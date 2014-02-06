@@ -1,0 +1,22 @@
+Admin Powers
+    Mute players
+    Prevent interaction of certain 
+    
+Grief Prevention Tools
+    block players
+    revert board
+    flip board (client side only)
+    
+Life w/ spinner
+
+Snap pieces to places
+
+Snap pieces together
+
+Shared area
+    Dynamically generated?
+    Pass cards around?
+
+Shuffle cards by shaking deck
+
+
