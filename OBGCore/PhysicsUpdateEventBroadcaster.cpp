@@ -4,7 +4,7 @@
 using namespace std;
 
 void PhysicsUpdateEventBroadcaster::
-	fire(PhysicsUpdate *u)
+	firePhysicsUpdate(PhysicsUpdate *u)
 {
 	for (unsigned int c = 0; c < listeners.size(); c++) {
 		listeners[c]->handlePhysicsUpdate(u);

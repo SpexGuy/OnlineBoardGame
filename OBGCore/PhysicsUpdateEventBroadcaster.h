@@ -9,7 +9,7 @@ private:
 	std::vector<PhysicsUpdateListener *> listeners;
 
 protected:
-	void fire(PhysicsUpdate *update);
+	void firePhysicsUpdate(PhysicsUpdate *update);
 
 public:
 	PhysicsUpdateEventBroadcaster() {};

@@ -9,7 +9,7 @@ private:
 	std::vector<InteractionListener *> listeners;
 
 protected:
-	void fire(Interaction *update);
+	void fireInteraction(Interaction *update);
 
 public:
 	InteractionEventBroadcaster() {};
