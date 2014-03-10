@@ -5,21 +5,28 @@ Steps for creating a Visual Studio Project:
   2.  Select "Empty Project".
   3.  Give it the name "OBGCore" and call the solution "OnlineBoardGame".
   4.  From OBGCore, right-click->Properties
-  5.  Go to Configuration Properties->General
-  6.  Change Project Defaults.Configuration Type to Utility
-  7.  Right-click the solution, and go to Add->New Project
-  8.  Call the new project "OBGClient"
-  9.  Make another project the same way called "OBGServer"
-  10. Right-click OBGClient and go to Project Dependencies
-  11. Check OBGCore
-  12. Right-click OBGClient->Properties
-  13. Switch the configuration to All Configurations
-  14. Navigate to Configuration Properties->VC++ Directories
-  15. Hilight Include Directories and click edit
-  16. Add the OBGCore directory
-  17. Save
-  18. Repeat steps 7-14 for OBGServer
-  19. Add the code files to the directories
-  20. For each project, right-click->Add->Existing Item
-  21.   Hilight all source and header files and click ok
-  22. Congratulations!
+  5.  Change configuration to All Configurations
+  6.  Go to Configuration Properties->General
+  7.  Change Project Defaults.Configuration Type to Utility
+  8.  Right-click the solution, and go to Add->New Project
+  9.  Call the project "OBGGraphics"
+  10. Repeat steps 4-7 for OBGGraphics
+  11. Right-click the solution, and go to Add->New Project
+  12. Call the new project "OBGClient"
+  13. Make another project the same way called "OBGServer"
+  14. Right-click OBGClient and go to Project Dependencies
+  15. Check OBGCore
+  16. Check OBGGraphics (OBGClient only)
+  17. Right-click OBGClient->Properties
+  18. Switch the configuration to All Configurations
+  19. Navigate to Configuration Properties->VC++ Directories
+  20. Hilight Include Directories and click edit
+  21. Add the OBGCore directory
+  22. Add the OBGGraphics directory (OBGClient only)
+  23. Save
+  24. Repeat steps 11-23 for OBGServer
+  25. Add the code files to the directories
+  26. For each project, right-click->Add->Existing Item
+  27.   Hilight all source and header files and click ok
+  28. Congratulations!
+

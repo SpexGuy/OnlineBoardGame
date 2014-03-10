@@ -6,4 +6,5 @@ class AssetPack;
 class AssetPackFactory {
 public:
 	virtual AssetPack *load(std::string name);
+	virtual ~AssetPackFactory();
 };

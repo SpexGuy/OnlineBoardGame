@@ -12,4 +12,5 @@ public:
 	virtual void shake();
 	virtual void hide();
 	virtual void show();
+	virtual ~Entity();
 };
