@@ -78,6 +78,10 @@ build/
 *.log
 *.scc
 
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
 # Visual C++ cache files
 ipch/
 *.aps
