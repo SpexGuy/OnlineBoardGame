@@ -3,12 +3,14 @@
 
 using namespace std;
 
+
+
 GameManager::GameManager() {
-	
+
 }
 
 void GameManager::run() {
-	cout << "It Runs!!!" << endl;
+	cout << "Client works!" << endl;
 	char i;
 	cin >> i;
 }
