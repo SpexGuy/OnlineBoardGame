@@ -4,5 +4,6 @@
 class GraphicsMesh :
 	public Drawable
 {
-	virtual void draw(/*TODO:mat4*/);
+	virtual void draw(const glm::mat4 &world);
+	virtual ~GraphicsMesh();
 };
