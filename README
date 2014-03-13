@@ -1,58 +1,261 @@
 
 
-Steps for creating a Visual Studio Project:
-  1.  Go to File->New Project.
-  2.  Select "Empty Project".
-  3.  Give it the name "OBGCore" and call the solution "OnlineBoardGame".
-  4.  From OBGCore, right-click->Properties
-  5.  Change configuration to All Configurations
-  6.  Go to Configuration Properties->General
-  7.  Change Project Defaults.Configuration Type to Utility
-  8.  Right-click the solution, and go to Add->New Project
-  9.  Call the project "OBGGraphics"
-  10. Repeat steps 4-7 for OBGGraphics
-  11. Right-click the solution, and go to Add->New Project
-  12. Call the new project "OBGClient"
-  13. Make another project the same way called "OBGServer"
-  14. Right-click OBGClient and go to Project Dependencies
-  15. Check OBGCore
-  16. Check OBGGraphics (OBGClient only)
-  17. Right-click OBGClient->Properties
-  18. Switch the configuration to All Configurations
-  19. Navigate to Configuration Properties->VC++ Directories
-  20. Hilight Include Directories and click edit
-  21. Add the OBGCore directory
-  22. Add the OBGGraphics directory (OBGClient only)
-  23. Save
-  24. Repeat steps 11-23 for OBGServer
-  25. Download glm, freeglut, DevIL, and glew.
-The directories you put them in will henceforth be denoted as
-$GLM, $FREEGLUT, $DEVIL, and $GLEW, respectively.
-  26. From OBGGraphics, right-click->Properties
-  27. Switch to All Configurations
-  28. Go to Configuration Properties->VC++ Directories
-  29. Add to Include Directories the following:
-        $GLEW\include
-        $DEVIL\include
-        $GLM
-        $FREEGLUT\include
-  30. Add to Library Directories the following:
-        $DEVIL\lib
-        $FREEGLUT\lib
-        $GLEW\lib\Release\Win32
-  31. Open OBGClient properties and go to C/C++->General
-  32. Add $GLM to Additional Include Directories
-  33. Go to Linker->General
-  34. Add to Additional Library Directories:
-        $DEVIL\lib
-        $FREEGLUT\lib
-        $GLEW\lib\Release\Win32
-  35. Under Linker->Input, edit Additional Dependencies
-  36. Add freeglut.lib, DevIL.lib, ILU.lib, ILUT.lib, and glew32.lib
-  37. Find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll
-  38. Copy these libraries to OnlineBoardGame\Debug (where the executable will be).
-  39. Add the code files to the directories
-  40. For each project, right-click->Add->Existing Item
-  41.   Hilight all source and header files and click ok
-  42. Congratulations!
+Instructions for creating a VS2012 Project (Rev. 2)
+	
+PART 1: Bullet to the head
+
+	Download glm, freeglut, DevIL, glew, and Bullet. The directories you put them in will henceforth be denoted as $GLM, $FREEGLUT, $DEVIL, $GLEW, and $BULLET, respectively.
+
+	Run $BULLET/build/vs2010.bat
+
+	Go to File->New->Project
+	Select Empty Project
+	Name the solution OnlineBoardGame and the project OBGCore
+	Click ok
+
+	right-click(solution)->Add->Existing Project
+	select $BULLET/build/vs2010/LinearMath.vcxproj
+	right-click(solution)->Add->Existing Project
+	select $BULLET/build/vs2010/BulletCollision.vcxproj
+	right-click(solution)->Add->Existing Project
+	select $BULLET/build/vs2010/BulletDynamics.vcxproj
+
+	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	Check all three projects
+	Configuration Properties->C/C++->General
+	Change Configuration (top-left) to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+	Apply all changes
+
+	For each bullet library, $BLIB,
+		right-click($BLIB)->Properties->Configuration Properties->C/C++->Code Generation
+		Set Configuration (top-left) to Debug
+		Change Runtime Library from /MTd to /MDd
+		Apply
+		Set Configuration (top-left) to Release
+		Change Runtime Library from /MT to /MD
+		Apply
+
+	right-click(solution)->Update Projects
+
+	**** SANITY CHECK ****
+	create a file in OBGCore with the following code:
+
+		#include "btBulletDynamicsCommon.h"
+		int main(int argc, char* argv[]){
+			btBoxShape * box = new btBoxShape(btVector3(1,1,1));
+			delete box;
+			return 0;
+		}
+
+	Ensure that your project builds and runs successfully (it should just pop up a console for a second)
+	Once it works, delete that file
+
+
+
+PART 2: Lots of Libraries
+
+	right-click(OBGCore)->Properties->Configuration Properties->General
+	Change Configuration to All Configurations
+	Change Configuration Type from Application to Static Library
+	Apply
+
+	right-click(solution)->Add->New Project
+	Select Empty Project
+	Name the new project OBGGraphics.
+
+	right-click(OBGGraphics)->Properties->Configuration Properties->General
+	Go to C/C++->General
+	Edit Additional Include Directories; add:
+		$GLEW/include
+		$DEVIL/include
+		$GLM
+		$FREEGLUT/include
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+		$GLEW/lib/Release/Win32
+		$DEVIL/lib
+		$FREEGLUT/lib
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		glew32.lib
+		DevIL.lib
+		ILU.lib
+		ILUT.lib
+		freeglut.lib
+	Apply
+
+	In the libraries you downloaded, find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug.
+
+	**** SANITY CHECK ****
+	right-click(OBGGraphics)->Set as StartUp Project
+	Create a source file in OBGGraphics containing the following:
+
+		#include <iostream>
+		#include <GL/glew.h>
+		#include <GL/freeglut.h>
+		#include <IL/il.h>
+		#include <IL/ilu.h>
+		#include <IL/ilut.h>
+		#include <glm/glm.hpp>
+
+		using namespace std;
+		using namespace glm;
+
+		int main(int argc, char *argv[]) {
+			glutInit(&argc, argv);
+			ilInit();
+			iluInit();
+			ilutInit();
+
+			glutInitWindowSize(1024, 512);
+			glutInitWindowPosition(0, 0);
+			glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
+
+			glutCreateWindow("Test Window");
+
+			if (glewInit() != GLEW_OK) {
+				cerr << "GLEW failed to initialize." << endl;
+				char i;
+				cin >> i;
+				return -1;
+			}
+
+			vec3 vec = vec3(1.0f, 0.0f, 1.0f);
+
+			cout << "SUCCESS!" << endl;
+			char i;
+			cin >> i;
+			return 0;
+		}
+
+	Compile and run it.  A window should pop up, and the console should say "SUCCESS". Delete the file once it works.
+
+
+
+
+PART 3: The Server Project
+
+	right-click(OBGGraphics)->Properties->Configuration Properties->General
+	Change Configuration to All Configurations
+	Change Configuration Type from Application to Static Library
+	Apply
+
+	right-click(solution)->Add->New Project
+	Select Empty Project
+	Name the new project OBGServer.
+
+	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGCore
+
+	Go to C/C++->General
+	Change Configuration to All Configurations
+	Add $BULLET/src to Additional Include Directories
+	Apply
+
+	right-click(OBGServer)->Set as StartUp Project
+	Repeat the sanity check from Part 1 for this project.
+
+
+
+
+PART 4: The Client Project
+	
+	right-click(solution)->Add->New Project
+	Select Empty Project
+	Name the new project OBGClient.
+
+	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGCore and OBGGraphics
+	Apply
+	Go to C/C++->General
+	Change Configuration to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		$GLEW/include
+		$DEVIL/include
+		$GLM
+		$FREEGLUT/include
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+		$GLEW/lib/Release/Win32
+		$DEVIL/lib
+		$FREEGLUT/lib
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		glew32.lib
+		DevIL.lib
+		ILU.lib
+		ILUT.lib
+		freeglut.lib
+	Apply
+
+
+	**** SANITY CHECK ****
+	right-click(OBGClient)->Set as StartUp Project
+	Create a file with the following code:
+
+		#include <iostream>
+		#include <GL/glew.h>
+		#include <GL/freeglut.h>
+		#include <IL/il.h>
+		#include <IL/ilu.h>
+		#include <IL/ilut.h>
+		#include <glm/glm.hpp>
+		#include "btBulletDynamicsCommon.h"
+
+		using namespace std;
+		using namespace glm;
+
+		int main(int argc, char *argv[]) {
+			glutInit(&argc, argv);
+			ilInit();
+			iluInit();
+			ilutInit();
+
+			glutInitWindowSize(1024, 512);
+			glutInitWindowPosition(0, 0);
+			glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
+
+			glutCreateWindow("Test Window");
+
+			if (glewInit() != GLEW_OK) {
+				cerr << "GLEW failed to initialize." << endl;
+				char i;
+				cin >> i;
+				return -1;
+			}
+
+			vec3 vec = vec3(1.0f, 0.0f, 1.0f);
+
+			btBoxShape * box = new btBoxShape(btVector3(1,1,1));
+			delete box;
+
+			cout << "SUCCESS!" << endl;
+			char i;
+			cin >> i;
+			return 0;
+		}
+
+	Compile and run it.  Note that OBGServer will not link since it has no entry point.  You should still be able to run the program. It should have the same outcome as sanity check 2.
+	Delete the source file.
+
+
+
+
+Part 5: Get the Code
+
+	Now, checkout the git repo into OnlineBoardGame.
+
+	For each project, right-click(project)->Add->Existing Item
+	Select all cpp and header files
+
+	Build
+
+	To be sure everything worked, do a clean build
+	Build->Clean Solution
+	Build->Build Solution
+
+	Congratulations, you're done (finally)!
 

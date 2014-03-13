@@ -9,7 +9,7 @@ TextureGroup *TextureGroup::addTexture(Texture *tex) {
 }
 
 void TextureGroup::bind() {
-	for (int c = 0; c < textures.size(); c++) {
+	for (unsigned int c = 0; c < textures.size(); c++) {
 		textures[c]->bind();
 	}
 }
