@@ -151,7 +151,9 @@ PART 3: The Server Project
 
 	Go to C/C++->General
 	Change Configuration to All Configurations
-	Add $BULLET/src to Additional Include Directories
+	Edit Additional Include Directories; add:
+		$BULLET/include
+		OnlineBoardGame/OBGCore
 	Apply
 
 	right-click(OBGServer)->Set as StartUp Project
@@ -177,6 +179,8 @@ PART 4: The Client Project
 		$DEVIL/include
 		$GLM
 		$FREEGLUT/include
+		OnlineBoardGame/OBGGraphics
+		OnlineBoardGame/OBGCore
 	Go to Linker->General
 	Edit Additional Library Directories; add:
 		$GLEW/lib/Release/Win32
