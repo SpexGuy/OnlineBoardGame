@@ -4,8 +4,11 @@
 #include <glm/glm.hpp>
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
-#include <MatrixShader.h>
-#include <ShaderMaterial.h>
+#include <ILTexture.h>
+#include <Texture.h>
+#include <TextureGroup.h>
+#include <TextureMaterial.h>
+#include <TextureShader.h>
 #include <Vertex.h>
 #include "GameManager.h"
 #include "GraphicsAsset.h"
@@ -20,8 +23,8 @@ GameManager::GameManager(int argc, char *argv[]) {
 
 	vector<VertexPNT> verts;
 	verts.push_back(VertexPNT(vec3(-1,-1,0),vec3(0,0,1),vec2(0,0)));
-	verts.push_back(VertexPNT(vec3(0,1,0),vec3(0,1,0),vec2(0,0)));
-	verts.push_back(VertexPNT(vec3(1,-1,0),vec3(1,0,0),vec2(0,0)));
+	verts.push_back(VertexPNT(vec3(0,1,0),vec3(0,1,0),vec2(.5,1)));
+	verts.push_back(VertexPNT(vec3(1,-1,0),vec3(1,0,0),vec2(1,0)));
 
 	vector<GLuint> trigs;
 	trigs.push_back(0);
@@ -30,12 +33,14 @@ GameManager::GameManager(int argc, char *argv[]) {
 
 	GraphicsMesh *mesh = new GraphicsMesh(verts, trigs);
 
-	GLSLProgram *shader = new MatrixShader();
+	GLSLProgram *shader = new TextureShader();
 	shader->compileShader("NormalShader.vert");
 	shader->compileShader("NormalShader.frag");
 	shader->link();
 
-	Material *material = new ShaderMaterial(shader);
+	Texture *tex = new ILTexture("earth_texture.jpg", 0);
+
+	Material *material = new TextureMaterial(tex, shader);
 
 	GraphicsAsset *asset = new GraphicsAsset(mesh, material);
 	GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));

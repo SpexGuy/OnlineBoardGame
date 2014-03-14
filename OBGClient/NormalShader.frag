@@ -1,10 +1,14 @@
 
 #version 400
 
-in vec3 fColor;
+uniform sampler2D colorTex;
+
+in vec3 fPosition;
+in vec3 fNormal;
+in vec2 fTexCoord;
 
 layout (location = 0) out vec4 FragColor;
 
 void main() {
-	FragColor = vec4(fColor, 1.0);
+	FragColor = texture(colorTex, fTexCoord);
 }

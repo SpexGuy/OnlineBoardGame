@@ -2,15 +2,16 @@
 #include <assert.h>
 #include "ILTexture.h"
 
-bool ILTexture::initialize() {
-	// We are asserting that we have not initialized this object before.
-	assert(this->il_handle == BAD_IL_VALUE);
+
+ILTexture::ILTexture(const char *filename, int channel) {
+	this->filename = filename;
+	this->channel = channel;
 
 	if ((this->il_handle = ilGenImage()) == BAD_IL_VALUE)
-		return false;
+		assert(false);
 	ilBindImage(this->il_handle);
 	if (!ilLoadImage(filename))
-		return false;
+		assert(false);
 
 	glGenTextures(1, &this->il_texture_handle);
 	glBindTexture(GL_TEXTURE_2D, this->il_texture_handle);
@@ -19,8 +20,8 @@ bool ILTexture::initialize() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), this->width = ilGetInteger(IL_IMAGE_WIDTH), this->height = ilGetInteger(IL_IMAGE_HEIGHT), 0, this->format = ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, this->data = ilGetData());
-	return true;
 }
+
 
 void ILTexture::bind() {
 	// We are asserting that we have initialized this object before.
@@ -30,19 +31,8 @@ void ILTexture::bind() {
 	glBindTexture(GL_TEXTURE_2D, this->il_texture_handle);
 }
 
-void ILTexture::takeDown() {
-	//free resources
-	if (this->il_texture_handle != BAD_GL_VALUE)
-		glDeleteTextures(1, &this->il_texture_handle);
-	if (this->il_handle != BAD_IL_VALUE)
-		ilDeleteImage(this->il_handle);
-
-	this->il_handle = BAD_IL_VALUE;
-	this->il_texture_handle = BAD_GL_VALUE;
-}
-
 ILTexture::~ILTexture() {
 	//assert that takeDown has been called
-	assert(il_handle == BAD_IL_VALUE);
-	assert(il_texture_handle == BAD_GL_VALUE);
+	glDeleteTextures(1, &this->il_texture_handle);
+	ilDeleteImage(this->il_handle);
 }

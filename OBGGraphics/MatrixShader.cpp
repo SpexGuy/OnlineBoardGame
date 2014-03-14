@@ -5,11 +5,8 @@
 using namespace glm;
 
 void MatrixShader::setup(const mat4 &model) {
-	this->setUniform("mvp",
-		GraphicsContext::inst()->getProjection() *
-		GraphicsContext::inst()->getView() *
-		model);
-	this->setUniform("m", model);
-	this->setUniform("v", GraphicsContext::inst()->getView());
-	this->setUniform("p", GraphicsContext::inst()->getProjection());
+	mat4 mv = GraphicsContext::inst()->getView() * model;
+	this->setUniform("mv", mv);
+	this->setUniform("mvp", GraphicsContext::inst()->getProjection() * mv);
+	this->setUniform("norm", inverse(transpose(mat3(mv))));
 }

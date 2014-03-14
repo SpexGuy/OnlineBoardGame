@@ -30,19 +30,9 @@ private:
 	GLuint il_texture_handle;
 	GLvoid *data;
 public:
-	ILTexture(const char *filename, int channel) {
-		this->filename = filename;
-		this->il_handle = BAD_IL_VALUE;
-		this->il_texture_handle = BAD_GL_VALUE;
-		this->channel = channel;
-	}
+	ILTexture(const char *filename, int channel);
 
-	/* loads the texture and registers it with GL */
-	virtual bool initialize();
 	/* binds the texture to its channel */
 	virtual void bind();
-	/* releases any GL resources */
-	virtual void takeDown();
-
 	virtual ~ILTexture();
 };
