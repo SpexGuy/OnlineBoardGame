@@ -26,14 +26,17 @@ void trimString(string & str) {
 
 
 GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
+	int time = glutGet(GLUT_ELAPSED_TIME);
 	vector<vec3> points;
 	vector<vec3> normals;
 	vector<vec2> texCoords;
+	vector<VertexPNT> verts;
+	int vertIndex = 0;
 	vector<GLuint> faces;
 
 	int nFaces = 0;
 
-	bool loadTex = false;
+	bool loadTex = true;
 
 	ifstream objStream(fileName, std::ios::in);
 
@@ -43,7 +46,7 @@ GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
 	}
 
 	string line, token;
-	vector<int> face;
+	vector<ivec3> face;
 
 	getline(objStream, line);
 	while (!objStream.eof()) {
@@ -91,38 +94,34 @@ GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
 					}
 					if (pIndex == -1) {
 						printf("Missing point index!!!");
+					} else if (tcIndex == -1) {
+						printf("Missing texture index!!!");
+					} else if (nIndex == -1) {
+						printf("Missing normal index!!!");
 					} else {
-						face.push_back(pIndex);
-					}
-
-					if (loadTex && tcIndex != -1 && pIndex != tcIndex) {
-						printf("Texture and point indices are not consistent.\n");
-					}
-					if (nIndex != -1 && nIndex != pIndex) {
-						printf("Normal and point indices are not consistent.\n");
+						face.push_back(ivec3(pIndex, tcIndex, nIndex));
 					}
 				}
+				ivec3 v0 = face[0];
+				ivec3 v1 = face[1];
+				ivec3 v2 = face[2];
+				int baseIndex = verts.size();
+				// First face
+				faces.push_back(baseIndex);
+				verts.push_back(VertexPNT(points[v0.x], normals[v0.z], texCoords[v0.y]));
+				faces.push_back(verts.size());
+				verts.push_back(VertexPNT(points[v1.x], normals[v1.z], texCoords[v1.y]));
+				faces.push_back(verts.size());
+				verts.push_back(VertexPNT(points[v2.x], normals[v2.z], texCoords[v2.y]));
 				// If number of edges in face is greater than 3,
 				// decompose into triangles as a triangle fan.
-				if (face.size() > 3) {
-					int v0 = face[0];
-					int v1 = face[1];
-					int v2 = face[2];
-					// First face
-					faces.push_back(v0);
-					faces.push_back(v1);
-					faces.push_back(v2);
-					for (unsigned int i = 3; i < face.size(); i++) {
-						v1 = v2;
-						v2 = face[i];
-						faces.push_back(v0);
-						faces.push_back(v1);
-						faces.push_back(v2);
-					}
-				} else {
-					faces.push_back(face[0]);
-					faces.push_back(face[1]);
-					faces.push_back(face[2]);
+				for (unsigned int i = 3; i < face.size(); i++) {
+					v1 = v2;
+					v2 = face[i];
+					faces.push_back(baseIndex);
+					faces.push_back(verts.size()-1);
+					faces.push_back(verts.size());
+					verts.push_back(VertexPNT(points[v2.x], normals[v2.z], texCoords[v2.y]));
 				}
 			}
 		}
@@ -131,17 +130,9 @@ GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
 
 	objStream.close();
 		
-	cout << "Loaded mesh from: " << fileName << endl;
+	cout << "Loaded mesh from " << fileName << " in " << glutGet(GLUT_ELAPSED_TIME) - time << "ms" << endl;
 
-	vec3 dimensions = vec3(0.0f);
-
-	vector<VertexPNT> vertices;
-
-	for(unsigned int i = 0; i < points.size(); i++){
-		vertices.push_back(VertexPNT(points[i], normals[i], vec2(0.0f, 0.0f)));
-	}
-
-	GraphicsMesh *mesh = new GraphicsMesh(vertices, faces);
+	GraphicsMesh *mesh = new GraphicsMesh(verts, faces);
 	return mesh;
 }
 
