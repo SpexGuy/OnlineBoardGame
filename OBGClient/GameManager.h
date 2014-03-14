@@ -12,8 +12,13 @@ protected:
 	Connection *connection;
 	UserInputHandler *inputHandler;
 
+	bool running;
+
 public:
 	GameManager(int argc, char *argv[]);
 	virtual void run();
+	virtual void update();
+	virtual void display();
+	virtual void close();
 	virtual ~GameManager();
 };

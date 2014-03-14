@@ -17,6 +17,9 @@ private:
 public:
 	static GraphicsContext *inst();
 
+	void setupFrame();
+
+	void viewport();
 
 	void drawTriangles(GLsizei numElements, GLuint vertexArrayHandle,
 					   const glm::mat4 &world);

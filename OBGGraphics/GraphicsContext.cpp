@@ -32,6 +32,9 @@ void obgGraphicsInit(int argc, char *argv[]) {
 		cerr << "GLEW failed to initialize." << endl;
 		assert(false);
 	}
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.2f,0.2f,0.2f,1.0f);
 
 	instance = new GraphicsContext();
 
@@ -41,6 +44,15 @@ void obgGraphicsInit(int argc, char *argv[]) {
 
 GraphicsContext *GraphicsContext::inst() {
 	return instance;
+}
+
+void GraphicsContext::setupFrame() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	viewport();
+}
+
+void GraphicsContext::viewport() {
+	glViewport(0, 0, size.x, size.y);
 }
 
 void GraphicsContext::useShader(GLSLProgram *shader) {

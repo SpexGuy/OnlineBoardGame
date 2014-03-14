@@ -14,24 +14,33 @@
 #include "GraphicsAsset.h"
 #include "GraphicsManager.h"
 
+#define PERIOD (int)(1000.0/60.0)
+
 using namespace std;
 using namespace glm;
 
 
+GameManager *instance;
+
+void displayFunc() {
+	//cout << "display" << endl;
+	instance->display();
+}
+
+void updateFunc(int value) {
+	instance->update();
+}
+
+void closeFunc() {
+	instance->close();
+}
+
 GameManager::GameManager(int argc, char *argv[]) {
+	running = false;
 	graphicsManager = new GraphicsManager(argc, argv);
-
-	//vector<VertexPNT> verts;
-	//verts.push_back(VertexPNT(vec3(-1,-1,0),vec3(0,0,1),vec2(0,0)));
-	//verts.push_back(VertexPNT(vec3(0,1,0),vec3(0,1,0),vec2(.5,1)));
-	//verts.push_back(VertexPNT(vec3(1,-1,0),vec3(1,0,0),vec2(1,0)));
-
-	//vector<GLuint> trigs;
-	//trigs.push_back(0);
-	//trigs.push_back(1);
-	//trigs.push_back(2);
-
-	//GraphicsMesh *mesh = new GraphicsMesh(verts, trigs);
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+	glutCloseFunc(closeFunc);
+	glutDisplayFunc(displayFunc);
 
 	GraphicsMesh *mesh = GraphicsMesh::loadMesh("badEarth.obj");
 
@@ -48,12 +57,31 @@ GameManager::GameManager(int argc, char *argv[]) {
 	GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));
 	graphicsManager->addRenderable(entity);
 
-	glDisable(GL_CULL_FACE);
-	glClearColor(0.2f,0.2f,0.2f,1.0f);
+	instance = this;
 }
 
 void GameManager::run() {
-	graphicsManager->update();
+	running = true;
+	glutTimerFunc(PERIOD, updateFunc, 0);
+	glutMainLoop();
+}
+
+void GameManager::update() {
+	if (running) {
+		glutTimerFunc(PERIOD, updateFunc, 0);
+		glutPostRedisplay();
+	}
+}
+
+void GameManager::display() {
+	if (running) {
+		graphicsManager->display();
+	}
+}
+
+void GameManager::close() {
+	running = false;
+	glutLeaveMainLoop();
 }
 
 GameManager::~GameManager() {

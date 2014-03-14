@@ -8,6 +8,6 @@ protected:
 
 public:
 	GraphicsManager(int argc, char *argv[]);
-	virtual void update();
+	virtual void display();
 	virtual void addRenderable(Renderable *r);
 };
