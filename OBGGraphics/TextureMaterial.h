@@ -3,11 +3,15 @@
 
 class Texture;
 
-class TextureMaterial {
+class TextureMaterial :
+	public ShaderMaterial
+{
 protected:
 	Texture *tex;
 
 public:
+	TextureMaterial(Texture *tex, GLSLProgram *shader) :
+		ShaderMaterial(shader), tex(tex) {}
 	virtual void bind();
-	virtual ~TextureMaterial();
+	virtual ~TextureMaterial() {}
 };

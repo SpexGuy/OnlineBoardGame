@@ -3,11 +3,15 @@
 
 class GLSLProgram;
 
-class ShaderMaterial {
+class ShaderMaterial :
+	public Material
+{
 protected:
 	GLSLProgram *shader;
 
 public:
+	ShaderMaterial(GLSLProgram *shader) :
+		shader(shader) {}
 	virtual void bind();
-	virtual ~ShaderMaterial();
+	virtual ~ShaderMaterial() {}
 };

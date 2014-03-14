@@ -14,7 +14,9 @@ protected:
 	GraphicsMesh *mesh;
 	Material *material;
 public:
+	GraphicsAsset(GraphicsMesh *mesh, Material *material) :
+		Asset(0, 0), mesh(mesh), material(material) {}
 	virtual void draw(const glm::mat4 &world);
-	virtual GraphicsEntity *createEntity(btVector3 &position);
-	virtual ~GraphicsAsset();
+	virtual GraphicsEntity *createEntity(const btVector3 &position);
+	virtual ~GraphicsAsset() {}
 };

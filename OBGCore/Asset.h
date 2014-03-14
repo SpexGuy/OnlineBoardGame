@@ -4,6 +4,8 @@ class btVector3;
 class Entity;
 
 class Asset {
+private:
+	Asset();
 protected:
 	int assetPackIndex;
 	int group;
@@ -14,7 +16,7 @@ public:
 		group(group)
 	{}
 
-	virtual Entity *createEntity(btVector3 &position);
+	virtual Entity *createEntity(const btVector3 &position);
 	
 	virtual ~Asset();
 };

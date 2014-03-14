@@ -13,7 +13,7 @@ protected:
 	UserInputHandler *inputHandler;
 
 public:
-	GameManager();
+	GameManager(int argc, char *argv[]);
 	virtual void run();
 	virtual ~GameManager();
 };
