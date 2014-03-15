@@ -16,7 +16,7 @@ using namespace std;
 
 GraphicsContext *instance;
 
-void obgGraphicsInit(int argc, char *argv[]) {
+void OBGGraphicsInit(int argc, char *argv[]) {
 	glutInit(&argc, argv);
 	ilInit();
 	iluInit();
@@ -25,7 +25,9 @@ void obgGraphicsInit(int argc, char *argv[]) {
 	glutInitWindowSize(1024, 512);
 	glutInitWindowPosition(0, 0);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
+}
 
+void OBGGraphicsCreateContext() {
 	glutCreateWindow("Test Window");
 
 	if (glewInit() != GLEW_OK) {
@@ -37,10 +39,7 @@ void obgGraphicsInit(int argc, char *argv[]) {
 	glClearColor(0.2f,0.2f,0.2f,1.0f);
 
 	instance = new GraphicsContext();
-
-	cout << "SUCCESS!" << endl;
 }
-
 
 GraphicsContext *GraphicsContext::inst() {
 	return instance;

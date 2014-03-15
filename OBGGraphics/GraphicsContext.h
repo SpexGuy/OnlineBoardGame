@@ -5,7 +5,9 @@
 
 class GLSLProgram;
 
-void obgGraphicsInit(int argc, char *argv[]);
+void OBGGraphicsInit(int argc, char *argv[]);
+
+void OBGGraphicsCreateContext();
 
 class GraphicsContext {
 private:

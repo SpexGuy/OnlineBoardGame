@@ -8,15 +8,12 @@
 using namespace std;
 using namespace glm;
 
-void reshape(int x, int y) {
-	GraphicsContext::inst()->setSize(x, y);
-	GraphicsContext::inst()->setProjection(
-		glm::perspective(45.0f, float(x)/y, 0.1f, 10.0f));
+GraphicsManager::GraphicsManager(int argc, char *argv[]) {
+	OBGGraphicsInit(argc, argv);
 }
 
-GraphicsManager::GraphicsManager(int argc, char *argv[]) {
-	obgGraphicsInit(argc, argv);
-	glutReshapeFunc(reshape);
+void GraphicsManager::start() {
+	OBGGraphicsCreateContext();
 	GraphicsContext::inst()->setView(
 		glm::lookAt(vec3(2.0f, 2.0f, 2.0f),
 					vec3(0.0f, 0.0f, 0.0f),
@@ -29,6 +26,13 @@ void GraphicsManager::display() {
 		renderables[c]->render();
 	}
 	glutSwapBuffers();
+}
+
+void GraphicsManager::reshape(int x, int y) {
+	GraphicsContext::inst()->setSize(x, y);
+	GraphicsContext::inst()->setProjection(
+		glm::perspective(45.0f, float(x)/y, 0.1f, 10.0f));
+
 }
 
 void GraphicsManager::addRenderable(Renderable *r) {

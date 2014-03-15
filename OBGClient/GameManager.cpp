@@ -15,6 +15,7 @@
 #include "GraphicsManager.h"
 
 #define PERIOD (int)(1000.0/60.0)
+#define ESCAPE_CHAR 0x1B
 
 using namespace std;
 using namespace glm;
@@ -22,13 +23,40 @@ using namespace glm;
 
 GameManager *instance;
 
+void updateFunc(int value) {
+	instance->update();
+}
+
 void displayFunc() {
-	//cout << "display" << endl;
 	instance->display();
 }
 
-void updateFunc(int value) {
-	instance->update();
+void keyboardFunc(unsigned char c, int x, int y) {
+	instance->keyPressed(c, x, y);
+}
+
+void specialFunc(int k, int x, int y) {
+	instance->specialKeyPressed(k, x, y);
+}
+
+void mouseFunc(int button, int state, int x, int y) {
+	instance->mousePressed(button, state, x, y);
+}
+
+void motionFunc(int x, int y) {
+	instance->mouseDragged(x, y);
+}
+
+void passiveMotionFunc(int x, int y) {
+	instance->mouseMoved(x, y);
+}
+
+void visibilityFunc(int state) {
+	instance->visibilityChanged(state);
+}
+
+void reshapeFunc(int x, int y) {
+	instance->reshape(x, y);
 }
 
 void closeFunc() {
@@ -38,9 +66,13 @@ void closeFunc() {
 GameManager::GameManager(int argc, char *argv[]) {
 	running = false;
 	graphicsManager = new GraphicsManager(argc, argv);
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-	glutCloseFunc(closeFunc);
-	glutDisplayFunc(displayFunc);
+}
+
+void GameManager::run() {
+	running = true;
+	visible = true;
+
+	graphicsManager->start();
 
 	GraphicsMesh *mesh = GraphicsMesh::loadMesh("badEarth.obj");
 
@@ -57,12 +89,20 @@ GameManager::GameManager(int argc, char *argv[]) {
 	GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));
 	graphicsManager->addRenderable(entity);
 
-	instance = this;
-}
-
-void GameManager::run() {
-	running = true;
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+	glutDisplayFunc(displayFunc);
+	glutKeyboardFunc(keyboardFunc);
+	glutSpecialFunc(specialFunc);
+	glutMouseFunc(mouseFunc);
+	glutMotionFunc(motionFunc);
+	glutPassiveMotionFunc(passiveMotionFunc);
+	glutVisibilityFunc(visibilityFunc);
+	glutReshapeFunc(reshapeFunc);
+	glutCloseFunc(closeFunc);
 	glutTimerFunc(PERIOD, updateFunc, 0);
+
+	instance = this;
+
 	glutMainLoop();
 }
 
@@ -74,9 +114,68 @@ void GameManager::update() {
 }
 
 void GameManager::display() {
-	if (running) {
+	if (running && visible) {
 		graphicsManager->display();
 	}
+}
+
+void GameManager::keyPressed(unsigned char c, int x, int y) {
+	switch(c) {
+	case ESCAPE_CHAR:
+		if (glutGet(GLUT_FULL_SCREEN)) {
+			glutLeaveFullScreen();
+			break;
+		} //else fall through
+	case 'X':
+	case 'x':
+		close();
+		break;
+	default:
+		cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
+	}
+}
+
+void GameManager::specialKeyPressed(int k, int x, int y) {
+	switch(k) {
+	case GLUT_KEY_F11:
+		glutFullScreenToggle();
+		break;
+	default:
+		cout << "Unknown special key: " << k << endl;
+	}
+}
+
+void GameManager::mousePressed(int button, int state, int x, int y) {
+	switch(button) {
+	case 0: //left click
+		break;
+	case 1: //right click
+		break;
+	case 2: //middle click
+		break;
+	case 3: //back button
+		break;
+	case 4: //forward button
+		break;
+	default:
+		cout << "TOO MANY BUTTONS ON THAT MOUSE!" << endl;
+	}
+}
+
+void GameManager::mouseDragged(int x, int y) {
+
+}
+
+void GameManager::mouseMoved(int x, int y) {
+
+}
+
+void GameManager::visibilityChanged(int state) {
+	visible = (state != GLUT_NOT_VISIBLE);
+}
+
+void GameManager::reshape(int x, int y) {
+	graphicsManager->reshape(x, y);
 }
 
 void GameManager::close() {
