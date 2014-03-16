@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 
-class Connection;
+class ServerConnection;
 
 class ServerMessageListener {
 public:
-	virtual void handleMessage(const std::string &msg, Connection *sender) = 0;
+	virtual void handleMessage(const std::string &msg, ServerConnection *sender) = 0;
 	virtual ~ServerMessageListener() {}
 };

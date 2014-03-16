@@ -3,34 +3,37 @@
 #include <string>
 #include <Socket.h>
 #include "GameManager.h"
+#include "MessageBroadcaster.h"
+#include "PlayerManager.h"
+#include "PlayerStatusBroadcaster.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	GameManager *gm = new GameManager();
-	gm->run();
-	delete gm;
-
 	// socket test
+	//PlayerStatusBroadcaster *psb = new PlayerStatusBroadcaster();
+	//MessageBroadcaster *mb = new MessageBroadcaster();
 	//cout << "Init socket" << endl;
 	//SocketInit();
 	//cout << "Create Server Socket" << endl;
-	//ServerSocket *server = new ServerSocket(0xABC0);
+	//PlayerManager *server = new PlayerManager(0xABC0);
+	//server->registerPlayerListener(psb);
+	//server->registerServerMessageListener(mb);
 	//cout << "Waiting for Connection" << endl;
-	//ServerConnection *conn = new ServerConnection(NULL, server->getNextConnection());
-	//cout << "Connection! Starting thread" << endl;
-	//conn->start();
+	//server->start();
 	//system("pause");
-	//conn->sendMessage("Hello, ppls!");
-	//cout << "Sent message" << endl;
-	//system("pause");
-	//conn->close();
-	//delete conn;
+	//server->close();
+	//cout << "Server closed" << endl;
 	//delete server;
+	//cout << "Server deleted" << endl;
 	//SocketClose();
 	//cout << "All closed up" << endl;
+
+	GameManager *gm = new GameManager();
+	gm->run();
+	delete gm;
 
 	return 0;
 }

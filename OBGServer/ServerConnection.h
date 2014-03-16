@@ -24,4 +24,5 @@ public:
 	virtual ~ServerConnection();
 
 	inline std::string getName()		{ return name; }
+	inline PlayerManager *getManager()	{ return owner; }
 };

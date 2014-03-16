@@ -1,6 +1,6 @@
 #pragma once
 
-class Connection;
+class ServerConnection;
 
 class PlayerListener {
 public:

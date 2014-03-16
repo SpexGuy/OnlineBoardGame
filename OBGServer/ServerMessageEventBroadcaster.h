@@ -2,14 +2,14 @@
 #include <vector>
 
 class ServerMessageListener;
-class Connection;
+class ServerConnection;
 
 class ServerMessageEventBroadcaster {
 private:
 	std::vector<ServerMessageListener *> listeners;
 
 protected:
-	void fireMessage(const std::string &message, Connection *sender);
+	void fireMessage(const std::string &message, ServerConnection *sender);
 
 public:
 	ServerMessageEventBroadcaster() {};
