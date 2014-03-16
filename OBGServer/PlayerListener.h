@@ -1,10 +1,10 @@
 #pragma once
 
-class Player;
+class Connection;
 
 class PlayerListener {
 public:
-	virtual void playerJoined(Player *p) = 0;
-	virtual void playerLeft(Player *p) = 0;
+	virtual void playerJoined(ServerConnection *p) = 0;
+	virtual void playerLeft(ServerConnection *p) = 0;
 	virtual ~PlayerListener() {}
 };

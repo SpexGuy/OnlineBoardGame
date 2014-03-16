@@ -1,23 +1,29 @@
 #pragma once
 #include <vector>
 #include <PhysicsUpdateListener.h>
-#include "ServerMessageEventBroadcaster.h"
+#include "InteractionListener.h"
 #include "PlayerEventBroadcaster.h"
+#include "ServerMessageListener.h"
+#include "ServerMessageEventBroadcaster.h"
 
-class Player;
 class ServerSocket;
+class ServerConnection;
 
 class PlayerManager :
+	public InteractionListener,
+	public PhysicsUpdateListener,
 	public PlayerEventBroadcaster,
 	public ServerMessageEventBroadcaster,
-	public PhysicsUpdateListener
+	public ServerMessageListener
 {
 protected:
-	std::vector<Player *> players;
+	std::vector<ServerConnection *> players;
 	ServerSocket *socket;
 public:
 	virtual void start();
-	virtual void disconnectPlayer(Player *p);
+	virtual void disconnectPlayer(ServerConnection *p);
 	virtual void handlePhysicsUpdate(PhysicsUpdate *update);
-	virtual void broadcast(std::string message, Player *exclude);
+	virtual void handleInteraction(Interaction *action);
+	virtual void handleMessage(const std::string &msg, ServerConnection *sender);
+	virtual void broadcast(std::string message, ServerConnection *exclude);
 };

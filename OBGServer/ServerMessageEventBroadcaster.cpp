@@ -4,7 +4,7 @@
 using namespace std;
 
 void ServerMessageEventBroadcaster::
-	fireMessage(const string &msg, Player *player)
+	fireMessage(const string &msg, Connection *player)
 {
 	for (unsigned int c = 0; c < listeners.size(); c++) {
 		listeners[c]->handleMessage(msg, player);

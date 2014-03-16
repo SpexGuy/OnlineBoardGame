@@ -4,7 +4,7 @@
 using namespace std;
 
 void PlayerEventBroadcaster::
-	firePlayerJoined(Player *player)
+	firePlayerJoined(ServerConnection *player)
 {
 	for (unsigned int c = 0; c < listeners.size(); c++) {
 		listeners[c]->playerJoined(player);
@@ -12,7 +12,7 @@ void PlayerEventBroadcaster::
 }
 
 void PlayerEventBroadcaster::
-	firePlayerLeft(Player *player)
+	firePlayerLeft(ServerConnection *player)
 {
 	for (unsigned int c = 0; c < listeners.size(); c++) {
 		listeners[c]->playerLeft(player);

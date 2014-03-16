@@ -54,7 +54,7 @@ void Socket::sendRawBytes(char *byteData, int size) {
 	}
 }
 
-void Socket::readRawBytes(void *data, int size) {
+void Socket::readRawBytes(const void *data, int size) {
 	char *byteData = (char *) data;
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
@@ -72,7 +72,7 @@ void Socket::readRawBytes(void *data, int size) {
 	}
 }
 
-void Socket::sendData(int type, void *data, int size) {
+void Socket::sendData(int type, const void *data, int size) {
 	int ntype = htonl(type);
 	int nsize = htonl(size);
 	sendRawBytes((char *) &ntype, sizeof(ntype));

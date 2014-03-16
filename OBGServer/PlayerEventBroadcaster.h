@@ -2,15 +2,15 @@
 #include <vector>
 
 class PlayerListener;
-class Player;
+class ServerConnection;
 
 class PlayerEventBroadcaster {
 private:
 	std::vector<PlayerListener *> listeners;
 
 protected:
-	void firePlayerJoined(Player *player);
-	void firePlayerLeft(Player *player);
+	void firePlayerJoined(ServerConnection *player);
+	void firePlayerLeft(ServerConnection *player);
 
 public:
 	PlayerEventBroadcaster() {};

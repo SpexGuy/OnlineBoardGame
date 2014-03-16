@@ -15,7 +15,7 @@ public:
 class Socket {
 private:
 	void sendRawBytes(char *data, int size);
-	void readRawBytes(void *data, int size);
+	void readRawBytes(const void *data, int size);
 protected:
 	int socketFD;
 public:
@@ -23,7 +23,7 @@ public:
 		socketFD(fd) {}
 	Socket(std::string ip, short int port);
 
-	virtual void sendData(int type, void *data, int size);
+	virtual void sendData(int type, const void *data, int size);
 
 	/** blocks for input, then returns that input */
 	virtual SerialData receive();
