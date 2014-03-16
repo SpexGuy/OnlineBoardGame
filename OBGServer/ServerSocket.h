@@ -3,6 +3,12 @@
 class Socket;
 
 class ServerSocket {
+private:
+	ServerSocket();
+protected:
+	int socketFD;
 public:
-	Socket *accept();
+	ServerSocket(short int port);
+	virtual Socket *getNextConnection();
+	virtual ~ServerSocket();
 };

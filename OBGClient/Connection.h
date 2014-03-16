@@ -13,7 +13,6 @@ class Connection :
 protected:
 	Socket *socket;
 public:
-	
 	virtual void connectToServer(std::string ip);
 	virtual void connectToServer(std::string ip, short int port);
 	virtual void connectToServer(int ip, short int port);

@@ -84,6 +84,7 @@ PART 2: Lots of Libraries
 		ILU.lib
 		ILUT.lib
 		freeglut.lib
+		ws2_32.lib
 	Apply
 
 	In the libraries you downloaded, find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug.
@@ -152,8 +153,11 @@ PART 3: The Server Project
 	Go to C/C++->General
 	Change Configuration to All Configurations
 	Edit Additional Include Directories; add:
-		$BULLET/include
+		$BULLET/src
 		OnlineBoardGame/OBGCore
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		ws2_32.lib
 	Apply
 
 	right-click(OBGServer)->Set as StartUp Project
@@ -193,6 +197,7 @@ PART 4: The Client Project
 		ILU.lib
 		ILUT.lib
 		freeglut.lib
+		ws2_32.lib
 	Apply
 
 

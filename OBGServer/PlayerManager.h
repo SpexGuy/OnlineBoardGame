@@ -16,6 +16,7 @@ protected:
 	std::vector<Player *> players;
 	ServerSocket *socket;
 public:
+	virtual void start();
 	virtual void disconnectPlayer(Player *p);
 	virtual void handlePhysicsUpdate(PhysicsUpdate *update);
 	virtual void broadcast(std::string message, Player *exclude);
