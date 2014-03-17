@@ -4,6 +4,7 @@
 #include "PlayerManager.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"
+#include "Socket.h"
 
 using namespace std;
 
@@ -40,9 +41,17 @@ void PlayerManager::start() {
 
 void PlayerManager::loop() {
 	while(active) {
-		ServerConnection *conn = new ServerConnection(this, socket->getNextConnection());
-		conn->start();
-		addPlayer(conn);
+		Socket *sock = socket->getNextConnection();
+		if (sock == NULL) {
+			active = false;
+			break;
+		} else if (active) {
+			ServerConnection *conn = new ServerConnection(this, sock);
+			conn->start();
+			addPlayer(conn);
+		} else {
+			delete sock;
+		}
 	}
 }
 
@@ -100,7 +109,7 @@ void PlayerManager::close() {
 PlayerManager::~PlayerManager() {
 	if (active) close();
 	//TODO: Serialize players
-	for (int c = 0; c < players.size(); c++) {
+	for (unsigned int c = 0; c < players.size(); c++) {
 		delete players[c];
 	}
 	players.clear();

@@ -7,7 +7,9 @@
 using namespace std;
 
 Connection::Connection(Socket *socket) :
-	socket(socket), active(false)
+	socket(socket),
+	active(false),
+	loopEnded(true)
 {
 	
 }
@@ -21,6 +23,7 @@ DWORD WINAPI ConnectionThreadLoop(_In_ LPVOID c) {
 
 void Connection::start() {
 	active = true;
+	loopEnded = false;
 	DWORD threadId;
 	thread = CreateThread(
 			NULL,					// default security attributes
@@ -39,17 +42,30 @@ void Connection::start() {
 void Connection::loop() {
 	while(active) {
 		SerialData data = socket->receive();
-		processData(data);
+		if (data.data != NULL) {
+			processData(data);
+		} else {
+			cout << "Fatal error in socket read.  Closing loop." << endl;
+			if (active) {
+				handleFatalError();
+				active = false;
+			}
+			break;
+		}
 	}
+	loopEnded = true;
 }
 
 void Connection::close() {
 	this->active = false;
-	delete socket;
-	socket = NULL;
+	if (socket != NULL) {
+		delete socket;
+		socket = NULL;
+	}
 }
 
 Connection::~Connection() {
-	if (socket != NULL)
-		close();
+	close();
+	while(!loopEnded)
+		;
 }

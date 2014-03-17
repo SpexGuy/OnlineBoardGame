@@ -16,6 +16,7 @@ ServerConnection::ServerConnection(PlayerManager *owner, Socket *sock) :
 }
 
 void ServerConnection::processData(const SerialData &data) {
+	string message;
 	switch(data.type) {
 	case TYPE_PHYSICS_UPDATE:
 		cout << "...The server just got a physics update.  WTF?!" << endl;
@@ -28,10 +29,20 @@ void ServerConnection::processData(const SerialData &data) {
 	case TYPE_MESSAGE:
 		owner->handleMessage(string((char *)data.data), this);
 		break;
+	case TYPE_SET_USERNAME:
+		message = name;
+		name = string((char *)data.data);
+		message = message.append(" changed his username to ").append(name);
+		owner->broadcast(message, NULL);
+		break;
 	default:
 		cout << "The server just got an unknown message type: " << data.type << endl;
 		assert(false);
 	}
+}
+
+void ServerConnection::handleFatalError() {
+	owner->disconnectPlayer(this);
 }
 
 bool ServerConnection::isUnresponsive() {
@@ -40,7 +51,8 @@ bool ServerConnection::isUnresponsive() {
 }
 
 void ServerConnection::sendUpdate(PhysicsUpdate *update) {
-	//TODO: serialize if necessary
+	//With TCP, socket disconnect is detected by
+	//reads. When we switch, this will need to detect.
 	socket->sendData(TYPE_PHYSICS_UPDATE, update, sizeof(PhysicsUpdate));
 }
 

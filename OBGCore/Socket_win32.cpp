@@ -41,62 +41,87 @@ Socket::Socket(string ip, short int port) {
 	}
 }
 
-void Socket::sendRawBytes(char *byteData, int size) {
+int Socket::sendRawBytes(char *byteData, int size) {
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
 		int bytesSent = send(socketFD, byteData, bytesLeft, 0);
 		if (bytesSent < 0) {
 			cout << "Failed to send bytes" << endl;
-			assert(false);
+			return bytesLeft;
 		}
 		byteData += bytesSent;
 		bytesLeft -= bytesSent;
 	}
+	return 0;
 }
 
-void Socket::readRawBytes(const void *data, int size) {
+int Socket::readRawBytes(const void *data, int size) {
 	char *byteData = (char *) data;
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
 		int bytesRecv = recv(socketFD, byteData, bytesLeft, 0);
 		if (bytesRecv < 0) {
 			cout << "Could not receive bytes" << endl;
-			assert(false);
+			return bytesLeft;
 		}
 		if (bytesRecv == 0) {
 			cout << "Disconnection!" << endl;
-			return;
+			return bytesLeft;
 		}
 		byteData += bytesRecv;
 		bytesLeft -= bytesRecv;
 	}
+	return 0;
 }
 
-void Socket::sendData(int type, const void *data, int size) {
+int Socket::sendData(int type, const void *data, int size) {
 	int ntype = htonl(type);
 	int nsize = htonl(size);
-	sendRawBytes((char *) &ntype, sizeof(ntype));
-	sendRawBytes((char *) &nsize, sizeof(nsize));
-	sendRawBytes((char *) data, size);
+
+	int bytesLeft = sendRawBytes((char *) &ntype, sizeof(ntype));
+	if (bytesLeft != 0) return bytesLeft;
+
+	bytesLeft = sendRawBytes((char *) &nsize, sizeof(nsize));
+	if (bytesLeft != 0) return bytesLeft;
+
+	bytesLeft = sendRawBytes((char *) data, size);
+	return bytesLeft;
 }
 
 SerialData Socket::receive() {
 	int type;
-	readRawBytes(&type, sizeof(type));
+	int bytesLeft = readRawBytes(&type, sizeof(type));
 	type = ntohl(type);
 	
+	SerialData ret;
+	if (bytesLeft != 0) {
+		ret.data = NULL;
+		return ret;
+	}
+
 	int size;
-	readRawBytes(&size, sizeof(size));
+	bytesLeft = readRawBytes(&size, sizeof(size));
 	size = ntohl(size);
+
+	if (bytesLeft != 0) {
+		ret.data = NULL;
+		return ret;
+	}
+
 
 	char *data = (char *) malloc(size);
 	if (data == NULL) {
 		cout << "Could not malloc " << size << " bytes!" << endl;
 		assert(false);
 	}
-	readRawBytes(data, size);
+	bytesLeft = readRawBytes(data, size);
+
+	if (bytesLeft != 0) {
+		free(data);
+		ret.data = NULL;
+		return ret;
+	}
 	
-	SerialData ret;
 	ret.data = data;
 	ret.size = size;
 	ret.type = type;

@@ -39,7 +39,7 @@ Socket *ServerSocket::getNextConnection() {
 	int newFD = accept(socketFD, &newInfo, &size);
 	if (newFD < 0) {
 		cout << "Accept had an error!" << endl;
-		assert(false);
+		return NULL;
 	}
 
 	return new Socket(newFD);

@@ -35,6 +35,17 @@ void ClientConnection::processData(const SerialData &data) {
 	}
 }
 
+void ClientConnection::handleFatalError() {
+	cout << "Fatal Connection Error.  Attempting to reconnect." << endl;
+	cout << "JK, This program's not that fancy. Goodbye." << endl;
+}
+
+void ClientConnection::setUsername(const string &un) {
+	//With TCP, socket disconnect is detected by
+	//reads. When we switch, this will need to detect.
+	socket->sendData(TYPE_SET_USERNAME, un.c_str(), un.length()+1);
+}
+
 void ClientConnection::handleInteraction(Interaction *action) {
 	socket->sendData(TYPE_INTERACTION, action, sizeof(*action));
 }

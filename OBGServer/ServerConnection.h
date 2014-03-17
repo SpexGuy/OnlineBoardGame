@@ -15,7 +15,7 @@ protected:
 	std::string name;
 
 	virtual void processData(const SerialData &data);
-
+	virtual void handleFatalError();
 public:
 	ServerConnection(PlayerManager *owner, Socket *socket);
 	virtual bool isUnresponsive();

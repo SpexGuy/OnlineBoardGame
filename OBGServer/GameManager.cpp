@@ -8,9 +8,7 @@ GameManager::GameManager() {
 }
 
 void GameManager::run() {
-	cout << "It Runs!!!" << endl;
-	char i;
-	cin >> i;
+
 }
 
 GameManager::~GameManager() {

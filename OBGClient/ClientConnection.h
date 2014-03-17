@@ -14,10 +14,12 @@ class ClientConnection :
 {
 protected:
 	void processData(const SerialData &data);
+	virtual void handleFatalError();
 
 public:
 	ClientConnection(std::string ip, short port);
 
+	virtual void setUsername(const std::string &username);
 	virtual void handleInteraction(Interaction *action);
 	virtual void handleMessage(const std::string &message);
 
