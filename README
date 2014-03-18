@@ -259,6 +259,7 @@ Part 5: Get the Code
 
 	For each project, right-click(project)->Add->Existing Item
 	Select all cpp and header files
+	DO NOT SELECT ANY .OBJ FILES!!!
 
 	Build
 
