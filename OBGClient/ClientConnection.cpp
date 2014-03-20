@@ -8,7 +8,8 @@
 using namespace std;
 
 ClientConnection::ClientConnection(string ip, short port) :
-	Connection(new Socket(ip, port))
+	Connection(new Socket(ip, port)),
+	fileDownloaded(false, false)
 {
 }
 
@@ -16,6 +17,7 @@ void ClientConnection::processData(const SerialData &data) {
 	switch(data.type) {
 	case TYPE_FILE:
 		cout << "Client got a file: " << data.data << endl;
+		fileDownloaded.notify();
 		free(data.data);
 		break;
 
@@ -60,6 +62,16 @@ void ClientConnection::handleInteraction(Interaction *action) {
 
 void ClientConnection::handleMessage(const string &message) {
 	socket->sendData(TYPE_MESSAGE, message.c_str(), message.length() + 1);
+}
+
+void ClientConnection::downloadFile(const string &filename) {
+	//ensure not set from async load
+	fileDownloaded.reset();
+	socket->sendData(TYPE_FILE_REQUEST, filename.c_str(), filename.length() + 1);
+	//wait for file to download
+	cout << "waiting for file to download" << endl;
+	fileDownloaded.wait();
+	cout << "fileDownloaded triggered" << endl;
 }
 
 ClientConnection::~ClientConnection() {

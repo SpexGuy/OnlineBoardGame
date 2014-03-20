@@ -18,7 +18,7 @@ protected:
 	GLsizei numElements;
 public:
 
-	static GraphicsMesh *loadMesh(std::string filename);
+	static GraphicsMesh *loadMesh(std::istream *source);
 
 	GraphicsMesh(const std::vector<VertexPNT> &verts,
 				 const std::vector<GLuint> &trigs);

@@ -12,7 +12,7 @@ protected:
 	std::vector<Asset *> assets;
 
 public:
-	AssetPack(std::string gameName);
+	AssetPack(const std::string &gameName);
 
 	virtual std::vector<Entity *> loadGame();
 

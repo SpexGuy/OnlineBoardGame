@@ -4,6 +4,7 @@
 #define TYPE_INTERACTION 2
 #define TYPE_MESSAGE 3
 #define TYPE_SET_USERNAME 4
+#define TYPE_FILE_REQUEST 5
 
 class Socket;
 class SerialData;

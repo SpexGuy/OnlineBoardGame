@@ -25,7 +25,8 @@ void trimString(string & str) {
 }
 
 
-GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
+GraphicsMesh* GraphicsMesh::loadMesh(istream *stream) {
+	istream &objStream = *stream;
 	int time = glutGet(GLUT_ELAPSED_TIME);
 	vector<vec3> points;
 	vector<vec3> normals;
@@ -37,13 +38,6 @@ GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
 	int nFaces = 0;
 
 	bool loadTex = true;
-
-	ifstream objStream(fileName, std::ios::in);
-
-	if (!objStream) {
-		cerr << "Unable to open OBJ file: " << fileName << endl;
-		return NULL;
-	}
 
 	string line, token;
 	vector<ivec3> face;
@@ -128,9 +122,7 @@ GraphicsMesh* GraphicsMesh::loadMesh(string fileName) {
 		getline(objStream, line);
 	}
 
-	objStream.close();
-		
-	cout << "Loaded mesh from " << fileName << " in " << glutGet(GLUT_ELAPSED_TIME) - time << "ms" << endl;
+	cout << "Loaded mesh from " << objStream << " in " << glutGet(GLUT_ELAPSED_TIME) - time << "ms" << endl;
 
 	GraphicsMesh *mesh = new GraphicsMesh(verts, faces);
 	return mesh;

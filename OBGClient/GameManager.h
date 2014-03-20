@@ -2,20 +2,22 @@
 
 class GraphicsManager;
 class EntityManager;
-class Connection;
+class ClientConnection;
 class UserInputHandler;
 
 class GameManager {
 protected:
-	GraphicsManager *graphicsManager;
-	EntityManager *entityManager;
-	Connection *connection;
+	GraphicsManager	 *graphicsManager;
+	EntityManager	 *entityManager;
+	ClientConnection *connection;
 	UserInputHandler *inputHandler;
 
 	bool running;
 	bool visible;
 
 public:
+	static GameManager *inst();
+
 	GameManager(int argc, char *argv[]);
 	virtual void run();
 	virtual void update();
@@ -29,4 +31,10 @@ public:
 	virtual void reshape(int x, int y);
 	virtual void close();
 	virtual ~GameManager();
+
+	//accessors
+	inline GraphicsManager	*getGraphicsManager()	{ return graphicsManager;	}
+	inline EntityManager	*getEntityManager()		{ return entityManager;		}
+	inline ClientConnection	*getConnection()		{ return connection;		}
+	inline UserInputHandler	*getInputHandler()		{ return inputHandler;		}
 };

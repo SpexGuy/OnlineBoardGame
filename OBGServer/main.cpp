@@ -12,43 +12,27 @@
 
 using namespace std;
 
-class FileDownloadTest : public PlayerListener {
-public:
-	virtual void playerJoined(ServerConnection *conn);
-	virtual void playerLeft(ServerConnection *conn);
-};
-
-void FileDownloadTest::playerJoined(ServerConnection *conn) {
-	conn->sendFile("badEarth.obj");
-}
-
-void FileDownloadTest::playerLeft(ServerConnection *conn) {
-}
-
 int main(int argc, char *argv[]) {
 	// socket test
-	//PlayerStatusBroadcaster *psb = new PlayerStatusBroadcaster();
-	//MessageBroadcaster *mb = new MessageBroadcaster();
-	//FileDownloadTest *fdt = new FileDownloadTest();
-	//cout << "Init socket" << endl;
-	//SocketInit();
-	//cout << "Create Server Socket" << endl;
-	//PlayerManager *server = new PlayerManager(0xABC0);
-	//server->registerPlayerListener(psb);
-	//server->registerPlayerListener(fdt);
-	//server->registerServerMessageListener(mb);
-	//cout << "Waiting for Connection" << endl;
-	//server->start();
-	//system("pause");
-	//server->close();
-	//cout << "Server closed" << endl;
-	//delete server;
-	//cout << "Server deleted" << endl;
-	//SocketClose();
-	//cout << "All closed up" << endl;
-	//delete psb;
-	//delete mb;
-	//delete fdt;
+	PlayerStatusBroadcaster *psb = new PlayerStatusBroadcaster();
+	MessageBroadcaster *mb = new MessageBroadcaster();
+	cout << "Init socket" << endl;
+	SocketInit();
+	cout << "Create Server Socket" << endl;
+	PlayerManager *server = new PlayerManager(0xABC0);
+	server->registerPlayerListener(psb);
+	server->registerServerMessageListener(mb);
+	cout << "Waiting for Connection" << endl;
+	server->start();
+	system("pause");
+	server->close();
+	cout << "Server closed" << endl;
+	delete server;
+	cout << "Server deleted" << endl;
+	SocketClose();
+	cout << "All closed up" << endl;
+	delete psb;
+	delete mb;
 
 	GameManager *gm = new GameManager();
 	gm->run();

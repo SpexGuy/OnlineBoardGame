@@ -99,7 +99,7 @@ int Socket::sendFile(const string &filename) {
 		cout << "Could not open file '" << filename << "'." << endl;
 		return -2;
 	}
-	long size = file.tellg();
+	long size = (long) file.tellg();
 	cout << "file length is " << size;
 	file.seekg(0, ios::beg);
 	//send header data
@@ -121,12 +121,6 @@ int Socket::sendFile(const string &filename) {
 	while (bytesLeft > 0) {
 		int chunkSize = bytesLeft < FILE_BUFFER_SIZE ? bytesLeft : FILE_BUFFER_SIZE;
 		file.read(buffer, chunkSize);
-		/*if (bytesRead < chunkSize) {
-			cout << "Could not read bytes" << endl;
-			file.close();
-			delete[] buffer;
-			return -2;
-		}*/
 		bl = sendRawBytes(buffer, chunkSize);
 		if (bl != 0) {
 			cout << "Could not send bytes" << endl;

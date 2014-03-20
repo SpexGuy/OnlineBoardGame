@@ -1,7 +1,12 @@
 #include <iostream>
+#include <fstream>
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
+
+#include <Socket.h>
+
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
@@ -10,8 +15,11 @@
 #include <TextureMaterial.h>
 #include <TextureShader.h>
 #include <Vertex.h>
+
+#include "ClientConnection.h"
 #include "GameManager.h"
 #include "GraphicsAsset.h"
+#include "GraphicsAssetPack.h"
 #include "GraphicsManager.h"
 
 #define PERIOD (int)(1000.0/60.0)
@@ -21,7 +29,7 @@ using namespace std;
 using namespace glm;
 
 
-GameManager *instance;
+GameManager *instance = NULL;
 
 void updateFunc(int value) {
 	instance->update();
@@ -63,9 +71,20 @@ void closeFunc() {
 	instance->close();
 }
 
+
+GameManager *GameManager::inst() {
+	return instance;
+}
+
+
 GameManager::GameManager(int argc, char *argv[]) {
 	running = false;
 	graphicsManager = new GraphicsManager(argc, argv);
+	SocketInit();
+	connection = new ClientConnection("127.0.0.1", 0xABC0);
+
+	assert(instance == NULL);
+	instance = this;
 }
 
 void GameManager::run() {
@@ -73,8 +92,11 @@ void GameManager::run() {
 	visible = true;
 
 	graphicsManager->start();
+	connection->start();
 
-	GraphicsMesh *mesh = GraphicsMesh::loadMesh("badEarth.obj");
+	GraphicsAssetPack *pack = new GraphicsAssetPack("badEarth");
+
+	GraphicsMesh *mesh = pack->getMesh("badEarth.obj");
 
 	GLSLProgram *shader = new TextureShader();
 	shader->compileShader("NormalShader.vert");
@@ -100,8 +122,6 @@ void GameManager::run() {
 	glutReshapeFunc(reshapeFunc);
 	glutCloseFunc(closeFunc);
 	glutTimerFunc(PERIOD, updateFunc, 0);
-
-	instance = this;
 
 	glutMainLoop();
 }
@@ -184,5 +204,7 @@ void GameManager::close() {
 }
 
 GameManager::~GameManager() {
-
+	delete graphicsManager;
+	delete connection;
+	SocketClose();
 }
