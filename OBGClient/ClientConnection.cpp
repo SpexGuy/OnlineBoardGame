@@ -14,8 +14,14 @@ ClientConnection::ClientConnection(string ip, short port) :
 
 void ClientConnection::processData(const SerialData &data) {
 	switch(data.type) {
+	case TYPE_FILE:
+		cout << "Client got a file: " << data.data << endl;
+		free(data.data);
+		break;
+
 	case TYPE_INTERACTION:
 		cout << "Client got an interaction...?" << endl;
+		free(data.data);
 		assert(false);
 		break;
 
@@ -25,12 +31,14 @@ void ClientConnection::processData(const SerialData &data) {
 		break;
 
 	case TYPE_MESSAGE:
-		fireMessage(string((char *) data.data));
 		cout << "Got message: " << (char *)data.data << endl;
+		fireMessage(string((char *) data.data));
+		free(data.data);
 		break;
 
 	default:
 		cout << "Client got an unknown type: " << data.type << endl;
+		free(data.data);
 		assert(false);
 	}
 }

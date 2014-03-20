@@ -56,6 +56,10 @@ void Connection::loop() {
 	loopEnded = true;
 }
 
+int Connection::sendFile(const std::string &file) {
+	return socket->sendFile(file);
+}
+
 void Connection::close() {
 	this->active = false;
 	if (socket != NULL) {

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#define TYPE_FILE -1
+
 void SocketInit();
 
 void SocketClose();
@@ -21,11 +23,14 @@ protected:
 public:
 	Socket(int fd) :
 		socketFD(fd) {}
-	Socket(std::string ip, short int port);
+	Socket(const std::string &ip, short int port);
 
 	/**	returns 0 if the data is send successfully, or the number
-	 *	of bytes which are left to send if a fatal error occurs. */
+	 *	of bytes which are left to send if a fatal error occurs.
+	 *	negative types are reserved; type must be positive.*/
 	virtual int sendData(int type, const void *data, int size);
+
+	virtual int sendFile(const std::string &filename);
 
 	/**	Blocks for input, then returns that input.
 	 *	If a fatal error occurs, the returned

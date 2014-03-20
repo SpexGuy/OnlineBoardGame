@@ -26,6 +26,8 @@ public:
 	Connection(Socket *socket);
 	virtual void start();
 	virtual void loop();
+	//TODO:[MW] move this inside of (Server|Client)Connection
+	virtual int  sendFile(const std::string &name);
 	virtual void close();
 	virtual ~Connection();
 	

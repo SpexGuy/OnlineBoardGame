@@ -1,8 +1,11 @@
 #ifdef _WIN32
 #include <assert.h>
+#include <fstream>
 #include <iostream>
 #include <WinSock2.h>
 #include "Socket.h"
+
+#define FILE_BUFFER_SIZE 1024
 
 using namespace std;
 
@@ -20,7 +23,7 @@ void SocketClose() {
 }
 
 
-Socket::Socket(string ip, short int port) {
+Socket::Socket(const string &ip, short port) {
 	socketFD = socket(PF_INET, SOCK_STREAM, 0);
 	if (socketFD < 0) {
 		cerr << "Could not create socket" << endl;
@@ -88,6 +91,57 @@ int Socket::sendData(int type, const void *data, int size) {
 	return bytesLeft;
 }
 
+int Socket::sendFile(const string &filename) {
+	cout << "Sending file: " << filename << endl;
+	//open file for binary read
+	ifstream file(filename.c_str(), ios::in | ios::binary | ios::ate);
+	if (!file.is_open()) {
+		cout << "Could not open file '" << filename << "'." << endl;
+		return -2;
+	}
+	long size = file.tellg();
+	cout << "file length is " << size;
+	file.seekg(0, ios::beg);
+	//send header data
+	int bl = sendData(TYPE_FILE, filename.c_str(), filename.length()+1);
+	if (bl != 0) {
+		cout << "Could not send file header" << endl;
+		file.close();
+		return -1;
+	}
+	cout << "Sent file header" << endl;
+	bl = sendRawBytes((char *) &size, sizeof(size));
+	if (bl != 0) {
+		cout << "Could not send file header" << endl;
+		file.close();
+		return -1;
+	}
+	long bytesLeft = size;
+	char *buffer = new char[FILE_BUFFER_SIZE];
+	while (bytesLeft > 0) {
+		int chunkSize = bytesLeft < FILE_BUFFER_SIZE ? bytesLeft : FILE_BUFFER_SIZE;
+		file.read(buffer, chunkSize);
+		/*if (bytesRead < chunkSize) {
+			cout << "Could not read bytes" << endl;
+			file.close();
+			delete[] buffer;
+			return -2;
+		}*/
+		bl = sendRawBytes(buffer, chunkSize);
+		if (bl != 0) {
+			cout << "Could not send bytes" << endl;
+			file.close();
+			delete[] buffer;
+			return -1;
+		}
+		bytesLeft -= chunkSize;
+		cout << "Sent " << (size - bytesLeft) << " of " << size << " bytes." << endl;
+	}
+	file.close();
+	delete[] buffer;
+	return 0;
+}
+
 SerialData Socket::receive() {
 	int type;
 	int bytesLeft = readRawBytes(&type, sizeof(type));
@@ -115,13 +169,46 @@ SerialData Socket::receive() {
 		assert(false);
 	}
 	bytesLeft = readRawBytes(data, size);
-
 	if (bytesLeft != 0) {
 		free(data);
 		ret.data = NULL;
 		return ret;
 	}
-	
+
+	if (type == TYPE_FILE) {
+		cout << "Receiving a file: " << data << endl;
+		long fileLength;
+		bytesLeft = readRawBytes(&fileLength, sizeof(fileLength));
+		if (bytesLeft != 0) {
+			free(data);
+			ret.data = NULL;
+			return ret;
+		}
+		cout << "Length is " << fileLength << endl;
+
+		ofstream outFile(data);
+		char *buffer = new char[FILE_BUFFER_SIZE];
+
+		long fileBytesLeft = fileLength;
+
+		while(fileBytesLeft > 0) {
+			int chunkSize = fileBytesLeft < FILE_BUFFER_SIZE ? fileBytesLeft : FILE_BUFFER_SIZE;
+			bytesLeft = readRawBytes(buffer, chunkSize);
+			if (bytesLeft != 0) {
+				free(data);
+				ret.data = NULL;
+				delete[] buffer;
+				return ret;
+			}
+			outFile.write(buffer, chunkSize);
+			fileBytesLeft -= chunkSize;
+			cout << "Received " << (fileLength - fileBytesLeft) << " of " << fileLength << " bytes." << endl;
+		}
+
+		delete[] buffer;
+
+	}
+
 	ret.data = data;
 	ret.size = size;
 	ret.type = type;
