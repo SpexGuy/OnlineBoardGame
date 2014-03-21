@@ -18,14 +18,15 @@ int PlayerManagerThreadLoop(void *pm) {
 PlayerManager::PlayerManager(short port) :
 	socket(new ServerSocket(port)),
 	active(false),
-	thread(new Thread(PlayerManagerThreadLoop, this))
+	thread(PlayerManagerThreadLoop, this),
+	playersMutex()
 {
 
 }
 
 void PlayerManager::start() {
 	active = true;
-	if (!thread->start()) {
+	if (!thread.start()) {
 		cout << "Could not create client thread" << endl;
 		assert(false);
 	}
@@ -48,13 +49,14 @@ void PlayerManager::loop() {
 }
 
 void PlayerManager::addPlayer(ServerConnection *player) {
-	//TODO: Synchronize players array
+	FunctionLock lock(playersMutex);
 	players.push_back(player);
+	lock.unlock();
 	firePlayerJoined(player);
 }
 
 void PlayerManager::handlePhysicsUpdate(PhysicsUpdate *physicsUpdate) {
-	//TODO: Synchronize players
+	FunctionLock lock(playersMutex);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		players[c]->sendUpdate(physicsUpdate);
 	}
@@ -70,21 +72,24 @@ void PlayerManager::handleInteraction(Interaction *action) {
 
 void PlayerManager::disconnectPlayer(ServerConnection *player) {
 	bool found = false;
-	//TODO: Synchronize players array
-	for (unsigned int c = 0; c < players.size(); c++) {
-		if (players[c] == player) {
+	FunctionLock lock(playersMutex);
+	for (auto iter = players.begin(), end = players.end();
+			iter != end; ++iter)
+	{
+		if (*iter == player) {
 			found = true;
-			players.erase(players.begin()+c);
+			players.erase(iter);
 			break;
 		}
 	}
+	lock.unlock();
 	assert(found);
 	firePlayerLeft(player);
 	delete player;
 }
 
 void PlayerManager::broadcast(string message, ServerConnection *exclude) {
-	//TODO: Synchronize players array
+	FunctionLock lock(playersMutex);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		if (players[c] != exclude) {
 			players[c]->sendMessage(message);
@@ -100,11 +105,10 @@ void PlayerManager::close() {
 
 PlayerManager::~PlayerManager() {
 	if (active) close();
-	//TODO: Serialize players
+
+	FunctionLock lock(playersMutex);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		delete players[c];
 	}
 	players.clear();
-	thread->waitForTerminate();
-	delete thread;
 }

@@ -27,12 +27,20 @@ public:
 class FunctionLock {
 protected:
 	Lock &lock;
+	bool locked;
 public:
 	FunctionLock(Lock &lock) :
-		lock(lock) {
+		lock(lock),
+		locked(false) {
 		lock.lock();
+		locked = true;
 	}
-	virtual ~FunctionLock() {
+	inline void unlock() {
+		locked = false;
 		lock.unlock();
+	}
+	~FunctionLock() {
+		if (locked)
+			lock.unlock();
 	}
 };

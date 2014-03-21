@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <Mutex.h>
 #include <PhysicsUpdateListener.h>
 #include <Thread.h>
 #include "InteractionEventBroadcaster.h"
@@ -26,7 +27,8 @@ protected:
 	ServerSocket *socket;
 	volatile bool active;
 
-	Thread *thread;
+	Thread thread;
+	Mutex playersMutex;
 
 	virtual void addPlayer(ServerConnection *player);
 public:
