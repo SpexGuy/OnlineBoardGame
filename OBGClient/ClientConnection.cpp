@@ -75,5 +75,5 @@ void ClientConnection::downloadFile(const string &filename) {
 }
 
 ClientConnection::~ClientConnection() {
-	
+	fileDownloaded.notify();
 }
