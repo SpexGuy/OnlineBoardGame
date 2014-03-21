@@ -6,29 +6,27 @@
 #define TYPE_SET_USERNAME 4
 #define TYPE_FILE_REQUEST 5
 
-class Socket;
 class SerialData;
+class Socket;
+class Thread;
 
 class Connection {
 private:
 	Connection();
-	volatile bool loopEnded;
 
 protected:
 	Socket *socket;
+	Thread *runThread;
+
 	volatile bool active;
 
-	volatile unsigned long threadId;
-	volatile void *thread;
-
+	virtual int  sendFile(const std::string &name);
 	virtual void processData(const SerialData &data) = 0;
 	virtual void handleFatalError() = 0;
 public:
 	Connection(Socket *socket);
 	virtual void start();
 	virtual void loop();
-	//TODO:[MW] move this inside of (Server|Client)Connection
-	virtual int  sendFile(const std::string &name);
 	virtual void close();
 	virtual ~Connection();
 	

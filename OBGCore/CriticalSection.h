@@ -4,6 +4,10 @@
 #	include <Windows.h>
 #endif
 
+
+/**	A Critical Section is a synchronization primitive
+ *	which prevents interrupts during its body.
+ */
 class CriticalSection :
 	public Lock
 {

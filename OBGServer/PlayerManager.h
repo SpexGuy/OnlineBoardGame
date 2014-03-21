@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <PhysicsUpdateListener.h>
+#include <Thread.h>
 #include "InteractionEventBroadcaster.h"
 #include "InteractionListener.h"
 #include "PlayerEventBroadcaster.h"
@@ -25,8 +26,7 @@ protected:
 	ServerSocket *socket;
 	volatile bool active;
 
-	volatile void *thread;
-	volatile long int threadId;
+	Thread *thread;
 
 	virtual void addPlayer(ServerConnection *player);
 public:

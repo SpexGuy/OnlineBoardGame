@@ -8,32 +8,24 @@
 
 using namespace std;
 
-PlayerManager::PlayerManager(short port) :
-	socket(new ServerSocket(port)),
-	active(false)
-{
-
-}
-
-DWORD WINAPI PlayerManagerThreadLoop(_In_ LPVOID pm) {
+int PlayerManagerThreadLoop(void *pm) {
 	cout << "PM Thread started apparently" << endl;
 	((PlayerManager *)pm)->loop();
 	cout << "PM Thread ended" << endl;
 	return 0;
 }
 
+PlayerManager::PlayerManager(short port) :
+	socket(new ServerSocket(port)),
+	active(false),
+	thread(new Thread(PlayerManagerThreadLoop, this))
+{
+
+}
+
 void PlayerManager::start() {
 	active = true;
-	DWORD threadId;
-	thread = CreateThread(
-			NULL,						// default security attributes
-			0,							// use default stack size
-			PlayerManagerThreadLoop,	// thread function
-			this,						// argument to thread function
-			0,							// use default creation flags
-			&threadId);					// returns the thread identifier
-	this->threadId = threadId;
-	if (thread == NULL) {
+	if (!thread->start()) {
 		cout << "Could not create client thread" << endl;
 		assert(false);
 	}
@@ -113,4 +105,6 @@ PlayerManager::~PlayerManager() {
 		delete players[c];
 	}
 	players.clear();
+	thread->waitForTerminate();
+	delete thread;
 }

@@ -1,20 +1,19 @@
 #include <assert.h>
 #include <iostream>
-#include <Windows.h>
 #include "Connection.h"
 #include "Socket.h"
+#include "Thread.h"
 
 using namespace std;
 
 Connection::Connection(Socket *socket) :
 	socket(socket),
-	active(false),
-	loopEnded(true)
+	active(false)
 {
 	
 }
 
-DWORD WINAPI ConnectionThreadLoop(_In_ LPVOID c) {
+int ConnectionThreadLoop(void *c) {
 	cout << "Socket Thread started apparently" << endl;
 	((Connection *)c)->loop();
 	cout << "Socket Thread ended" << endl;
@@ -23,17 +22,8 @@ DWORD WINAPI ConnectionThreadLoop(_In_ LPVOID c) {
 
 void Connection::start() {
 	active = true;
-	loopEnded = false;
-	DWORD threadId;
-	thread = CreateThread(
-			NULL,					// default security attributes
-			0,						// use default stack size
-			ConnectionThreadLoop,	// thread function
-			this,					// argument to thread function
-			0,						// use default creation flags
-			&threadId);				// returns the thread identifier
-	this->threadId = threadId;
-	if (thread == NULL) {
+	runThread = new Thread(ConnectionThreadLoop, this);
+	if (!runThread->start()) {
 		cout << "Could not create client thread" << endl;
 		assert(false);
 	}
@@ -53,7 +43,6 @@ void Connection::loop() {
 			break;
 		}
 	}
-	loopEnded = true;
 }
 
 int Connection::sendFile(const std::string &file) {
@@ -70,6 +59,6 @@ void Connection::close() {
 
 Connection::~Connection() {
 	close();
-	while(!loopEnded)
-		;
+	runThread->waitForTerminate();
+	delete runThread;
 }

@@ -4,6 +4,9 @@
 #endif
 #include "Lock.h"
 
+/**	A Mutex is a synchronization primitive which ensures
+ *	that only one thread has the lock at a time.
+ */
 class Mutex :
 	public Lock
 {
