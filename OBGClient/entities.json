@@ -1,0 +1,15 @@
+{
+	"GameName":"Bad Earth",
+	"Version":0.1,
+	"Entities":[
+		{
+			"Asset":"earth",
+			"posX":0.0,
+			"posY":0.0,
+			"posZ":0.0,
+			"rotX":0.0,
+			"rotY":0.0,
+			"rotZ":0.0
+		}
+	]
+}

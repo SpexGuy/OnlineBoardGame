@@ -23,13 +23,16 @@ public:
  *	The FunctionLock will lock() myLock on entry,
  *	and will automatically release the lock when
  *	the function ends (via return or exception or anything).
+ *	
+ *	Despite the name, FunctionLock is NOT THREADSAFE, so
+ *	each instance should only be handled by one thread.
  */
 class FunctionLock {
 protected:
 	Lock &lock;
 	bool locked;
 public:
-	FunctionLock(Lock &lock) :
+	inline FunctionLock(Lock &lock) :
 		lock(lock),
 		locked(false) {
 		lock.lock();
@@ -39,7 +42,7 @@ public:
 		locked = false;
 		lock.unlock();
 	}
-	~FunctionLock() {
+	inline ~FunctionLock() {
 		if (locked)
 			lock.unlock();
 	}

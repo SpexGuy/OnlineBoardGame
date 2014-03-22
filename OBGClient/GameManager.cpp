@@ -5,6 +5,7 @@
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
 
+#include <json.h>
 #include <Socket.h>
 
 #include <GLSLProgram.h>
@@ -94,22 +95,39 @@ void GameManager::run() {
 	graphicsManager->start();
 	connection->start();
 
-	GraphicsAssetPack *pack = new GraphicsAssetPack("badEarth");
+	//GraphicsAssetPack *pack = new GraphicsAssetPack("badEarth");
 
-	GraphicsMesh *mesh = pack->getMesh("badEarth.obj");
+	//GraphicsMesh *mesh = pack->getMesh("badEarth.obj");
 
-	GLSLProgram *shader = new TextureShader();
-	shader->compileShader("NormalShader.vert");
-	shader->compileShader("NormalShader.frag");
-	shader->link();
+	//GLSLProgram *shader = new TextureShader();
+	//shader->compileShader("NormalShader.vert");
+	//shader->compileShader("NormalShader.frag");
+	//shader->link();
 
-	Texture *tex = new ILTexture("super_earth.jpg", 0);
+	//ILContainer *texImage = new ILContainer("super_earth.jpg");
+	//Texture *tex = new ILTexture(texImage, 0);
 
-	Material *material = new TextureMaterial(tex, shader);
+	//Material *material = new TextureMaterial(tex, shader);
 
-	GraphicsAsset *asset = new GraphicsAsset(mesh, material);
-	GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));
-	graphicsManager->addRenderable(entity);
+	//GraphicsAsset *asset = new GraphicsAsset(mesh, material);
+	//GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));
+
+	ifstream file("assets.json");
+	assert(file);
+	Json::Value root;
+	Json::Reader reader;
+	if (!reader.parse(file, root)) {
+		cout << "Could not parse JSON file" << endl;
+		file.close();
+		assert(false);
+	}
+	file.close();
+	GraphicsAssetPack *pack = new GraphicsAssetPack(root);
+	vector<Entity *> entities = pack->loadGame();
+	assert(entities.size() > 0);
+	for (Entity *entity : entities) {
+		graphicsManager->addRenderable((GraphicsEntity *)entity);
+	}
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 	glutDisplayFunc(displayFunc);

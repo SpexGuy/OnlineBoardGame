@@ -1,0 +1,48 @@
+{
+   "GameName":"Bad Earth",
+   "Version":0.1,
+   "EntityLocationsFile":"entities.json",
+   "Assets":{
+      "earth":{
+         "Group":"sphereness",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"badEarth.obj",
+         "ColorTex":"super_earth.jpg",
+         "NormalTex":"super_earth.jpg",
+         "SpecularTex":"super_earth.jpg",
+         "Physics":{
+            "Mass": 10.0,
+            "CoMx": 0,
+            "CoMy": 0,
+            "CoMz": 0
+         },
+         "Colliders":[
+            {
+               "Name":"badEarth.obj"
+            }
+         ]
+      },
+      "asset2":{
+         "Group":"group2",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"mesh1",
+         "ColorTex":"colorTex2",
+         "NormalTex":"normalTex2",
+         "SpecularTex":"specTex2",
+         "Physics":"physProp2",
+         "Colliders":[
+            {
+               "Name":"coll2"
+            },
+            {
+               "Name":"coll2"
+            },
+            {
+               "Name":"coll2"
+            }
+         ]
+      }
+   }
+}
