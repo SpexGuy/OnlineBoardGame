@@ -38,24 +38,24 @@ Asset *AssetPack::makeAsset(const string &name) {
 	Value group = asset["Group"];
 	Value stackType = asset["StackType"];
 	Value shakeType = asset["ShakeType"];
-	Value physics = asset["Physics"];
+	Value mass = asset["Mass"];
+	Value massCenterX = asset["CoMx"];
+	Value massCenterY = asset["CoMy"];
+	Value massCenterZ = asset["CoMz"];
 	Value colliders = asset["Colliders"];
 	assert(group.isConvertibleTo(ValueType::stringValue));
 	assert(stackType.isNull());
 	assert(shakeType.isNull());
-	assert(physics.isObject());
 	assert(colliders.isArray());
-
-	Value mass = physics["Mass"];
-	Value massCenterX = physics["CoMx"];
-	Value massCenterY = physics["CoMy"];
-	Value massCenterZ = physics["CoMz"];
 	assert(mass.isConvertibleTo(ValueType::realValue));
 	assert(massCenterX.isConvertibleTo(ValueType::realValue));
 	assert(massCenterY.isConvertibleTo(ValueType::realValue));
 	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
 
 	for (Value collider : colliders) {
+		assert(collider.isObject());
+		Value colliderFile = collider["Name"];
+		assert(colliderFile.isString());
 		//TODO: colliders
 	}
 	//TODO: make Asset

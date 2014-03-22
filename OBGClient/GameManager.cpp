@@ -95,23 +95,6 @@ void GameManager::run() {
 	graphicsManager->start();
 	connection->start();
 
-	//GraphicsAssetPack *pack = new GraphicsAssetPack("badEarth");
-
-	//GraphicsMesh *mesh = pack->getMesh("badEarth.obj");
-
-	//GLSLProgram *shader = new TextureShader();
-	//shader->compileShader("NormalShader.vert");
-	//shader->compileShader("NormalShader.frag");
-	//shader->link();
-
-	//ILContainer *texImage = new ILContainer("super_earth.jpg");
-	//Texture *tex = new ILTexture(texImage, 0);
-
-	//Material *material = new TextureMaterial(tex, shader);
-
-	//GraphicsAsset *asset = new GraphicsAsset(mesh, material);
-	//GraphicsEntity *entity = asset->createEntity(btVector3(0,0,0));
-
 	ifstream file("assets.json");
 	assert(file);
 	Json::Value root;

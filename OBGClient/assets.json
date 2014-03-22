@@ -11,12 +11,10 @@
          "ColorTex":"super_earth.jpg",
          "NormalTex":"super_earth.jpg",
          "SpecularTex":"super_earth.jpg",
-         "Physics":{
-            "Mass": 10.0,
-            "CoMx": 0,
-            "CoMy": 0,
-            "CoMz": 0
-         },
+         "Mass": 10.0,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
          "Colliders":[
             {
                "Name":"badEarth.obj"
