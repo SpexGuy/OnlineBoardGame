@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <iostream>
-#include <Windows.h>
 #include "PlayerManager.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"

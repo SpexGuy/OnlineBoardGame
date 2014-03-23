@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <iostream>
 #include <Socket.h>
-#include <Windows.h>
 #include <Interaction.h>
 #include <PhysicsUpdate.h>
 #include "ServerConnection.h"
