@@ -1,4 +1,5 @@
 #pragma once
+#include "btBulletDynamicsCommon.h"
 
 /** This class has no constructor or destructor.
  *	It should be allocated with malloc() and
@@ -19,5 +20,9 @@ private:
 	PhysicsUpdate();
 	~PhysicsUpdate();
 public:
-	//TODO:[JK]
+	static PhysicsUpdate* create(int entityId, const btDefaultMotionState& motion, const btVector3& inertia);
+	void emancipate();
+	int entityId;
+	btDefaultMotionState motion;
+	btVector3 inertia;
 };

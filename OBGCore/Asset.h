@@ -9,8 +9,10 @@ private:
 protected:
 	int assetPackIndex;
 	int group;
+	float mass;
 public:
-
+	inline float getMass() {return mass;}
+	inline int getGroup() {return group;}
 	Asset(int assetPackIndex, int group) :
 		assetPackIndex(assetPackIndex),
 		group(group)

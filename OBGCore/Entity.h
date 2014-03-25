@@ -7,11 +7,15 @@ class Entity {
 private:
 	Entity();
 protected:
-	Asset *type;
 	int id;
 	bool hidden;
+	btRigidBody *physicsBody;
+	Asset *type;
 
 public:
+	inline int getId() {return id;}
+	inline btRigidBody *getPhysicsBody() {return physicsBody;}
+	inline Asset *getType() {return type;}
 	Entity(Asset *type, const btVector3 &position) :
 		type(type), id(0), hidden(false) {}
 	virtual void shake();

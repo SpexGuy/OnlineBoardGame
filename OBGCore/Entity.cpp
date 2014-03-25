@@ -1,4 +1,8 @@
 #include "Entity.h"
+#include "Asset.h"
+
+Entity::Entity() {
+}
 
 void Entity::shake() {
 	//TODO:[JK] shake physics
