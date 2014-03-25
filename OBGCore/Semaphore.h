@@ -3,7 +3,7 @@
 #ifdef _WIN32
 #	include <Windows.h>
 #endif
- 
+
 /**	A Semaphore is a synchronization primitive which allows
  *	for a certain number of resources to be available for
  *	locking.

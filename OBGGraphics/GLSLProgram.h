@@ -58,7 +58,7 @@ public:
     void   use();
 
 	//@Precondition - the shader must be in use
-	virtual void setup(const glm::mat4 &model) = 0;
+	virtual void setup(const glm::mat4 &model) {}
 
     int    getHandle();
     bool   isLinked();

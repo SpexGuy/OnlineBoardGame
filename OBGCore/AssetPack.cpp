@@ -87,7 +87,7 @@ vector<Entity *> AssetPack::loadGame(const string &saveFile) {
 	Value saveRoot;
 	ifstream file(saveFile, ios::in);
 	if (!file) {
-		cout << "Could not open entity file " << saveFile << endl;
+		cout << "Could not open entity file: " << saveFile << endl;
 		return entities;
 	}
 	if (!reader.parse(file, saveRoot)) {
@@ -115,6 +115,7 @@ vector<Entity *> AssetPack::loadGame(const string &saveFile) {
 		assert(rotZ.isConvertibleTo(ValueType::realValue));
 		Asset *asset = getAsset(assetVal.asString());
 		if (asset == NULL) {
+			//ignore invalid asset
 			continue;
 		}
 		entities.push_back(asset->createEntity(btVector3(posX.asDouble(), posY.asDouble(), posZ.asDouble())));

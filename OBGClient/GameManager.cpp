@@ -17,11 +17,13 @@
 #include <TextureShader.h>
 #include <Vertex.h>
 
+#include "ChatBox.h"
 #include "ClientConnection.h"
 #include "GameManager.h"
 #include "GraphicsAsset.h"
 #include "GraphicsAssetPack.h"
 #include "GraphicsManager.h"
+#include "UserInputHandler.h"
 
 #define PERIOD (int)(1000.0/60.0)
 #define ESCAPE_CHAR 0x1B
@@ -83,6 +85,10 @@ GameManager::GameManager(int argc, char *argv[]) {
 	graphicsManager = new GraphicsManager(argc, argv);
 	SocketInit();
 	connection = new ClientConnection("127.0.0.1", 0xABC0);
+	inputHandler = new UserInputHandler();
+	connection->registerMessageListener(inputHandler->getChatBox());
+	inputHandler->getChatBox()->registerMessageListener(connection);
+	graphicsManager->addRenderable(inputHandler->getChatBox());
 
 	assert(instance == NULL);
 	instance = this;
@@ -108,8 +114,10 @@ void GameManager::run() {
 	GraphicsAssetPack *pack = new GraphicsAssetPack(root);
 	vector<Entity *> entities = pack->loadGame();
 	assert(entities.size() > 0);
+	//((GraphicsEntity *) entities[0])->render();
 	for (Entity *entity : entities) {
 		graphicsManager->addRenderable((GraphicsEntity *)entity);
+		//entity->hide();
 	}
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
@@ -130,6 +138,7 @@ void GameManager::run() {
 void GameManager::update() {
 	if (running) {
 		glutTimerFunc(PERIOD, updateFunc, 0);
+		inputHandler->update();
 		glutPostRedisplay();
 	}
 }
@@ -141,54 +150,23 @@ void GameManager::display() {
 }
 
 void GameManager::keyPressed(unsigned char c, int x, int y) {
-	switch(c) {
-	case ESCAPE_CHAR:
-		if (glutGet(GLUT_FULL_SCREEN)) {
-			glutLeaveFullScreen();
-			break;
-		} //else fall through
-	case 'X':
-	case 'x':
-		close();
-		break;
-	default:
-		cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
-	}
+	inputHandler->keyPressed(c, x, y);
 }
 
 void GameManager::specialKeyPressed(int k, int x, int y) {
-	switch(k) {
-	case GLUT_KEY_F11:
-		glutFullScreenToggle();
-		break;
-	default:
-		cout << "Unknown special key: " << k << endl;
-	}
+	inputHandler->specialKeyPressed(k,x,y);
 }
 
 void GameManager::mousePressed(int button, int state, int x, int y) {
-	switch(button) {
-	case 0: //left click
-		break;
-	case 1: //right click
-		break;
-	case 2: //middle click
-		break;
-	case 3: //back button
-		break;
-	case 4: //forward button
-		break;
-	default:
-		cout << "TOO MANY BUTTONS ON THAT MOUSE!" << endl;
-	}
+	inputHandler->mousePressed(button, state, x, y);
 }
 
 void GameManager::mouseDragged(int x, int y) {
-
+	inputHandler->mouseDragged(x, y);
 }
 
 void GameManager::mouseMoved(int x, int y) {
-
+	inputHandler->mouseDragged(x, y);
 }
 
 void GameManager::visibilityChanged(int state) {
