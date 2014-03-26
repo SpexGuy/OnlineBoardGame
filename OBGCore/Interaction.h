@@ -1,5 +1,8 @@
 #pragma once
+#include <vector>
+#include "btBulletDynamicsCommon.h"
 
+using std::vector
 /** This class has no constructor or destructor.
  *	It should be allocated with malloc() and
  *	destroyed with free().
@@ -19,5 +22,8 @@ private:
 	Interaction();
 	~Interaction();
 public:
-	//TODO:[MW]
+	vector<int> ids;
+	btVector3 mousePos;
+	Interaction(const btVector3& mousePos, vector<int> ids);
+	~Interaction();
 };
