@@ -27,11 +27,10 @@ public:
 
 	virtual void addEntity(Entity *e);
 
-	
 	virtual void handleInteraction(Interaction *action);
 	virtual void handlePhysicsUpdate(PhysicsUpdate *update);
 
-	virtual void registerPhysicsUpdateListener(PhysicsUpdateListener *listener);
+	virtual void start();
 	virtual void update();
 	virtual void clear();
 	virtual Entity* getEntityById(int id);
@@ -45,5 +44,5 @@ private:
 	btCollisionDispatcher* dispatcher;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btBroadphaseInterface* broadphase;
-	time_t lastTime;
+	clock_t lastTime;
 };

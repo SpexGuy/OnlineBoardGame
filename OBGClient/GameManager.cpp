@@ -8,6 +8,7 @@
 #include <json.h>
 #include <Socket.h>
 
+#include <EntityManager.h>
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
@@ -89,7 +90,7 @@ GameManager::GameManager(int argc, char *argv[]) {
 	connection->registerMessageListener(inputHandler->getChatBox());
 	inputHandler->getChatBox()->registerMessageListener(connection);
 	graphicsManager->addRenderable(inputHandler->getChatBox());
-
+	entityManager = new EntityManager();
 	assert(instance == NULL);
 	instance = this;
 }
@@ -117,6 +118,7 @@ void GameManager::run() {
 	//((GraphicsEntity *) entities[0])->render();
 	for (Entity *entity : entities) {
 		graphicsManager->addRenderable((GraphicsEntity *)entity);
+		entityManager->addEntity(entity);
 		//entity->hide();
 	}
 
@@ -132,6 +134,8 @@ void GameManager::run() {
 	glutCloseFunc(closeFunc);
 	glutTimerFunc(PERIOD, updateFunc, 0);
 
+	entityManager->start();
+
 	glutMainLoop();
 }
 
@@ -139,6 +143,7 @@ void GameManager::update() {
 	if (running) {
 		glutTimerFunc(PERIOD, updateFunc, 0);
 		inputHandler->update();
+		entityManager->update();
 		glutPostRedisplay();
 	}
 }

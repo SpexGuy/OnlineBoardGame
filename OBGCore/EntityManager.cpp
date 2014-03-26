@@ -1,3 +1,4 @@
+#include <iostream>
 #include "EntityManager.h"
 #include "Entity.h"
 #include "Asset.h"
@@ -7,13 +8,57 @@
 EntityManager::EntityManager() {
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
-	collisionConfiguration = new btDefaultCollisionConfiguration();
+	collisionConfiguration = new btDefaultCollisionConfiguration;
     dispatcher = new btCollisionDispatcher(collisionConfiguration);
     solver = new btSequentialImpulseConstraintSolver;
     world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
-	world->setGravity(btVector3(0.0f, -1.0f, 0.0f));
-	time(&lastTime);
+	world->setGravity(btVector3(0.0f, -10.0f, 0.0f));
+
+
+
+ //   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);
+
+ //   btCollisionShape* fallShape = new btSphereShape(1);
+
+	//btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-1,0)));
+ //   btRigidBody::btRigidBodyConstructionInfo
+ //           groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+ //   btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+ //   world->addRigidBody(groundRigidBody);
+
+
+ //   btDefaultMotionState* fallMotionState =
+ //           new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,50,0)));
+ //   btScalar mass = 1;
+ //   btVector3 fallInertia(0,0,0);
+ //   fallShape->calculateLocalInertia(mass,fallInertia);
+ //   btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,fallMotionState,fallShape,fallInertia);
+ //   btRigidBody* fallRigidBody = new btRigidBody(fallRigidBodyCI);
+ //   world->addRigidBody(fallRigidBody);
+
+
+ //   for (int i=0 ; i<300 ; i++) {
+ //           world->stepSimulation(1/60.f,10);
+
+ //           btTransform trans;
+ //           fallRigidBody->getMotionState()->getWorldTransform(trans);
+
+ //           std::cout << "sphere height: " << trans.getOrigin().getY() << std::endl;
+ //   }
+
+ //   world->removeRigidBody(fallRigidBody);
+ //   delete fallRigidBody->getMotionState();
+ //   delete fallRigidBody;
+
+ //   world->removeRigidBody(groundRigidBody);
+ //   delete groundRigidBody->getMotionState();
+ //   delete groundRigidBody;
+
+
+ //   delete fallShape;
+
+ //   delete groundShape;
 }
 
 EntityManager::~EntityManager() {
@@ -55,13 +100,20 @@ void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
 	world->addRigidBody(ent->getPhysicsBody());
 }
 
+void EntityManager::start() {
+	lastTime = clock();
+}
+
 void EntityManager::update() {
 	//Step physics simulation
 
-	time_t currTime;
-	time(&currTime);
-	world->stepSimulation(currTime - lastTime);
+	clock_t currTime = clock();
+	world->stepSimulation(float(currTime - lastTime)/float(CLOCKS_PER_SEC), 10);
 	lastTime = currTime;
+
+	btTransform transform;
+	entities.at(0)->getPhysicsBody()->getMotionState()->getWorldTransform(transform);
+	std::cout << "Entity 0: " << transform.getOrigin().getY() << std::endl;
 	
 	//Combine stackable entities
 	for(unsigned int i = 0; i < entities.size(); i ++) {
