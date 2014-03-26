@@ -1,10 +1,21 @@
 
 
-Instructions for creating a VS2012 Project (Rev. 2)
-	
+Instructions for creating a VS2012 Project (Rev. 2.2)
+
+Depending on your experience with VS2012, this should take 1-2 hours to set up.
+I recommend creating a backup of the project directory after each step.
+
+@Rohit: THERE IS A COMPILED EXECUTABLE IN THE REPO, UNDER /snapshot, SO UNLESS YOU REALLY WANT TO BUILD IT YOURSELF, YOU DON'T NEED TO DO ALL OF THIS.  But if you do, good luck!
+
 PART 1: Bullet to the head
 
-	Download glm, freeglut, DevIL, glew, and Bullet. The directories you put them in will henceforth be denoted as $GLM, $FREEGLUT, $DEVIL, $GLEW, and $BULLET, respectively.
+	Download glm, freeglut, DevIL, glew, and Bullet. They can be found at:
+		http://sourceforge.net/projects/ogl-math/files/
+		http://www.transmissionzero.co.uk/software/freeglut-devel/
+		http://sourceforge.net/projects/openil/files/DevIL%20Windows%20SDK/1.7.8/DevIL-SDK-x86-1.7.8.zip/download
+		http://sourceforge.net/projects/glew/files/glew/1.10.0/glew-1.10.0-win32.zip/download
+		http://code.google.com/p/bullet/downloads/detail?name=bullet-2.82-r2704.zip&can=2&q=
+	The directories you put them in will henceforth be denoted as $GLM, $FREEGLUT, $DEVIL, $GLEW, and $BULLET, respectively.
 
 	Run $BULLET/build/vs2010.bat
 
@@ -268,4 +279,8 @@ Part 5: Git the Code
 	Build->Build Solution
 
 	Congratulations, you're done (finally)!
+
+
+Part 6 (optional): Running without VS
+	In order to run the executable outside of the debug environment, you must copy all resource files (.obj, .mat, .jpg, ...) and shader files (.vert, .frag, .geom, .cs) into the same directory as the executable. This is not necessary in debug mode because VS sets your working directory to be the project directory.
 
