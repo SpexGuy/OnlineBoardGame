@@ -13,9 +13,17 @@ class GraphicsAsset :
 protected:
 	GraphicsMesh *mesh;
 	Material *material;
+
 public:
-	GraphicsAsset(GraphicsMesh *mesh, Material *material) :
-		Asset(0, 0), mesh(mesh), material(material) {}
+	GraphicsAsset(const std::string &name, const std::string &group,
+				  float mass, const btVector3 &position,
+				  btTriangleMesh *collider,
+				  GraphicsMesh *mesh, Material *material)
+	 :	Asset(name, group, mass, position, collider),
+		mesh(mesh),
+		material(material)
+	{}
+
 	virtual void draw(const glm::mat4 &world);
 	virtual GraphicsEntity *createEntity(const btVector3 &position);
 	virtual ~GraphicsAsset() {}

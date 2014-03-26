@@ -1,21 +1,30 @@
 #pragma once
+#include <string>
+#include <btBulletDynamicsCommon.h>
 
-class btVector3;
 class Entity;
 
 class Asset {
 private:
 	Asset();
 protected:
-	int assetPackIndex;
+	std::string name;
+	std::string group;
 	int group;
 	float mass;
+	btVector3 centerMass;
+	btTriangleMesh *collider;
+
 public:
-	inline float getMass() {return mass;}
-	inline int getGroup() {return group;}
-	Asset(int assetPackIndex, int group) :
-		assetPackIndex(assetPackIndex),
-		group(group)
+	inline float getMass() { return mass; }
+	inline std::string &getGroup() { return group; }
+	Asset(const std::string &name, const std::string &group, float mass,
+		  const btVector3 &centerMass, btTriangleMesh *collider)
+	 :	name(name),
+		group(group),
+		mass(mass),
+		centerMass(centerMass),
+		collider(collider)
 	{}
 
 	virtual Entity *createEntity(const btVector3 &position);

@@ -34,19 +34,32 @@ void GraphicsAssetPack::downloadFile(const string &file) {
 }
 
 GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
-	Asset *baseAsset = AssetPack::makeAsset(name);
-	//if (baseAsset == NULL)
-		//return NULL;
-
 	Value asset = assetRoot[name];
+	assert(asset.isObject());
+	Value group = asset["Group"];
+	Value stackType = asset["StackType"];
+	Value shakeType = asset["ShakeType"];
 	Value meshName = asset["Mesh"];
 	Value colorTex = asset["ColorTex"];
 	Value specTex = asset["SpecularTex"];
 	Value normalTex = asset["NormalTex"];
+	Value mass = asset["Mass"];
+	Value massCenterX = asset["CoMx"];
+	Value massCenterY = asset["CoMy"];
+	Value massCenterZ = asset["CoMz"];
+	Value colliders = asset["Colliders"];
+	assert(group.isConvertibleTo(ValueType::stringValue));
+	assert(stackType.isNull());
+	assert(shakeType.isNull());
 	assert(meshName.isString());
 	assert(colorTex.isString());
 	assert(specTex.isString());
 	assert(normalTex.isString());
+	assert(mass.isConvertibleTo(ValueType::realValue));
+	assert(massCenterX.isConvertibleTo(ValueType::realValue));
+	assert(massCenterY.isConvertibleTo(ValueType::realValue));
+	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
+	assert(colliders.isArray());
 
 	Texture *tex = (new TextureGroup())
 		->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR))
@@ -57,7 +70,9 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 
 	TextureMaterial *material = new TextureMaterial(tex, texShader);
 
-	return new GraphicsAsset(mesh, material);
+	return new GraphicsAsset(name, group.asString(), mass.asDouble(),
+		btVector3(massCenterX.asDouble(), massCenterY.asDouble(), massCenterZ.asDouble()),
+		getCollider(colliders[0].asString()), mesh, material);
 }
 
 ifstream *GraphicsAssetPack::getFile(const string &filename) {

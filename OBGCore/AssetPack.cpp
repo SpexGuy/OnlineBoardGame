@@ -30,10 +30,7 @@ AssetPack::AssetPack(const Json::Value &root) {
 
 Asset *AssetPack::makeAsset(const string &name) {
 	Value asset = assetRoot[name];
-	if (!asset.isObject()) {
-		cout << "Asset " << name << " is not an object!" << endl;
-		return NULL;
-	}
+	assert(asset.isObject());
 
 	Value group = asset["Group"];
 	Value stackType = asset["StackType"];
@@ -46,20 +43,27 @@ Asset *AssetPack::makeAsset(const string &name) {
 	assert(group.isConvertibleTo(ValueType::stringValue));
 	assert(stackType.isNull());
 	assert(shakeType.isNull());
-	assert(colliders.isArray());
 	assert(mass.isConvertibleTo(ValueType::realValue));
 	assert(massCenterX.isConvertibleTo(ValueType::realValue));
 	assert(massCenterY.isConvertibleTo(ValueType::realValue));
 	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
+	assert(colliders.isArray());
 
-	for (Value collider : colliders) {
-		assert(collider.isObject());
-		Value colliderFile = collider["Name"];
-		assert(colliderFile.isString());
-		//TODO: colliders
-	}
+	Value collider = colliders[0];
+	assert(collider.isObject());
+	Value colliderName = collider["Name"];
+	assert(colliderName.isString());
+
+	btTriangleMesh *colliderMesh = getCollider(colliderName.asString());
 	//TODO: make Asset
-	return NULL;
+	return new Asset(
+		name,
+		group.asString(),
+		mass.asDouble(),
+		btVector3(massCenterX.asDouble(),
+				  massCenterY.asDouble(),
+				  massCenterZ.asDouble()),
+		colliderMesh);
 }
 
 Asset *AssetPack::getAsset(const string &name) {
@@ -75,6 +79,10 @@ Asset *AssetPack::getAsset(const string &name) {
 	} else {
 		return location->second;
 	}
+}
+
+btTriangleMesh *AssetPack::getCollider(const string &name) {
+	
 }
 
 vector<Entity *> AssetPack::loadGame() {
