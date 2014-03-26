@@ -15,6 +15,19 @@ EntityManager::EntityManager() {
 
 	world->setGravity(btVector3(0.0f, -10.0f, 0.0f));
 
+	btCollisionShape *groundShape = new btStaticPlaneShape(btVector3(-1.1, 1, 0.9), -2);
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+    btRigidBody::btRigidBodyConstructionInfo
+            groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+    btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    world->addRigidBody(groundRigidBody);
+
+	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(0.9, 1, -1.1), -2);
+	btDefaultMotionState* groundMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-1,0)));
+    btRigidBody::btRigidBodyConstructionInfo
+            groundRigidBodyCI2(0,groundMotionState2,groundShape2,btVector3(0,0,0));
+    btRigidBody* groundRigidBody2 = new btRigidBody(groundRigidBodyCI2);
+    world->addRigidBody(groundRigidBody2);
 
 
  //   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);

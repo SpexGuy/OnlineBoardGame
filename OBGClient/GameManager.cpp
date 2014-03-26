@@ -83,14 +83,20 @@ GameManager *GameManager::inst() {
 
 GameManager::GameManager(int argc, char *argv[]) {
 	running = false;
-	graphicsManager = new GraphicsManager(argc, argv);
+	//init everything
 	SocketInit();
+	graphicsManager = new GraphicsManager(argc, argv);
 	connection = new ClientConnection("127.0.0.1", 0xABC0);
 	inputHandler = new UserInputHandler();
+	entityManager = new EntityManager();
+	//set up listeners
 	connection->registerMessageListener(inputHandler->getChatBox());
 	inputHandler->getChatBox()->registerMessageListener(connection);
+	connection->registerPhysicsUpdateListener(entityManager);
+	inputHandler->registerInteractionListener(connection);
+	inputHandler->registerInteractionListener(entityManager);
 	graphicsManager->addRenderable(inputHandler->getChatBox());
-	entityManager = new EntityManager();
+	//provide global access point
 	assert(instance == NULL);
 	instance = this;
 }
