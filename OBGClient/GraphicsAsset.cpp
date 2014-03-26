@@ -12,12 +12,13 @@ void GraphicsAsset::draw(const mat4 &world) {
 }
 
 GraphicsEntity *GraphicsAsset::createEntity(const btVector3 &position, int id) {
-	btMotionState *motionState = new btDefaultMotionState();
+	btMotionState *motionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), position));
 	btCompoundShape *collisionShape = new btCompoundShape();
 	btConvexTriangleMeshShape *collisionMesh = new btConvexTriangleMeshShape(collider);
 	collisionShape->addChildShape(btTransform(), collisionMesh);
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo = btRigidBody::btRigidBodyConstructionInfo(mass, motionState, collisionShape);
 	btRigidBody *physicsBody = new btRigidBody(constructionInfo);
+	
 
 	return new GraphicsEntity(this, id, physicsBody);
 }

@@ -22,6 +22,5 @@ void GraphicsEntity::render() {
 		//this cast is safe because type never changes and
 		//it must be a GraphicsAsset in the constructor
 		((GraphicsAsset *)type)->draw(world);
-		//TODO:[MW] stop entities from spinning ALL THE TIME
 	}
 }

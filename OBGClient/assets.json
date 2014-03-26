@@ -20,27 +20,6 @@
                "Name":"badEarth.obj"
             }
          ]
-      },
-      "asset2":{
-         "Group":"group2",
-         "StackType":null,
-         "ShakeType":null,
-         "Mesh":"mesh1",
-         "ColorTex":"colorTex2",
-         "NormalTex":"normalTex2",
-         "SpecularTex":"specTex2",
-         "Physics":"physProp2",
-         "Colliders":[
-            {
-               "Name":"coll2"
-            },
-            {
-               "Name":"coll2"
-            },
-            {
-               "Name":"coll2"
-            }
-         ]
       }
    }
 }
