@@ -47,7 +47,7 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	Value massCenterX = asset["CoMx"];
 	Value massCenterY = asset["CoMy"];
 	Value massCenterZ = asset["CoMz"];
-	Value colliders = asset["Colliders"];
+	Value collider = asset["Collider"];
 	assert(group.isConvertibleTo(ValueType::stringValue));
 	assert(stackType.isNull());
 	assert(shakeType.isNull());
@@ -59,11 +59,11 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	assert(massCenterX.isConvertibleTo(ValueType::realValue));
 	assert(massCenterY.isConvertibleTo(ValueType::realValue));
 	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
-	assert(colliders.isArray());
-	Value collider = colliders[0];
-	assert(collider.isObject());
-	Value colliderName = collider["Name"];
-	assert(colliderName.isString());
+
+	CollisionShapeInflater *shape;
+	btTransform transform;
+	bool success = parseCollider(collider, &transform, &shape);
+	assert(success);
 
 	Texture *tex = (new TextureGroup())
 		->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR))
@@ -76,7 +76,7 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 
 	return new GraphicsAsset(name, group.asString(), mass.asDouble(),
 		btVector3(massCenterX.asDouble(), massCenterY.asDouble(), massCenterZ.asDouble()),
-		getCollider(colliderName.asString()), mesh, material);
+		transform, shape, mesh, material);
 }
 
 ifstream *GraphicsAssetPack::getFile(const string &filename) {

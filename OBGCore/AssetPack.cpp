@@ -4,12 +4,32 @@
 #include "Asset.h"
 #include "AssetPack.h"
 #include "CollisionMeshLoader.h"
+#include "CollisionShapeInflater.h"
 #include "Entity.h"
 #include "json.h"
 
 using namespace std;
 using Json::Value;
 using Json::ValueType;
+
+btQuaternion parseQuaternion(const Value &val) {
+	assert(val.isArray() && val.size() == 4);
+	assert(val[0].isConvertibleTo(ValueType::realValue));
+	assert(val[1].isConvertibleTo(ValueType::realValue));
+	assert(val[2].isConvertibleTo(ValueType::realValue));
+	assert(val[3].isConvertibleTo(ValueType::realValue));
+	return btQuaternion(val[0].asDouble(), val[1].asDouble(),
+						val[2].asDouble(), val[3].asDouble());
+}
+
+btVector3 parseVector3(const Value &val) {
+	assert(val.isArray() && val.size() == 3);
+	assert(val[0].isConvertibleTo(ValueType::realValue));
+	assert(val[1].isConvertibleTo(ValueType::realValue));
+	assert(val[2].isConvertibleTo(ValueType::realValue));
+	return btVector3(val[0].asDouble(), val[1].asDouble(),
+					 val[2].asDouble());
+}
 
 AssetPack::AssetPack(const Json::Value &root) {
 	assert(root.isObject());
@@ -40,7 +60,7 @@ Asset *AssetPack::makeAsset(const string &name) {
 	Value massCenterX = asset["CoMx"];
 	Value massCenterY = asset["CoMy"];
 	Value massCenterZ = asset["CoMz"];
-	Value colliders = asset["Colliders"];
+	Value collider = asset["Collider"];
 	assert(group.isConvertibleTo(ValueType::stringValue));
 	assert(stackType.isNull());
 	assert(shakeType.isNull());
@@ -48,15 +68,12 @@ Asset *AssetPack::makeAsset(const string &name) {
 	assert(massCenterX.isConvertibleTo(ValueType::realValue));
 	assert(massCenterY.isConvertibleTo(ValueType::realValue));
 	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
-	assert(colliders.isArray());
 
-	Value collider = colliders[0];
-	assert(collider.isObject());
-	Value colliderName = collider["Name"];
-	assert(colliderName.isString());
+	CollisionShapeInflater *shape;
+	btTransform transform;
+	bool success = parseCollider(collider, &transform, &shape);
+	assert(success);
 
-	btTriangleMesh *colliderMesh = getCollider(colliderName.asString());
-	//TODO: make Asset
 	return new Asset(
 		name,
 		group.asString(),
@@ -64,7 +81,7 @@ Asset *AssetPack::makeAsset(const string &name) {
 		btVector3(massCenterX.asDouble(),
 				  massCenterY.asDouble(),
 				  massCenterZ.asDouble()),
-		colliderMesh);
+		transform, shape);
 }
 
 Asset *AssetPack::getAsset(const string &name) {
@@ -82,7 +99,97 @@ Asset *AssetPack::getAsset(const string &name) {
 	}
 }
 
-btTriangleMesh *AssetPack::getCollider(const string &name) {
+bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, CollisionShapeInflater **retShape) {
+	assert(collider.isObject());
+	Value type = collider["Type"];
+	Value position = collider["Position"];
+	Value rotation = collider["Rotation"];
+	assert(type.isString());
+	*retTransform = btTransform(parseQuaternion(rotation),parseVector3(position));
+
+
+	if (type.asString() == string("Sphere")) {
+		Value radius = collider["Radius"];
+		assert(radius.isConvertibleTo(ValueType::realValue));
+		*retShape = new SphereInflater(radius.asDouble());
+		return true;
+	} else if (type.asString() == string("Box")) {
+		Value halfExtents = collider["HalfExtents"];
+		btVector3 vec = parseVector3(halfExtents);
+		*retShape = new BoxInflater(vec);
+		return true;
+	} else if (type.asString() == string("Cylinder")) {
+		Value halfExtents = collider["HalfExtents"];
+		btVector3 vec = parseVector3(halfExtents);
+		*retShape = new CylinderInflater(vec);
+		return true;
+	} else if (type.asString() == string("Capsule")) {
+		Value radius = collider["Radius"];
+		Value distance = collider["Distance"];
+		assert(radius.isConvertibleTo(ValueType::realValue));
+		assert(distance.isConvertibleTo(ValueType::realValue));
+		*retShape = new CapsuleInflater(radius.asDouble(), distance.asDouble());
+		return true;
+	} else if (type.asString() == string("Cone")) {
+		Value radius = collider["Radius"];
+		Value height = collider["Height"];
+		assert(radius.isConvertibleTo(ValueType::realValue));
+		assert(height.isConvertibleTo(ValueType::realValue));
+		*retShape = new ConeInflater(radius.asDouble(), height.asDouble());
+		return true;
+	} else if (type.asString() == string("MultiSphere")) {
+		Value radiiVal = collider["Radii"];
+		Value positionsVal = collider["Positions"];
+		assert(radiiVal.isArray());
+		assert(positionsVal.isArray());
+		assert(radiiVal.size() > 0);
+		assert(radiiVal.size() == positionsVal.size());
+		int num = radiiVal.size();
+		btVector3 *positions = new btVector3[num];
+		btScalar *radii = new btScalar[num];
+		for (int c = 0; c < num; c++) {
+			assert(radiiVal[c].isConvertibleTo(ValueType::realValue));
+			positions[c] = parseVector3(positionsVal[c]);
+			radii[c] = radiiVal[c].asDouble();
+		}
+		*retShape = new MultiSphereInflater(positions, radii, num);
+		//positions and radii are deleted by the inflater
+		return true;
+	} else if (type.asString() == string("ConvexHull")) {
+		Value file = collider["File"];
+		assert(file.isString());
+		CollisionShapeInflater *shape = getCollider(file.asString());
+		*retShape = shape;
+		return shape != NULL;
+	} else if (type.asString() == string("Compound")) {
+		Value colliders = collider["Colliders"];
+		assert(colliders.isArray());
+		assert(colliders.size() > 0);
+		CompoundInflater *shape = new CompoundInflater();
+		btTransform subTrans;
+		CollisionShapeInflater *subShape;
+		int numChildren = 0;
+		for (Value subColl : colliders) {
+			if (parseCollider(subColl, &subTrans, &subShape)) {
+				shape->addInflater(subTrans, subShape);
+				numChildren++;
+			} else {
+				cout << "Could not parse child of compound collider. Ignoring." << endl;
+			}
+		}
+		*retShape = shape;
+		return numChildren > 0;
+	} else {
+		cout << "Unknown Collider Type: " << type.asString() << endl;
+		assert(false);
+		return false;
+	}
+	//this should be unreachable, but just in case...
+	assert(false);
+	return false;
+}
+
+CollisionShapeInflater *AssetPack::getCollider(const string &name) {
 	auto pos = colliders.find(name);
 	if (pos == colliders.end()) {
 		ifstream file(name);
@@ -90,11 +197,11 @@ btTriangleMesh *AssetPack::getCollider(const string &name) {
 			colliders[name] = NULL;
 			return NULL;
 		}
-		btTriangleMesh *mesh = loadCollisionMesh(&file);
+		vector<btVector3> *mesh = loadCollisionPoints(&file);
 		colliders[name] = mesh;
-		return mesh;
+		return new ConvexHullInflater(*mesh);
 	} else {
-		return pos->second;
+		return new ConvexHullInflater(*pos->second);
 	}
 }
 
@@ -122,26 +229,17 @@ vector<Entity *> AssetPack::loadGame(const string &saveFile) {
 	assert(ents.isArray());
 	for (Value ent : ents) {
 		Value assetVal = ent["Asset"];
-		Value posX = ent["posX"];
-		Value posY = ent["posY"];
-		Value posZ = ent["posZ"];
-		Value rotX = ent["rotX"];
-		Value rotY = ent["rotY"];
-		Value rotZ = ent["rotZ"];
+		Value position = ent["Position"];
+		Value rotation = ent["Rotation"];
 		assert(assetVal.isString());
-		assert(posX.isConvertibleTo(ValueType::realValue));
-		assert(posY.isConvertibleTo(ValueType::realValue));
-		assert(posZ.isConvertibleTo(ValueType::realValue));
-		assert(rotX.isConvertibleTo(ValueType::realValue));
-		assert(rotY.isConvertibleTo(ValueType::realValue));
-		assert(rotZ.isConvertibleTo(ValueType::realValue));
 		Asset *asset = getAsset(assetVal.asString());
 		if (asset == NULL) {
 			//ignore invalid asset
+			cout << "Invalid asset: " << assetVal.asString() << endl;
 			continue;
 		}
-		entities.push_back(asset->createEntity(btVector3(posX.asDouble(), posY.asDouble(), posZ.asDouble()), id++));
-		//TODO: add rotation
+		btTransform orientation(parseQuaternion(rotation), parseVector3(position));
+		entities.push_back(asset->createEntity(orientation, id++));
 	}
 	return entities;
 }

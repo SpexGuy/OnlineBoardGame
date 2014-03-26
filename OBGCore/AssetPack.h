@@ -5,6 +5,7 @@
 #include "json.h"
 
 class Asset;
+class CollisionShapeInflater;
 class Entity;
 
 class AssetPack {
@@ -13,13 +14,14 @@ protected:
 	std::string gameName;
 	std::string defaultSaveFile;
 	std::map<std::string, Asset *> assets;
-	std::map<std::string, btTriangleMesh *> colliders;
+	std::map<std::string, std::vector<btVector3> *> colliders;
 	Json::Value assetRoot;
 
 	virtual Asset *makeAsset(const std::string &name);
 	virtual Asset *getAsset(const std::string &name);
 
-	virtual btTriangleMesh *getCollider(const std::string &name);
+	virtual CollisionShapeInflater *getCollider(const std::string &name);
+	virtual bool parseCollider(const Json::Value &collider, btTransform *retTransform, CollisionShapeInflater **retShape);
 
 public:
 	AssetPack(const Json::Value &root);

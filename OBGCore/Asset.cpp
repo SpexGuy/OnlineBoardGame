@@ -1,20 +1,19 @@
 #include "Asset.h"
+#include "CollisionShapeInflater.h"
 #include "Entity.h"
 
 
-
-Entity *Asset::createEntity(const btVector3 &position, int id) {
-	btMotionState *motionState = new btDefaultMotionState();
-	btCompoundShape *collisionShape = new btCompoundShape();
-	btConvexTriangleMeshShape *collisionMesh = new btConvexTriangleMeshShape(collider);
-	collisionShape->addChildShape(btTransform(), collisionMesh);
+btRigidBody *Asset::createRigidBody(const btTransform &position) {
+	btMotionState *motionState = new btDefaultMotionState(orientation * position);
+	btCollisionShape *shape = collider->inflate();
     btVector3 fallInertia(0,0,0);
-    collisionShape->calculateLocalInertia(mass,fallInertia);
-	btRigidBody::btRigidBodyConstructionInfo constructionInfo = btRigidBody::btRigidBodyConstructionInfo(mass, motionState, collisionShape);
-	btRigidBody *physicsBody = new btRigidBody(constructionInfo);
+    shape->calculateLocalInertia(mass,fallInertia);
+	btRigidBody::btRigidBodyConstructionInfo constructionInfo(mass, motionState, shape, fallInertia);
+	return new btRigidBody(constructionInfo);
+}
 
-
-	return new Entity(this, id, physicsBody);
+Entity *Asset::createEntity(const btTransform &position, int id) {
+	return new Entity(this, id, createRigidBody(position));
 }
 
 Asset::~Asset() {

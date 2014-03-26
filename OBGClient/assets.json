@@ -15,11 +15,12 @@
          "CoMx": 0,
          "CoMy": 0,
          "CoMz": 0,
-         "Colliders":[
-            {
-               "Name":"badEarth.obj"
-            }
-         ]
+         "Collider":{
+   			"Type":"Sphere",
+   			"Position":[1.0,0.0,0.0],
+   			"Rotation":[0,0,0,1],
+   			"Radius":1
+		   }
       }
    }
 }

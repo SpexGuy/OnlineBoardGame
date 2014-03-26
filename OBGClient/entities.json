@@ -4,21 +4,13 @@
 	"Entities":[
 		{
 			"Asset":"earth",
-			"posX": 1.0,
-			"posY": 0.0,
-			"posZ": -1.0,
-			"rotX": 0.0,
-			"rotY": 0.0,
-			"rotZ": 0.0
+			"Position":[1.0,0.0,-1.0],
+			"Rotation":[0.0,0.0,0.0,1.0]
 		},
 		{
 			"Asset":"earth",
-			"posX": -1.0,
-			"posY": 0.0,
-			"posZ": 1.0,
-			"rotX": 0.0,
-			"rotY": 0.0,
-			"rotZ": 0.0
+			"Position":[-1.0,0.0,1.0],
+			"Rotation":[0.0,0.0,0.0,1.0]
 		}
 	]
 }

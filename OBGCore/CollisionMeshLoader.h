@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <vector>
 #include <btBulletDynamicsCommon.h>
 
-btTriangleMesh *loadCollisionMesh(std::istream *source);
+std::vector<btVector3> *loadCollisionPoints(std::istream *source);
 
