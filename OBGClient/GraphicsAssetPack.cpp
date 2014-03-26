@@ -60,6 +60,10 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	assert(massCenterY.isConvertibleTo(ValueType::realValue));
 	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
 	assert(colliders.isArray());
+	Value collider = colliders[0];
+	assert(collider.isObject());
+	Value colliderName = collider["Name"];
+	assert(colliderName.isString());
 
 	Texture *tex = (new TextureGroup())
 		->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR))
@@ -72,7 +76,7 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 
 	return new GraphicsAsset(name, group.asString(), mass.asDouble(),
 		btVector3(massCenterX.asDouble(), massCenterY.asDouble(), massCenterZ.asDouble()),
-		getCollider(colliders[0].asString()), mesh, material);
+		getCollider(colliderName.asString()), mesh, material);
 }
 
 ifstream *GraphicsAssetPack::getFile(const string &filename) {

@@ -11,7 +11,7 @@ class GraphicsEntity :
 private:
 	GraphicsEntity();
 public:
-	GraphicsEntity(GraphicsAsset *asset, const btVector3 &position);
+	GraphicsEntity(GraphicsAsset *asset, int id, btRigidBody *physicsBody);
 	virtual void render();
 	virtual ~GraphicsEntity() {}
 };

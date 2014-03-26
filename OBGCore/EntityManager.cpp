@@ -1,5 +1,8 @@
 #include "EntityManager.h"
 #include "Entity.h"
+#include "Asset.h"
+#include "Interaction.h"
+#include "PhysicsUpdate.h"
 	
 EntityManager::EntityManager() {
 	//Set up the physics world
@@ -10,6 +13,7 @@ EntityManager::EntityManager() {
     world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
 	world->setGravity(btVector3(0.0f, -1.0f, 0.0f));
+	time(&lastTime);
 }
 
 EntityManager::~EntityManager() {
@@ -33,7 +37,7 @@ void EntityManager::addEntity(Entity *e) {
 }
 
 void EntityManager::handleInteraction(Interaction *action) {
-
+	
 }
 
 void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
@@ -53,8 +57,12 @@ void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
 
 void EntityManager::update() {
 	//Step physics simulation
-	//world->stepSimulation();
 
+	time_t currTime;
+	time(&currTime);
+	world->stepSimulation(currTime - lastTime);
+	lastTime = currTime;
+	
 	//Combine stackable entities
 	for(unsigned int i = 0; i < entities.size(); i ++) {
 		for(unsigned int j = i + 1; j < entities.size(); j ++) {
@@ -75,11 +83,22 @@ void EntityManager::clear() {
 	entities.clear();
 }
 
-Entity* EntityManager::getEntityByIndex(int i) {
-	return entities.at(i);
+Entity* EntityManager::getEntityById(int id) {
+	return entities[id];
 }
 
 Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to, Interaction* interaction) {
+	btCollisionWorld::ClosestRayResultCallback callback(from, to);
+	world->rayTest(from, to, callback);
+
+	if(callback.hasHit()) {
+		const btCollisionObject *collided = callback.m_collisionObject;
+		for(pair<int, Entity *> e : entities) {
+			if(e.second->getPhysicsBody() == collided) {
+				return e.second;
+			}
+		}
+	}
 	return NULL;
 }
 

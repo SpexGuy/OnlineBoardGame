@@ -25,6 +25,6 @@ public:
 	{}
 
 	virtual void draw(const glm::mat4 &world);
-	virtual GraphicsEntity *createEntity(const btVector3 &position);
+	virtual GraphicsEntity *createEntity(const btVector3 &position, int id);
 	virtual ~GraphicsAsset() {}
 };

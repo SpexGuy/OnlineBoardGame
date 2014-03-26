@@ -1,8 +1,9 @@
 #include <assert.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include "Asset.h"
 #include "AssetPack.h"
+#include "CollisionMeshLoader.h"
 #include "Entity.h"
 #include "json.h"
 
@@ -82,7 +83,19 @@ Asset *AssetPack::getAsset(const string &name) {
 }
 
 btTriangleMesh *AssetPack::getCollider(const string &name) {
-	
+	auto pos = colliders.find(name);
+	if (pos == colliders.end()) {
+		ifstream file(name);
+		if (!file) {
+			colliders[name] = NULL;
+			return NULL;
+		}
+		btTriangleMesh *mesh = loadCollisionMesh(&file);
+		colliders[name] = mesh;
+		return mesh;
+	} else {
+		return pos->second;
+	}
 }
 
 vector<Entity *> AssetPack::loadGame() {
@@ -90,6 +103,7 @@ vector<Entity *> AssetPack::loadGame() {
 }
 
 vector<Entity *> AssetPack::loadGame(const string &saveFile) {
+	int id = 0;
 	vector<Entity *> entities;
 	Json::Reader reader;
 	Value saveRoot;
@@ -126,7 +140,7 @@ vector<Entity *> AssetPack::loadGame(const string &saveFile) {
 			//ignore invalid asset
 			continue;
 		}
-		entities.push_back(asset->createEntity(btVector3(posX.asDouble(), posY.asDouble(), posZ.asDouble())));
+		entities.push_back(asset->createEntity(btVector3(posX.asDouble(), posY.asDouble(), posZ.asDouble()), id++));
 		//TODO: add rotation
 	}
 	return entities;

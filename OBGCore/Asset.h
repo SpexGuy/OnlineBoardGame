@@ -10,7 +10,6 @@ private:
 protected:
 	std::string name;
 	std::string group;
-	int group;
 	float mass;
 	btVector3 centerMass;
 	btTriangleMesh *collider;
@@ -27,7 +26,7 @@ public:
 		collider(collider)
 	{}
 
-	virtual Entity *createEntity(const btVector3 &position);
+	virtual Entity *createEntity(const btVector3 &position, int id);
 	
 	virtual ~Asset();
 };

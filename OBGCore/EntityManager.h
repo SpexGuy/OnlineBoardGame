@@ -5,16 +5,16 @@
 #include "btBulletDynamicsCommon.h"
 #include <vector>
 #include <LinearMath\btVector3.h>
-#include "Asset.h"
-#include "Interaction.h"
-#include "PhysicsUpdate.h"
 #include <map>
+#include <time.h>
 
 using std::vector;
 using std::map;
 using std::pair;
 
 class Entity;
+class Interaction;
+class PhysicsUpdate;
 
 class EntityManager :
 	public InteractionListener,
@@ -34,8 +34,8 @@ public:
 	virtual void registerPhysicsUpdateListener(PhysicsUpdateListener *listener);
 	virtual void update();
 	virtual void clear();
-	virtual Entity* getEntityByIndex(int);
-	virtual Entity* getIntersectingEntity(const btVector3&, const btVector3&, Interaction*);
+	virtual Entity* getEntityById(int id);
+	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to, Interaction* interaction);
 	virtual void createPhysicsUpdates();
 
 private:
@@ -45,4 +45,5 @@ private:
 	btCollisionDispatcher* dispatcher;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btBroadphaseInterface* broadphase;
+	time_t lastTime;
 };

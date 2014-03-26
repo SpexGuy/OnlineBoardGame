@@ -14,13 +14,11 @@ void trimString(string & str) {
 }
 
 
-bool loadCollisionMesh(istream *stream,
-					   vector<btVector3> *outPoints,
-					   vector<int> *outTrigs)
+btTriangleMesh *loadCollisionMesh(istream *stream)
 {
 	istream &objStream = *stream;
-	vector<btVector3> &points = *outPoints;
-	vector<int> &trigs = *outTrigs;
+	vector<btVector3> points = vector<btVector3>();
+	vector<int> trigs = vector<int>();
 
 	assert(objStream);
 	assert(points.size() == 0);
@@ -83,5 +81,11 @@ bool loadCollisionMesh(istream *stream,
 		getline(objStream, line);
 	}
 
-	return true;
+	btTriangleMesh *mesh = new btTriangleMesh();
+
+	for(unsigned int i = 0; i < trigs.size() - 2; i += 3) {
+		mesh->addTriangle(points.at(trigs.at(i)), points.at(trigs.at(i + 1)), points.at(trigs.at(i + 2)));
+	}
+
+	return mesh;
 }

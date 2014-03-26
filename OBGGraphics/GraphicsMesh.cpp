@@ -15,7 +15,7 @@
 using namespace std;
 using namespace glm;
 
-void trimString(string & str) {
+void GraphicsMesh::trimString(string & str) {
 	const char * whiteSpace = " \t\n\r";
 	size_t location;
 	location = str.find_first_not_of(whiteSpace);
