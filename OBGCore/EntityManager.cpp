@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <iostream>
 #include "EntityManager.h"
 #include "Entity.h"
@@ -96,14 +97,15 @@ void EntityManager::addEntity(Entity *e) {
 
 void EntityManager::handleInteraction(Interaction *action) {
 	for(int &i : action->ids) {
+		assert(i != 0);
 		if(i < 0) {
-			int id = -i;
-			btRigidBody& physBody = *entities[id]->getPhysicsBody();
+			btRigidBody& physBody = *entities[-i]->getPhysicsBody();
 			physBody.setGravity(btVector3(0, -1, 0));
 			physBody.setAngularFactor(btVector3(1, 1, 1));
 		} else {
 			btRigidBody& physBody = *entities[i]->getPhysicsBody();
-			physBody.setGravity(action->mousePos);
+			btVector3 gravity = 50*(action->mousePos - physBody.getWorldTransform().getOrigin()).normalized();
+			physBody.setGravity(gravity);
 			physBody.setAngularFactor(btVector3(0, 0, 0));
 		}
 	}
@@ -131,10 +133,10 @@ void EntityManager::update() {
 	lastTime = currTime;
 	
 	//Combine stackable entities
-	for(unsigned int i = 0; i < entities.size(); i ++) {
-		for(unsigned int j = i + 1; j < entities.size(); j ++) {
-			Entity *ent1 = entities.at(i);
-			Entity *ent2 = entities.at(j);
+	for(auto iter1 = entities.begin(), end = entities.end(); iter1 != end;) {
+		Entity *ent1 = iter1->second;
+		for(auto iter2 = ++iter1; iter2 != end; ++iter2) {
+			Entity *ent2 = iter2->second;
 
 			if(ent1->getType()->getGroup() == ent2->getType()->getGroup()) { //&& similar positions && stackable) {
 				//stack them

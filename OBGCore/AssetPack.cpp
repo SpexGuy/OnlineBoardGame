@@ -210,7 +210,7 @@ vector<Entity *> AssetPack::loadGame() {
 }
 
 vector<Entity *> AssetPack::loadGame(const string &saveFile) {
-	int id = 0;
+	int id = 1;
 	vector<Entity *> entities;
 	Json::Reader reader;
 	Value saveRoot;

@@ -3,6 +3,7 @@
 #include "MessageEventBroadcaster.h"
 
 class ChatBox;
+class MousePointer;
 
 class UserInputHandler :
 	public MessageEventBroadcaster,
@@ -12,10 +13,10 @@ private:
 	ChatBox *chat;
 	std::vector<int> heldList;
 	std::vector<int> lastHeldList;
-	double mouseX, mouseZ;
-	int screenX, screenY;
+	MousePointer *pointer;
 public:
 	UserInputHandler();
+	virtual void start();
 	virtual void update();
 	virtual void keyPressed(unsigned char c, int x, int y);
 	virtual void specialKeyPressed(int k, int x, int y);
@@ -25,4 +26,5 @@ public:
 	~UserInputHandler();
 
 	inline ChatBox *getChatBox() { return chat; }
+	inline MousePointer *getMousePointer() { return pointer; }
 };

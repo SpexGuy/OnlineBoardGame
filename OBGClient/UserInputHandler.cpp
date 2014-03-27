@@ -7,20 +7,23 @@
 #include "EntityManager.h"
 #include "Interaction.h"
 #include "Entity.h"
+#include "MousePointer.h"
 
 #define CHAR_ESCAPE 0x1B
 #define CHAR_DELETE 0x7F
 #define CHAR_BACKSPACE 0x08
 #define CHAR_ENTER '\r'
-#define MOUSE_HEIGHT 10
 
 
 using namespace std;
+using namespace glm;
 
 UserInputHandler::UserInputHandler() {
 	chat = new ChatBox();
-	mouseX = 0.0;
-	mouseZ = 0.0;
+}
+
+void UserInputHandler::start() {
+	pointer = new MousePointer();
 }
 
 void UserInputHandler::update() {
@@ -36,12 +39,16 @@ void UserInputHandler::update() {
 	}
 
 	lastHeldList = heldList;
-
-	Interaction *interaction = new Interaction(btVector3(mouseX, 0, mouseZ), idList);
+	
+	vec3 worldPos = pointer->getWorldPos();
+	btVector3 btPos(worldPos.x, 1, worldPos.z);
+	Interaction *interaction = new Interaction(btPos, idList);
 	fireInteraction(interaction);
+	delete interaction;
 }
 
 void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
+	pointer->setScreenPos(ivec2(x, y));
 
 	if (chat->isEditMode()) {
 		switch(c) {
@@ -108,6 +115,7 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 }
 
 void UserInputHandler::specialKeyPressed(int k, int x, int y) {
+	pointer->setScreenPos(ivec2(x, y));
 	switch(k) {
 	case GLUT_KEY_F11:
 		glutFullScreenToggle();
@@ -118,15 +126,21 @@ void UserInputHandler::specialKeyPressed(int k, int x, int y) {
 }
 
 void UserInputHandler::mousePressed(int button, int state, int x, int y) {
+	pointer->setScreenPos(ivec2(x, y));
 	EntityManager* entityManager = GameManager::inst()->getEntityManager();
 
 	switch(button) {
 	case 0:{ //left click
-		Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(mouseX, MOUSE_HEIGHT, mouseZ), btVector3(mouseX, 0, mouseZ));
+		vec3 pos = pointer->getWorldPos();
+		Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z));
 		if(clickedEntity != NULL) {
+			cout << "Clicked on entity " << clickedEntity->getId() << endl;
 			heldList.push_back(clickedEntity->getId());
+		} else {
+			cout << "Clicked on nothing" << endl;
 		}
-		break;}
+		break;
+	}
 	case 1: //right click
 		break;
 	case 2: //middle click
@@ -141,18 +155,11 @@ void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 }
 
 void UserInputHandler::mouseDragged(int x, int y) {
-	
+	pointer->setScreenPos(ivec2(x, y));
 }
 
 void UserInputHandler::mouseMoved(int x, int y) {
-	double mouseDiffX = x - screenX;
-	double mouseDiffY = y - screenY;
-
-	mouseDiffX /= 500;
-	mouseDiffY /= 500;
-
-	mouseX += mouseDiffX;
-	mouseZ -= mouseDiffY;
+	pointer->setScreenPos(ivec2(x, y));
 }
 
 UserInputHandler::~UserInputHandler() {

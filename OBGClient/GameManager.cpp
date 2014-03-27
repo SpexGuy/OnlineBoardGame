@@ -24,6 +24,7 @@
 #include "GraphicsAsset.h"
 #include "GraphicsAssetPack.h"
 #include "GraphicsManager.h"
+#include "MousePointer.h"
 #include "UserInputHandler.h"
 
 #define PERIOD (int)(1000.0/60.0)
@@ -95,7 +96,6 @@ GameManager::GameManager(int argc, char *argv[]) {
 	connection->registerPhysicsUpdateListener(entityManager);
 	inputHandler->registerInteractionListener(connection);
 	inputHandler->registerInteractionListener(entityManager);
-	graphicsManager->addRenderable(inputHandler->getChatBox());
 	entityManager->registerPhysicsUpdateListener(entityManager);
 	//provide global access point
 	assert(instance == NULL);
@@ -108,6 +108,10 @@ void GameManager::run() {
 
 	graphicsManager->start();
 	connection->start();
+	inputHandler->start();
+
+	graphicsManager->addRenderable(inputHandler->getChatBox());
+	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
 	ifstream file("assets.json");
 	assert(file);
@@ -152,7 +156,7 @@ void GameManager::update() {
 		inputHandler->update();
 		entityManager->update();
 		entityManager->createPhysicsUpdates();
-		display();
+		glutPostRedisplay();
 	}
 }
 

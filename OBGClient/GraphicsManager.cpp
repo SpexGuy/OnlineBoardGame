@@ -15,7 +15,7 @@ GraphicsManager::GraphicsManager(int argc, char *argv[]) {
 void GraphicsManager::start() {
 	OBGGraphicsCreateContext();
 	GraphicsContext::inst()->setView(
-		glm::lookAt(vec3(2.0f, 2.0f, 2.0f),
+		glm::lookAt(vec3(0.0f, 2.0f, 2.0f),
 					vec3(0.0f, 0.0f, 0.0f),
 					vec3(0.0f, 1.0f, 0.0f)));
 }
