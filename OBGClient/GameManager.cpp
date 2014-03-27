@@ -96,7 +96,7 @@ GameManager::GameManager(int argc, char *argv[]) {
 	connection->registerPhysicsUpdateListener(entityManager);
 	inputHandler->registerInteractionListener(connection);
 	inputHandler->registerInteractionListener(entityManager);
-	entityManager->registerPhysicsUpdateListener(entityManager);
+	//entityManager->registerPhysicsUpdateListener(entityManager);
 	//provide global access point
 	assert(instance == NULL);
 	instance = this;

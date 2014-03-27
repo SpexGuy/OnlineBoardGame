@@ -22,6 +22,25 @@
    			"Radius":1
 		   }
       },
+      "othelloToken":{
+         "Group":"tokens",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"othelloToken.obj",
+         "ColorTex":"whiteblack.jpg",
+         "NormalTex":"whiteblack.jpg",
+         "SpecularTex":"whiteblack.jpg",
+         "Mass": 1.0,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Cylinder",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.20,0.0625,0.20]
+         }
+      },
       "othelloBoard":{
          "Group":"board",
          "StackType":null,
