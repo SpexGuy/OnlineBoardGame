@@ -95,22 +95,28 @@ void EntityManager::addEntity(Entity *e) {
 }
 
 void EntityManager::handleInteraction(Interaction *action) {
-	
+	for(int &i : action->ids) {
+		if(i < 0) {
+			int id = -i;
+			btRigidBody& physBody = *entities[id]->getPhysicsBody();
+			physBody.setGravity(btVector3(0, -1, 0));
+			physBody.setAngularFactor(btVector3(1, 1, 1));
+		} else {
+			btRigidBody& physBody = *entities[i]->getPhysicsBody();
+			physBody.setGravity(action->mousePos);
+			physBody.setAngularFactor(btVector3(0, 0, 0));
+		}
+	}
 }
 
 void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
 	Entity* ent = entities[update->entityId];
-
-	//Pull it out
-	world->removeRigidBody(ent->getPhysicsBody());
-
-	//Lube it up
-	delete ent->getPhysicsBody()->getMotionState();
-	ent->getPhysicsBody()->setMotionState(new btDefaultMotionState(update->motion));
-	ent->getPhysicsBody()->setMassProps(ent->getType()->getMass(), update->inertia);
-
-	//Put it back in
-	world->addRigidBody(ent->getPhysicsBody());
+	
+	btRigidBody& physBody = *ent->getPhysicsBody();
+	
+	physBody.setWorldTransform(update->transform);
+	physBody.setLinearVelocity(update->linearVel);
+	physBody.setAngularVelocity(update->angularVel);
 }
 
 void EntityManager::start() {
@@ -123,10 +129,6 @@ void EntityManager::update() {
 	clock_t currTime = clock();
 	world->stepSimulation(float(currTime - lastTime)/float(CLOCKS_PER_SEC), 10);
 	lastTime = currTime;
-
-	btTransform transform;
-	entities.at(0)->getPhysicsBody()->getMotionState()->getWorldTransform(transform);
-	std::cout << "Entity 0: " << transform.getOrigin().getY() << std::endl;
 	
 	//Combine stackable entities
 	for(unsigned int i = 0; i < entities.size(); i ++) {
@@ -168,5 +170,17 @@ Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVect
 }
 
 void EntityManager::createPhysicsUpdates() {
-	
+	for(pair<int, Entity*> p : entities) {
+		Entity * e = p.second;
+		btRigidBody& physBody = * e->getPhysicsBody();
+		btTransform transform;
+		physBody.getMotionState()->getWorldTransform(transform);
+		btVector3 linear = physBody.getLinearVelocity();
+		btVector3 angular = physBody.getAngularVelocity();
+		PhysicsUpdate *update = PhysicsUpdate::create(e->getId(), transform, linear, angular);
+
+		firePhysicsUpdate(update);
+
+		update->emancipate();
+	}
 }

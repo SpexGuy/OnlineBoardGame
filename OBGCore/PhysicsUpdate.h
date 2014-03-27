@@ -20,9 +20,10 @@ private:
 	PhysicsUpdate();
 	~PhysicsUpdate();
 public:
-	static PhysicsUpdate* create(int entityId, const btDefaultMotionState& motion, const btVector3& inertia);
+	static PhysicsUpdate* create(int entityId, const btTransform& transform, const btVector3& linearVel, const btVector3& angularVel);
 	void emancipate();
 	int entityId;
-	btDefaultMotionState motion;
-	btVector3 inertia;
+	btTransform transform;
+	btVector3 linearVel;
+	btVector3 angularVel;
 };

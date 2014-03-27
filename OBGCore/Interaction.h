@@ -2,7 +2,7 @@
 #include <vector>
 #include "btBulletDynamicsCommon.h"
 
-using std::vector
+using std::vector;
 /** This class has no constructor or destructor.
  *	It should be allocated with malloc() and
  *	destroyed with free().
@@ -20,7 +20,6 @@ using std::vector
 class Interaction {
 private:
 	Interaction();
-	~Interaction();
 public:
 	vector<int> ids;
 	btVector3 mousePos;
