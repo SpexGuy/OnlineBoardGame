@@ -131,13 +131,19 @@ void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 
 	switch(button) {
 	case 0:{ //left click
-		vec3 pos = pointer->getWorldPos();
-		Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z));
-		if(clickedEntity != NULL) {
-			cout << "Clicked on entity " << clickedEntity->getId() << endl;
-			heldList.push_back(clickedEntity->getId());
-		} else {
-			cout << "Clicked on nothing" << endl;
+		if(state == GLUT_DOWN) {
+			vec3 pos = pointer->getWorldPos();
+			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z));
+			if(clickedEntity != NULL) {
+				int id = clickedEntity->getId();
+				heldList.push_back(id);
+				cout << "Clicked on entity " << id << endl;
+			} else {
+				cout << "Clicked on nothing" << endl;
+			}
+		}
+		else if(state == GLUT_UP) {
+			heldList.clear();
 		}
 		break;
 	}
