@@ -23,7 +23,7 @@ class EntityManager :
 {
 public:
 	EntityManager();
-	~EntityManager();
+	virtual ~EntityManager();
 
 	virtual void addEntity(Entity *e);
 

@@ -4,13 +4,18 @@
 	"Entities":[
 		{
 			"Asset":"earth",
-			"Position":[1.0,0.0,-1.0],
+			"Position":[1.0,2.0,-1.0],
 			"Rotation":[0.0,0.0,0.0,1.0]
 		},
 		{
 			"Asset":"earth",
-			"Position":[-1.0,0.0,1.0],
+			"Position":[-1.0,2.0,1.0],
 			"Rotation":[0.0,0.0,0.0,1.0]
+		},
+		{
+			"Asset":"othelloBoard",
+			"Position":[0,0,0],
+			"Rotation":[0,0,0,1]
 		}
 	]
 }

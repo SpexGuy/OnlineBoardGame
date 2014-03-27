@@ -41,7 +41,7 @@ void UserInputHandler::update() {
 	lastHeldList = heldList;
 	
 	vec3 worldPos = pointer->getWorldPos();
-	btVector3 btPos(worldPos.x, 1, worldPos.z);
+	btVector3 btPos(worldPos.x, worldPos.y, worldPos.z);
 	Interaction *interaction = new Interaction(btPos, idList);
 	fireInteraction(interaction);
 	delete interaction;

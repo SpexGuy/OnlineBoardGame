@@ -42,7 +42,7 @@ MousePointer::MousePointer() {
 
 	material = new TextureMaterial(texture, texShader);
 
-	height = 1;
+	height = 2;
 	screenPos = ivec2(0,0);
 }
 
