@@ -52,7 +52,7 @@ EntityManager::EntityManager() {
     world->addRigidBody(groundRigidBody5);
 
 	btCollisionShape *ceilingShape = new btStaticPlaneShape(btVector3(0, -1, 0), 0);
-	btDefaultMotionState* ceilingMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,2,0)));
+	btDefaultMotionState* ceilingMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,2.01,0)));
     btRigidBody::btRigidBodyConstructionInfo
             ceilingRigidBodyCI(0,ceilingMotionState,ceilingShape,btVector3(0,0,0));
     btRigidBody* ceilingRigidBody = new btRigidBody(ceilingRigidBodyCI);
@@ -131,7 +131,9 @@ void EntityManager::handleInteraction(Interaction *action) {
 			physBody.setAngularFactor(btVector3(1, 1, 1));
 		} else {
 			btRigidBody& physBody = *entities[i]->getPhysicsBody();
-			btVector3 gravity = 50*(action->mousePos - physBody.getWorldTransform().getOrigin()).normalized();
+			btVector3 modifiedMouse = action->mousePos;
+			modifiedMouse.setY(modifiedMouse.getY() + 0.5);
+			btVector3 gravity = 50*(modifiedMouse - physBody.getWorldTransform().getOrigin()).normalized();
 			physBody.setGravity(gravity);
 			physBody.setAngularFactor(btVector3(0, 0, 0));
 		}
