@@ -77,6 +77,30 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 		case 'x':
 			GameManager::inst()->close();
 			break;
+		case 'w':
+		case 'W':
+			//Rotate -x
+			break;
+		case 's':
+		case 'S':
+			//Rotate x
+			break;
+		case 'a':
+		case 'A':
+			//Rotate z
+			break;
+		case 'd':
+		case 'D':
+			//rotate -z
+			break;
+		case 'q':
+		case 'Q':
+			//rotate y
+			break;
+		case 'e':
+		case 'E':
+			//rotate -y
+			break;
 		default:
 			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
 		}
