@@ -96,7 +96,7 @@ GameManager::GameManager(int argc, char *argv[]) {
 	inputHandler->registerInteractionListener(connection);
 	inputHandler->registerInteractionListener(entityManager);
 	graphicsManager->addRenderable(inputHandler->getChatBox());
-	//entityManager->registerPhysicsUpdateListener(entityManager);
+	entityManager->registerPhysicsUpdateListener(entityManager);
 	//provide global access point
 	assert(instance == NULL);
 	instance = this;
@@ -150,11 +150,9 @@ void GameManager::update() {
 	if (running) {
 		glutTimerFunc(PERIOD, updateFunc, 0);
 		inputHandler->update();
-		int t =  glutGet(GLUT_ELAPSED_TIME);
 		entityManager->update();
 		entityManager->createPhysicsUpdates();
-		cout << glutGet(GLUT_ELAPSED_TIME) - t << endl;
-		glutPostRedisplay();
+		display();
 	}
 }
 

@@ -34,7 +34,7 @@ public:
 	virtual void update();
 	virtual void clear();
 	virtual Entity* getEntityById(int id);
-	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to, Interaction* interaction);
+	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to);
 	virtual void createPhysicsUpdates();
 
 private:

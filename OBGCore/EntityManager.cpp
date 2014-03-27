@@ -114,7 +114,7 @@ void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
 	
 	btRigidBody& physBody = *ent->getPhysicsBody();
 	
-	physBody.setWorldTransform(update->transform);
+	physBody.getMotionState()->setWorldTransform(update->transform);
 	physBody.setLinearVelocity(update->linearVel);
 	physBody.setAngularVelocity(update->angularVel);
 }
@@ -154,7 +154,7 @@ Entity* EntityManager::getEntityById(int id) {
 	return entities[id];
 }
 
-Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to, Interaction* interaction) {
+Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to) {
 	btCollisionWorld::ClosestRayResultCallback callback(from, to);
 	world->rayTest(from, to, callback);
 

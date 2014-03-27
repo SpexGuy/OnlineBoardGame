@@ -10,7 +10,10 @@ class UserInputHandler :
 {
 private:
 	ChatBox *chat;
-
+	std::vector<int> heldList;
+	std::vector<int> lastHeldList;
+	double mouseX, mouseZ;
+	int screenX, screenY;
 public:
 	UserInputHandler();
 	virtual void update();
