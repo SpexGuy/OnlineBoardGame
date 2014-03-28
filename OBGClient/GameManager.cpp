@@ -8,7 +8,6 @@
 #include <json.h>
 #include <Socket.h>
 
-#include <EntityManager.h>
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
@@ -20,6 +19,8 @@
 
 #include "ChatBox.h"
 #include "ClientConnection.h"
+#include "ClientEntityManager.h"
+#include "CollisionMeshRenderer.h"
 #include "GameManager.h"
 #include "GraphicsAsset.h"
 #include "GraphicsAssetPack.h"
@@ -89,7 +90,7 @@ GameManager::GameManager(int argc, char *argv[]) {
 	graphicsManager = new GraphicsManager(argc, argv);
 	connection = new ClientConnection("127.0.0.1", 0xABC0);
 	inputHandler = new UserInputHandler();
-	entityManager = new EntityManager();
+	entityManager = new ClientEntityManager();
 	//set up listeners
 	connection->registerMessageListener(inputHandler->getChatBox());
 	inputHandler->getChatBox()->registerMessageListener(connection);

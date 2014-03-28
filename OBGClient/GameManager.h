@@ -1,16 +1,16 @@
 #pragma once
 
 class GraphicsManager;
-class EntityManager;
+class ClientEntityManager;
 class ClientConnection;
 class UserInputHandler;
 
 class GameManager {
 protected:
-	GraphicsManager	 *graphicsManager;
-	EntityManager	 *entityManager;
-	ClientConnection *connection;
-	UserInputHandler *inputHandler;
+	GraphicsManager		*graphicsManager;
+	ClientEntityManager	*entityManager;
+	ClientConnection	*connection;
+	UserInputHandler	*inputHandler;
 
 	bool running;
 	bool visible;
@@ -33,8 +33,8 @@ public:
 	virtual ~GameManager();
 
 	//accessors
-	inline GraphicsManager	*getGraphicsManager()	{ return graphicsManager;	}
-	inline EntityManager	*getEntityManager()		{ return entityManager;		}
-	inline ClientConnection	*getConnection()		{ return connection;		}
-	inline UserInputHandler	*getInputHandler()		{ return inputHandler;		}
+	inline GraphicsManager		*getGraphicsManager()	{ return graphicsManager;	}
+	inline ClientEntityManager	*getEntityManager()		{ return entityManager;		}
+	inline ClientConnection		*getConnection()		{ return connection;		}
+	inline UserInputHandler		*getInputHandler()		{ return inputHandler;		}
 };

@@ -15,6 +15,15 @@ class EntityManager :
 	public PhysicsUpdateListener,
 	public PhysicsUpdateEventBroadcaster
 {
+protected:
+	std::map<int, Entity*> entities;
+	btDiscreteDynamicsWorld* world;
+	btSequentialImpulseConstraintSolver* solver;
+	btCollisionDispatcher* dispatcher;
+	btDefaultCollisionConfiguration* collisionConfiguration;
+	btBroadphaseInterface* broadphase;
+	clock_t lastTime;
+
 public:
 	EntityManager();
 	virtual ~EntityManager();
@@ -30,13 +39,4 @@ public:
 	virtual Entity* getEntityById(int id);
 	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to);
 	virtual void createPhysicsUpdates();
-
-private:
-	std::map<int, Entity*> entities;
-	btDiscreteDynamicsWorld* world;
-	btSequentialImpulseConstraintSolver* solver;
-	btCollisionDispatcher* dispatcher;
-	btDefaultCollisionConfiguration* collisionConfiguration;
-	btBroadphaseInterface* broadphase;
-	clock_t lastTime;
 };

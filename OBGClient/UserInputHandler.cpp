@@ -4,7 +4,7 @@
 #include "ChatBox.h"
 #include "GameManager.h"
 #include "UserInputHandler.h"
-#include "EntityManager.h"
+#include "ClientEntityManager.h"
 #include "Interaction.h"
 #include "Entity.h"
 #include "MousePointer.h"
@@ -127,7 +127,7 @@ void UserInputHandler::specialKeyPressed(int k, int x, int y) {
 
 void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 	pointer->setScreenPos(ivec2(x, y));
-	EntityManager* entityManager = GameManager::inst()->getEntityManager();
+	ClientEntityManager* entityManager = GameManager::inst()->getEntityManager();
 
 	switch(button) {
 	case 0:{ //left click

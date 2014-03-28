@@ -66,20 +66,20 @@ void GraphicsContext::viewport() {
 
 void GraphicsContext::useShader(GLSLProgram *shader) {
 	currShader = shader;
-	shader->use();
 }
 
 void GraphicsContext::drawTriangles(GLsizei numElements, GLuint vertexArrayHandle,
 									const mat4 &world)
 {
 	glBindVertexArray(vertexArrayHandle);
+	currShader->use();
 	currShader->setup(world);
 	glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, 0);
+	glUseProgram(0);
 	checkError("After draw triangles");
 }
 
 void GraphicsContext::drawText2D(float x, float y, const char *str, float size, const vec3 &color) const {
-	glUseProgram(0);
 	mat4 pos = translate(overlayBase, vec3(x, y, 0));
 	float scaleFactor = size/72.0f;
 	pos = scale(pos, vec3(scaleFactor, scaleFactor, 1.0f));
@@ -98,9 +98,7 @@ void GraphicsContext::drawText2D(float x, float y, const char *str, float size, 
 		checkError("After glutStrokeWidth");
 		str++;
 	}
-	//unbind the shader
-	if (currShader != NULL)
-		currShader->use();
+	glUseProgram(0);
 	checkError("After draw text");
 }
 
