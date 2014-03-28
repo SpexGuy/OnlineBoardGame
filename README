@@ -5,7 +5,7 @@ Instructions for creating a VS2012 Project (Rev. 2.2)
 Depending on your experience with VS2012, this should take 1-2 hours to set up.
 I recommend creating a backup of the project directory after each step.
 
-@Rohit: THERE IS A COMPILED EXECUTABLE IN THE REPO, UNDER /snapshot, SO UNLESS YOU REALLY WANT TO BUILD IT YOURSELF, YOU DON'T NEED TO DO ALL OF THIS.  But if you do, good luck!
+@Rohit: THERE IS A COMPILED EXECUTABLE IN THE REPO, UNDER snapshot-iteration1.zip, SO UNLESS YOU REALLY WANT TO BUILD IT YOURSELF, YOU DON'T NEED TO DO ALL OF THIS.  But if you do, good luck!
 
 PART 1: Bullet to the head
 
@@ -281,6 +281,16 @@ Part 5: Git the Code
 	Congratulations, you're done (finally)!
 
 
-Part 6 (optional): Running without VS
-	In order to run the executable outside of the debug environment, you must copy all resource files (.obj, .mat, .jpg, ...) and shader files (.vert, .frag, .geom, .cs) into the same directory as the executable. This is not necessary in debug mode because VS sets your working directory to be the project directory.
+Part 6: Running the projects:
 
+IN ORDER TO RUN THE CLIENT, YOU MUST BE RUNNING THE SERVER ON LOCALHOST
+
+You must have a unique instance of visual studio running for each program you wish to run.
+In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
+RUN THE SERVER FIRST
+Then, run the client.  You can run multiple instances of the client, however they do not synchronize physics as of yet.
+The chat works though; press enter or t to talk to the other clients.
+There seems to be a bug where if an object has remained motionless for a few seconds it will become fixed, and cannot be moved.
+You can pick up an object at the beginning though, and if you throw it at other objects it will jar them free, and they can also be picked up.
+
+If you want to run the project without VS, be sure to copy all non-code files into the same directory as the executable.
