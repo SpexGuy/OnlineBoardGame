@@ -16,7 +16,7 @@ protected:
 	btTransform orientation;
 	CollisionShapeInflater *collider;
 
-	btRigidBody *createRigidBody(const btTransform &position);
+	void inflateRigidBody(Entity *entity);
 
 public:
 	inline float getMass() { return mass; }

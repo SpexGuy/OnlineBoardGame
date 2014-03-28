@@ -5,12 +5,12 @@ Entity::Entity() {
 
 }
 
-Entity::Entity(Asset *type, int id, btRigidBody *physicsBody) {
-	this->type = type;
-	this->id = id;
-	this->hidden = false;
-	this->physicsBody = physicsBody;
-}
+Entity::Entity(Asset *type, int id, const btTransform &transform) :
+	type(type),
+	id(id),
+	transform(transform),
+	hidden(false)
+{}
 
 void Entity::shake() {
 	//TODO:[JK] shake physics
