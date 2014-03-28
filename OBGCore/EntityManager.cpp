@@ -128,7 +128,10 @@ void EntityManager::handleInteraction(Interaction *action) {
 		if(i < 0) {
 			btRigidBody& physBody = *entities[-i]->getPhysicsBody();
 			physBody.setGravity(btVector3(0, -10, 0));
+			//TODO:[MWJK] USE ANGULAR DAMPENING INSTEAD
 			physBody.setAngularFactor(btVector3(1, 1, 1));
+			physBody.setAngularVelocity(btVector3(0, 0, 0));
+			physBody.setActivationState(ACTIVE_TAG);
 		} else {
 			btRigidBody& physBody = *entities[i]->getPhysicsBody();
 			btVector3 modifiedMouse = action->mousePos;
