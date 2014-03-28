@@ -1,16 +1,10 @@
 #pragma once
+#include <map>
+#include <time.h>
+#include "btBulletDynamicsCommon.h"
 #include "InteractionListener.h"
 #include "PhysicsUpdateListener.h"
 #include "PhysicsUpdateEventBroadcaster.h"
-#include "btBulletDynamicsCommon.h"
-#include <vector>
-#include <LinearMath\btVector3.h>
-#include <map>
-#include <time.h>
-
-using std::vector;
-using std::map;
-using std::pair;
 
 class Entity;
 class Interaction;
@@ -38,7 +32,7 @@ public:
 	virtual void createPhysicsUpdates();
 
 private:
-	map<int, Entity*> entities;
+	std::map<int, Entity*> entities;
 	btDiscreteDynamicsWorld* world;
 	btSequentialImpulseConstraintSolver* solver;
 	btCollisionDispatcher* dispatcher;

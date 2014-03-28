@@ -6,6 +6,11 @@
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
 	
+#define MAX_PICKUP_VELOCITY 10
+#define PICKUP_POWER 10
+
+using namespace std;
+
 EntityManager::EntityManager() {
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
@@ -51,12 +56,12 @@ EntityManager::EntityManager() {
     btRigidBody* groundRigidBody5 = new btRigidBody(groundRigidBodyCI5);
     world->addRigidBody(groundRigidBody5);
 
-	btCollisionShape *ceilingShape = new btStaticPlaneShape(btVector3(0, -1, 0), 0);
-	btDefaultMotionState* ceilingMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,2.01,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            ceilingRigidBodyCI(0,ceilingMotionState,ceilingShape,btVector3(0,0,0));
-    btRigidBody* ceilingRigidBody = new btRigidBody(ceilingRigidBodyCI);
-    world->addRigidBody(ceilingRigidBody);
+	//btCollisionShape *ceilingShape = new btStaticPlaneShape(btVector3(0, -1, 0), 0);
+	//btDefaultMotionState* ceilingMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,2.01,0)));
+ //   btRigidBody::btRigidBodyConstructionInfo
+ //           ceilingRigidBodyCI(0,ceilingMotionState,ceilingShape,btVector3(0,0,0));
+ //   btRigidBody* ceilingRigidBody = new btRigidBody(ceilingRigidBodyCI);
+ //   world->addRigidBody(ceilingRigidBody);
 
  //   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);
 
@@ -127,18 +132,21 @@ void EntityManager::handleInteraction(Interaction *action) {
 		assert(i != 0);
 		if(i < 0) {
 			btRigidBody& physBody = *entities[-i]->getPhysicsBody();
-			physBody.setGravity(btVector3(0, -10, 0));
-			//TODO:[MWJK] USE ANGULAR DAMPENING INSTEAD
+			physBody.setGravity(world->getGravity());
 			physBody.setAngularFactor(btVector3(1, 1, 1));
-			physBody.setAngularVelocity(btVector3(0, 0, 0));
 			physBody.setActivationState(ACTIVE_TAG);
 		} else {
 			btRigidBody& physBody = *entities[i]->getPhysicsBody();
-			btVector3 modifiedMouse = action->mousePos;
-			modifiedMouse.setY(modifiedMouse.getY() + 0.5);
-			btVector3 gravity = 50*(modifiedMouse - physBody.getWorldTransform().getOrigin()).normalized();
-			physBody.setGravity(gravity);
-			physBody.setAngularFactor(btVector3(0, 0, 0));
+			btVector3 v = action->mousePos - physBody.getWorldTransform().getOrigin();
+			v *= PICKUP_POWER;
+			if (v.length() > MAX_PICKUP_VELOCITY) {
+				v = MAX_PICKUP_VELOCITY * v.normalized();
+			}
+			physBody.setLinearVelocity(v);
+			physBody.setGravity(btVector3(0,0,0));
+			physBody.setAngularFactor(btVector3(0.1, 0.1, 0.1));
+			physBody.setAngularVelocity(btVector3(0, 0, 0));
+			physBody.setActivationState(ACTIVE_TAG);
 		}
 	}
 }
