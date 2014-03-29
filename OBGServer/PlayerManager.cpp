@@ -18,7 +18,7 @@ PlayerManager::PlayerManager(short port) :
 	socket(new ServerSocket(port)),
 	active(false),
 	thread(PlayerManagerThreadLoop, this),
-	playersMutex()
+	playersLock()
 {
 
 }
@@ -48,14 +48,14 @@ void PlayerManager::loop() {
 }
 
 void PlayerManager::addPlayer(ServerConnection *player) {
-	FunctionLock lock(playersMutex);
+	FunctionLock lock(playersLock);
 	players.push_back(player);
 	lock.unlock();
 	firePlayerJoined(player);
 }
 
 void PlayerManager::handlePhysicsUpdate(PhysicsUpdate *physicsUpdate) {
-	FunctionLock lock(playersMutex);
+	FunctionLock lock(playersLock);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		players[c]->sendUpdate(physicsUpdate);
 	}
@@ -71,7 +71,7 @@ void PlayerManager::handleInteraction(Interaction *action) {
 
 void PlayerManager::disconnectPlayer(ServerConnection *player) {
 	bool found = false;
-	FunctionLock lock(playersMutex);
+	FunctionLock lock(playersLock);
 	for (auto iter = players.begin(), end = players.end();
 			iter != end; ++iter)
 	{
@@ -88,7 +88,7 @@ void PlayerManager::disconnectPlayer(ServerConnection *player) {
 }
 
 void PlayerManager::broadcast(string message, ServerConnection *exclude) {
-	FunctionLock lock(playersMutex);
+	FunctionLock lock(playersLock);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		if (players[c] != exclude) {
 			players[c]->sendMessage(message);
@@ -105,7 +105,7 @@ void PlayerManager::close() {
 PlayerManager::~PlayerManager() {
 	if (active) close();
 
-	FunctionLock lock(playersMutex);
+	FunctionLock lock(playersLock);
 	for (unsigned int c = 0; c < players.size(); c++) {
 		delete players[c];
 	}

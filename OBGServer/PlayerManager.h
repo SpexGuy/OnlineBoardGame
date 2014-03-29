@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <Mutex.h>
+#include <CriticalSection.h>
 #include <PhysicsUpdateListener.h>
 #include <Thread.h>
 #include "InteractionEventBroadcaster.h"
@@ -28,7 +28,7 @@ protected:
 	volatile bool active;
 
 	Thread thread;
-	Mutex playersMutex;
+	CriticalSection playersLock;
 
 	virtual void addPlayer(ServerConnection *player);
 public:

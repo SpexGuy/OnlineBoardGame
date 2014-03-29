@@ -28,13 +28,13 @@ void ChatBox::handleMessage(const string &msg) {
 }
 
 void ChatBox::pushCharacter(char c) {
-	FunctionLock lock(inputMutex);
+	FunctionLock lock(inputLock);
 	if (input.size() < INPUT_BOX_SIZE)
 		input.push_back(c);
 }
 
 void ChatBox::popCharacter() {
-	FunctionLock lock(inputMutex);
+	FunctionLock lock(inputLock);
 	if (input.size() > 0)
 		input.pop_back();
 }
@@ -45,7 +45,7 @@ void ChatBox::enterEditMode() {
 
 void ChatBox::submit() {
 	editMode = false;
-	FunctionLock lock(inputMutex);
+	FunctionLock lock(inputLock);
 		if (input.size() == 0) return;
 		input.push_back('\0');
 		string str(&input[0]);
@@ -57,7 +57,7 @@ void ChatBox::submit() {
 
 void ChatBox::cancel() {
 	editMode = false;
-	FunctionLock lock(inputMutex);
+	FunctionLock lock(inputLock);
 	input.clear();
 }
 
@@ -65,7 +65,7 @@ void ChatBox::render() {
 	float x = X_OFFSET;
 	float y = Y_OFFSET;
 	if (editMode) {
-		FunctionLock lock(inputMutex);
+		FunctionLock lock(inputLock);
 			bool hasNext = input.size() < INPUT_BOX_SIZE;
 			if (hasNext) input.push_back('_');
 			input.push_back('\0');

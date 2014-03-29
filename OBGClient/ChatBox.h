@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <Mutex.h>
+#include <CriticalSection.h>
 #include <Renderable.h>
 #include "MessageListener.h"
 #include "MessageEventBroadcaster.h"
@@ -16,7 +16,7 @@ class ChatBox :
 {
 private:
 	std::string *messages[NUM_MESSAGES];
-	Mutex inputMutex;
+	CriticalSection inputLock;
 	std::vector<char> input;
 	bool editMode;
 
