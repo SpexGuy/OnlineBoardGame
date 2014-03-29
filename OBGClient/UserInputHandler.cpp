@@ -16,12 +16,12 @@
 
 #define ROTATIONAL_VELOCITY 100
 
-
 using namespace std;
 using namespace glm;
 
 UserInputHandler::UserInputHandler() {
 	chat = new ChatBox();
+	wireframe = false;
 }
 
 void UserInputHandler::start() {
@@ -119,6 +119,11 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 		case 'e':
 		case 'E':
 			//rotate -y
+			break;
+		case 'r':
+		case 'R':
+			wireframe = !wireframe;
+			glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 			break;
 		default:
 			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;

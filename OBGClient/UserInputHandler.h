@@ -14,6 +14,7 @@ private:
 	std::vector<int> heldList;
 	std::vector<int> lastHeldList;
 	MousePointer *pointer;
+	bool wireframe;
 public:
 	UserInputHandler();
 	virtual void start();

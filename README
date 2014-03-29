@@ -293,4 +293,12 @@ The chat works though; press enter or t to talk to the other clients.
 There seems to be a bug where if an object has remained motionless for a few seconds it will become fixed, and cannot be moved.
 You can pick up an object at the beginning though, and if you throw it at other objects it will jar them free, and they can also be picked up.
 
+Controls:
+	mouse 0 - pick up objects
+	t/enter - start chat
+	F11 - toggle fullscreen
+	esc - exit fullscreen / program
+	x - exit program
+	r - toggle wireframe
+
 If you want to run the project without VS, be sure to copy all non-code files into the same directory as the executable.

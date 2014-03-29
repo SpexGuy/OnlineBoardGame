@@ -4,11 +4,11 @@
 #include <Texture.h>
 #include <TextureGroup.h>
 #include <TextureMaterial.h>
-#include <TextureShader.h>
 #include "ClientConnection.h"
 #include "GameManager.h"
 #include "GraphicsAsset.h"
 #include "GraphicsAssetPack.h"
+#include "PointerShadowShader.h"
 
 //there's probably a better place for these
 #define CHANNEL_COLOR 0
@@ -23,9 +23,9 @@ using Json::ValueType;
 GraphicsAssetPack::GraphicsAssetPack(const Value &root) :
 		AssetPack(root)
 {
-	texShader = new TextureShader();
-	texShader->compileShader("NormalShader.vert");
-	texShader->compileShader("NormalShader.frag");
+	texShader = new PointerShadowShader();
+	texShader->compileShader("PointerShadowShader.vert");
+	texShader->compileShader("PointerShadowShader.frag");
 	texShader->link();
 }
 
