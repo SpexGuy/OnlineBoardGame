@@ -3,6 +3,8 @@
 #include <Material.h>
 #include <Renderable.h>
 
+#define MOUSE_HEIGHT 1
+
 class MousePointer :
 	public Renderable
 {
