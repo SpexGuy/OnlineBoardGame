@@ -134,7 +134,7 @@ void EntityManager::handleInteraction(Interaction *action) {
 			btRigidBody& physBody = *entities[-i]->getPhysicsBody();
 			physBody.setGravity(world->getGravity());
 			physBody.setAngularFactor(btVector3(1, 1, 1));
-			physBody.setActivationState(ACTIVE_TAG);
+			physBody.activate(true);
 		} else {
 			btRigidBody& physBody = *entities[i]->getPhysicsBody();
 			btVector3 v = action->mousePos - physBody.getWorldTransform().getOrigin();
@@ -146,7 +146,7 @@ void EntityManager::handleInteraction(Interaction *action) {
 			physBody.setGravity(btVector3(0,0,0));
 			physBody.setAngularFactor(btVector3(0.1, 0.1, 0.1));
 			physBody.setAngularVelocity(btVector3(0, 0, 0));
-			physBody.setActivationState(ACTIVE_TAG);
+			physBody.activate(true);
 		}
 	}
 }

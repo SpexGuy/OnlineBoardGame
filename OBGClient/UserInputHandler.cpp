@@ -94,7 +94,7 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 			//	//btRigidBody *bod = GameManager::inst()->getEntityManager()->getEntityById(heldList[0])->getPhysicsBody();
 			//	//bod->setAngularFactor(btVector3(1,1,1));
 			//	//bod->setAngularVelocity(btVector3(-ROTATIONAL_VELOCITY,ROTATIONAL_VELOCITY,ROTATIONAL_VELOCITY));
-			//	//bod->setActivationState(ACTIVE_TAG);
+			//	//bod->activate(true);
 			//} else {
 			//	cout << "Nothing to rotate" << endl;
 			//}
