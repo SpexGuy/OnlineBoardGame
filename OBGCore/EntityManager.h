@@ -1,8 +1,9 @@
 #pragma once
 #include <map>
 #include <time.h>
-#include "btBulletDynamicsCommon.h"
+#include <btBulletDynamicsCommon.h>
 #include "InteractionListener.h"
+#include "CriticalSection.h"
 #include "PhysicsUpdateListener.h"
 #include "PhysicsUpdateEventBroadcaster.h"
 
@@ -23,6 +24,7 @@ protected:
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btBroadphaseInterface* broadphase;
 	clock_t lastTime;
+	CriticalSection worldLock;
 
 public:
 	EntityManager();

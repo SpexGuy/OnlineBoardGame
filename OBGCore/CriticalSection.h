@@ -25,5 +25,5 @@ private:
 #ifdef _WIN32
 	CRITICAL_SECTION m_criticalSection;
 #endif
-	int m_lockCounter;
+	volatile int m_lockCounter;
 };

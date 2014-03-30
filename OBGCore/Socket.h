@@ -20,9 +20,10 @@ private:
 	int readRawBytes(const void *data, int size);
 protected:
 	int socketFD;
+	bool connected;
 public:
-	Socket(int fd) :
-		socketFD(fd) {}
+	Socket(int fd, bool connected = true) :
+		socketFD(fd), connected(connected) {}
 	Socket(const std::string &ip, short int port);
 
 	/**	returns 0 if the data is send successfully, or the number

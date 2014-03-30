@@ -48,8 +48,8 @@ long CriticalSection::tryLockFor(const unsigned int millis)
 
 void CriticalSection::unlock() {
 	assert(m_lockCounter > 0);
-	LeaveCriticalSection(&m_criticalSection);
 	m_lockCounter--;
+	LeaveCriticalSection(&m_criticalSection);
 }
 
 

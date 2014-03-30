@@ -57,7 +57,16 @@ void ClientConnection::setUsername(const string &un) {
 }
 
 void ClientConnection::handleInteraction(Interaction *action) {
-	socket->sendData(TYPE_INTERACTION, action, sizeof(*action));
+	//allocate SerializedInteraction with enough ints at the end
+	int size = sizeof(SerializedInteraction) + action->ids.size()*sizeof(int);
+	struct SerializedInteraction *serial = (SerializedInteraction *)malloc(size);
+	serial->mousePos = action->mousePos;
+	serial->numIds = action->ids.size();
+	for (unsigned int c = 0; c < action->ids.size(); c++) {
+		serial->ids[c] = action->ids[c];
+	}
+	socket->sendData(TYPE_INTERACTION, serial, size);
+	free(serial);
 }
 
 void ClientConnection::handleMessage(const string &message) {

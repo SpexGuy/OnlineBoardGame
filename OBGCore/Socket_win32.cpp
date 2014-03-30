@@ -40,11 +40,14 @@ Socket::Socket(const string &ip, short port) {
 
 	if (connect(socketFD, &target, sizeof(target)) < 0) {
 		cout << "Unable to connect!" << endl;
-		assert(false);
+		connected = false;
+	} else {
+		connected = true;
 	}
 }
 
 int Socket::sendRawBytes(char *byteData, int size) {
+	if (!connected) return -1;
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
 		int bytesSent = send(socketFD, byteData, bytesLeft, 0);
@@ -78,6 +81,7 @@ int Socket::readRawBytes(const void *data, int size) {
 }
 
 int Socket::sendData(int type, const void *data, int size) {
+	if (!connected) return -1;
 	int ntype = htonl(type);
 	int nsize = htonl(size);
 
@@ -92,6 +96,7 @@ int Socket::sendData(int type, const void *data, int size) {
 }
 
 int Socket::sendFile(const string &filename) {
+	if (!connected) return -1;
 	cout << "Sending file: " << filename << endl;
 	//open file for binary read
 	ifstream file(filename.c_str(), ios::in | ios::binary | ios::ate);
@@ -213,6 +218,7 @@ SerialData Socket::receive() {
 
 
 Socket::~Socket() {
+	connected = false;
 	closesocket(socketFD);
 }
 
