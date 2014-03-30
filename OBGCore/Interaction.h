@@ -23,6 +23,12 @@ private:
 public:
 	vector<int> ids;
 	btVector3 mousePos;
-	Interaction(const btVector3& mousePos, vector<int> ids);
+	Interaction(const btVector3& mousePos, const vector<int> &ids);
 	~Interaction();
+};
+
+struct SerializedInteraction {
+	btVector3 mousePos;
+	int numIds;
+	int ids[0];
 };

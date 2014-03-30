@@ -9,6 +9,9 @@ protected:
 	EntityManager *entityManager;
 	PlayerManager *playerManager;
 	ServerInputManager *inputManager;
+
+	volatile bool running;
+	
 public:
 	GameManager();
 	virtual void run();

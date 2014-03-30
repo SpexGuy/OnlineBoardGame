@@ -35,11 +35,18 @@ void ServerConnection::processData(const SerialData &data) {
 		assert(false);
 		break;
 
-	case TYPE_INTERACTION:
-		assert(data.size == sizeof(Interaction));
-		owner->handleInteraction((Interaction *) data.data);
+	case TYPE_INTERACTION: {
+		SerializedInteraction *serial = (SerializedInteraction *)data.data;
+		assert(data.size == sizeof(SerializedInteraction) + serial->numIds*sizeof(int));
+		vector<int> ids(serial->numIds);
+		for (int c = 0; c < serial->numIds; c++) {
+			ids[c] = serial->ids[c];
+		}
+		Interaction action(serial->mousePos, ids);
+		owner->handleInteraction(&action);
+		free(data.data);
 		break;
-
+	}
 	case TYPE_MESSAGE:
 		owner->handleMessage(string((char *)data.data), this);
 		free(data.data);
@@ -72,11 +79,16 @@ bool ServerConnection::isUnresponsive() {
 void ServerConnection::sendUpdate(PhysicsUpdate *update) {
 	//With TCP, socket disconnect is detected by
 	//reads. When we switch, this will need to detect.
-	socket->sendData(TYPE_PHYSICS_UPDATE, update, sizeof(PhysicsUpdate));
+	int sent = socket->sendData(TYPE_PHYSICS_UPDATE, update, sizeof(PhysicsUpdate));
+	if (sent != 0) {
+		handleFatalError();
+	}
 }
 
 void ServerConnection::sendMessage(const string &msg) {
-	socket->sendData(TYPE_MESSAGE, msg.c_str(), msg.length() + 1);
+	int sent = socket->sendData(TYPE_MESSAGE, msg.c_str(), msg.length() + 1);
+	if (sent != 0)
+		handleFatalError();
 }
 
 ServerConnection::~ServerConnection() {

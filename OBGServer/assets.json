@@ -1,0 +1,174 @@
+{
+   "GameName":"Bad Earth",
+   "Version":0.1,
+   "EntityLocationsFile":"entities.json",
+   "Assets":{
+      "earth":{
+         "Group":"sphereness",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"badEarth.obj",
+         "ColorTex":"super_earth.jpg",
+         "NormalTex":"super_earth.jpg",
+         "SpecularTex":"super_earth.jpg",
+         "Mass": 10.0,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+   			"Type":"Sphere",
+   			"Position":[0.0,0.0,0.0],
+   			"Rotation":[0,0,0,1],
+   			"Radius":1
+		   }
+      },
+      "othelloToken":{
+         "Group":"tokens",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"othelloToken.obj",
+         "ColorTex":"whiteblack.jpg",
+         "NormalTex":"whiteblack.jpg",
+         "SpecularTex":"whiteblack.jpg",
+         "Mass": 1.0,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Cylinder",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.20,0.0625,0.20]
+         }
+      },
+      "othelloBoard":{
+         "Group":"board",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"othelloBoard.obj",
+         "ColorTex":"felt.jpg",
+         "NormalTex":"felt.jpg",
+         "SpecularTex":"felt.jpg",
+         "Mass": 0,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Compound",
+            "Position":[0.0,0.0,0.0],
+            "Rotation":[0,0,0,1],
+            "Colliders":[
+               {
+                  "Type":"Box",
+                  "Position":[-2,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[-1.5,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[-1,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[-0.5,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0.5,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[1,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[1.5,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[2,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[0.03125,0.03125,2]
+               },
+
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,-2],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,-1.5],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,-1],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,-0.5],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,0],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,0.5],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,1],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,1.5],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               },
+               {
+                  "Type":"Box",
+                  "Position":[0,0.03125,2],
+                  "Rotation":[0,0,0,1],
+                  "HalfExtents":[2,0.03125,0.03125]
+               }
+            ]
+         }
+      }
+   }
+}

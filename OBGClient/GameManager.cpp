@@ -8,6 +8,7 @@
 #include <json.h>
 #include <Socket.h>
 
+#include <GLErrorCheck.h>
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
@@ -108,11 +109,6 @@ void GameManager::run() {
 	visible = true;
 
 	graphicsManager->start();
-	connection->start();
-	inputHandler->start();
-
-	graphicsManager->addRenderable(inputHandler->getChatBox());
-	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
 	ifstream file("assets.json");
 	assert(file);
@@ -147,6 +143,11 @@ void GameManager::run() {
 	glutTimerFunc(PERIOD, updateFunc, 0);
 
 	entityManager->start();
+	connection->start();
+	inputHandler->start();
+
+	graphicsManager->addRenderable(inputHandler->getChatBox());
+	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
 	glutMainLoop();
 }
@@ -156,13 +157,14 @@ void GameManager::update() {
 		glutTimerFunc(PERIOD, updateFunc, 0);
 		inputHandler->update();
 		entityManager->update();
-		entityManager->createPhysicsUpdates();
+		//entityManager->createPhysicsUpdates();
 		glutPostRedisplay();
 	}
 }
 
 void GameManager::display() {
 	if (running && visible) {
+		checkError("Before display");
 		graphicsManager->display();
 	}
 }

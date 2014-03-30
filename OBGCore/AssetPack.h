@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <btBulletDynamicsCommon.h>
 #include "json.h"
 
 class Asset;
