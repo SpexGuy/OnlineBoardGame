@@ -12,7 +12,7 @@ using namespace std;
 WSAData socketData;
 
 void SocketInit() {
-	if (WSAStartup(MAKEWORD(2,0), &socketData) != 0) {
+	if (WSAStartup(MAKEWORD(2,0), &socketData) != NO_ERROR) {
 		cout << "Failed to start WSA" << endl;
 		assert(false);
 	}
@@ -22,12 +22,12 @@ void SocketClose() {
 	WSACleanup();
 }
 
-
 Socket::Socket(const string &ip, short port) {
 	socketFD = socket(PF_INET, SOCK_STREAM, 0);
-	if (socketFD < 0) {
+	if (socketFD <= 0) {
 		cerr << "Could not create socket" << endl;
-		assert(false);
+		socketFD = 0;
+		return;
 	}
 
 	struct sockaddr target;
@@ -40,9 +40,8 @@ Socket::Socket(const string &ip, short port) {
 
 	if (connect(socketFD, &target, sizeof(target)) < 0) {
 		cout << "Unable to connect!" << endl;
-		connected = false;
-	} else {
-		connected = true;
+		closesocket(socketFD);
+		socketFD = 0;
 	}
 }
 
@@ -218,8 +217,8 @@ SerialData Socket::receive() {
 
 
 Socket::~Socket() {
-	connected = false;
-	closesocket(socketFD);
+	if (socketFD != 0)
+		closesocket(socketFD);
 }
 
 
