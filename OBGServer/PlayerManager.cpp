@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <Interaction.h>
 #include "PlayerManager.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"
@@ -14,26 +15,36 @@ int PlayerManagerThreadLoop(void *pm) {
 	return 0;
 }
 
-PlayerManager::PlayerManager(short port) :
-	socket(new ServerSocket(port)),
+PlayerManager::PlayerManager() :
+	socket(),
 	active(false),
 	thread(PlayerManagerThreadLoop, this),
+	udpServer(0xABCD4321, 500, this),
 	playersLock()
 {
 
 }
 
-void PlayerManager::start() {
+bool PlayerManager::start(int time, uint16_t port) {
 	active = true;
+	if (!socket.open(port)) {
+		cout << "Could not open ServerSocket" << endl;
+		return false;
+	}
 	if (!thread.start()) {
 		cout << "Could not create client thread" << endl;
-		assert(false);
+		return false;
 	}
+	if (!udpServer.start(time, port+1)) {
+		cout << "Could not start udpServer" << endl;
+		return false;
+	}
+	return true;
 }
 
 void PlayerManager::loop() {
 	while(active) {
-		Socket *sock = socket->getNextConnection();
+		Socket *sock = socket.getNextConnection();
 		if (sock == NULL) {
 			active = false;
 			break;
@@ -69,6 +80,28 @@ void PlayerManager::handleInteraction(Interaction *action) {
 	fireInteraction(action);
 }
 
+void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, int len) {
+	switch(type) {
+	case TYPE_INTERACTION: {
+		SerializedInteraction *si = (SerializedInteraction *)data;
+		assert(len >=  si->numIds * sizeof(si->ids[0]) + sizeof(si));
+		vector<int> ids;
+		for (int c = 0; c < si->numIds; c++)
+			ids.push_back(si->ids[c]);
+		Interaction action(si->mousePos, ids);
+		handleInteraction(&action);
+		break;
+	}
+	default:
+		cout << "Unknown UDP message type: " << type << endl;
+	}
+}
+
+bool PlayerManager::handleUnresponsiveClient(const Address &client) {
+	//TODO:[MW] identify and remove player
+	return false;
+}
+
 void PlayerManager::disconnectPlayer(ServerConnection *player) {
 	bool found = false;
 	FunctionLock lock(playersLock);
@@ -98,8 +131,7 @@ void PlayerManager::broadcast(string message, ServerConnection *exclude) {
 
 void PlayerManager::close() {
 	this->active = false;
-	delete socket;
-	socket = NULL;
+	socket.close();
 }
 
 PlayerManager::~PlayerManager() {

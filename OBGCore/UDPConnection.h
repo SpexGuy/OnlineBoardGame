@@ -37,7 +37,7 @@ public:
 class UDPServerListener {
 public:
 	virtual void handleMessage(const Address &from, int type, uint8_t *data, int len) = 0;
-	virtual bool handleUnresponsiveClient(const Address &client);
+	virtual bool handleUnresponsiveClient(const Address &client) = 0;
 	virtual ~UDPServerListener() {}
 };
 
