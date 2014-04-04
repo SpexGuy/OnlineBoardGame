@@ -20,7 +20,7 @@ GameManager::GameManager() {
 	cout << "Init socket" << endl;
 	SocketInit();
 	cout << "Create Server Socket" << endl;
-	playerManager = new PlayerManager(0xABC0);
+	playerManager = new PlayerManager();
 	entityManager = new EntityManager();
 
 	playerManager->registerPlayerListener(new PlayerStatusBroadcaster());
@@ -30,6 +30,7 @@ GameManager::GameManager() {
 }
 
 void GameManager::run() {
+	int time = clock();
 	running = true;
 
 	ifstream file("assets.json");
@@ -51,7 +52,7 @@ void GameManager::run() {
 
 	entityManager->start();
 	cout << "Waiting for Connection" << endl;
-	playerManager->start();
+	playerManager->start(time, 0xABC0);
 
 	while(running) {
 		entityManager->update();

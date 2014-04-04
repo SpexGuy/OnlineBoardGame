@@ -23,7 +23,8 @@ bool UDPClient::start(int time, const Address &server, uint16_t port) {
 	this->time = lastMessageTime = time;
 	if (!socket.open(port))
 		return false;
-	thread.start();
+	if (!thread.start())
+		return false;
 	return true;
 }
 
@@ -108,7 +109,8 @@ bool UDPServer::start(int time, uint16_t port) {
 	this->time = time;
 	if (!socket.open(port))
 		return false;
-	thread.start();
+	if (!thread.start())
+		return false;
 	return true;
 }
 

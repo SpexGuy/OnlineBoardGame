@@ -1,14 +1,17 @@
 #pragma once
+#include <stdint.h>
 
 class Socket;
 
 class ServerSocket {
-private:
-	ServerSocket();
 protected:
 	int socketFD;
 public:
-	ServerSocket(short int port);
+	ServerSocket();
+	virtual bool open(uint16_t port);
 	virtual Socket *getNextConnection();
+	virtual void close();
 	virtual ~ServerSocket();
+
+	inline bool isOpen() { return socketFD != 0; }
 };
