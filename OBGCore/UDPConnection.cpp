@@ -4,46 +4,31 @@
 
 using namespace std;
 
-UDPClient::UDPClient(uint32_t protocolId, int timeout) :
+#define MAX_PACKET_SIZE 4096
+
+int UDPClientReadThread(void *client) {
+	return ((UDPClient *)client)->loop();
+}
+
+UDPClient::UDPClient(uint32_t protocolId, int timeout, UDPClientListener *listener) :
 	protocolId(protocolId),
 	timeout(timeout),
-	state(Disconnected),
-	running(false),
-	reliabilitySystem(MAX_SEQNO)
+	listener(listener),
+	reliabilitySystem(MAX_SEQNO),
+	thread(UDPClientReadThread, this)
 {}
 
-bool UDPClient::start(int time, uint16_t port) {
-	assert(state == Disconnected);
+bool UDPClient::start(int time, const Address &server, uint16_t port) {
+	this->server = server;
 	this->time = lastMessageTime = time;
 	if (!socket.open(port))
 		return false;
-	running = true;
+	thread.start();
 	return true;
 }
 
-bool UDPClient::connect(const Address &server, int attemptMillis, int packetSendRate) {
-	assert(socket.isOpen());
-	assert(running);
-	assert(state == Disconnected);
-	assert(server.GetAddress());
-	//update state
-	state = Connecting;
-	this->server = server;
-	//send connect message until connected or time expires
-	for (int millis = 0; state == Connecting && millis < attemptMillis; millis += packetSendRate) {
-		if (!sendPacket(TYPE_CONNECT_REQUEST, 0, NULL)) {
-			cout << "Could not transmit connection packet" << endl;
-			break;
-		}
-		sleep(packetSendRate);
-	}
-	if (state == Connecting)
-		state = ConnectFail;
-	return state == Connected;
-}
-
 bool UDPClient::sendPacket(int type, int len, const uint8_t *data) {
-	assert(running);
+	assert(isRunning());
 	assert(server.GetAddress());
 	//make packet
 	int size = sizeof(Packet) + len;
@@ -61,13 +46,12 @@ bool UDPClient::sendPacket(int type, int len, const uint8_t *data) {
 	return true;
 }
 
-int UDPClient::receivePacket(int &type, int len, uint8_t *data) {
-	assert(running);
+int UDPClient::loop() {
+	assert(isRunning());
 	Address sender;
-	int size = sizeof(Packet) + len;
-	Packet *pack = (Packet *)alloca(size);
-	while(socket.isOpen()) {
-		int received_bytes = socket.receive(sender, (uint8_t *)pack, size);
+	Packet *pack = (Packet *)malloc(MAX_PACKET_SIZE);
+	while(isRunning()) {
+		int received_bytes = socket.receive(sender, (uint8_t *)pack, MAX_PACKET_SIZE);
 		if (received_bytes < 0)
 			return received_bytes;
 		if (received_bytes < sizeof(Packet))
@@ -77,88 +61,68 @@ int UDPClient::receivePacket(int &type, int len, uint8_t *data) {
 		if (sender != server)
 			continue;
 		//message is valid
-		if (len < received_bytes-sizeof(Packet))
-			cout << "Not enough memory to hold received packet" << endl;
+		//update tracking data
 		lastMessageTime = time;
-		reliabilitySystem.PacketReceived(pack->seqno, len);
+		reliabilitySystem.PacketReceived(pack->seqno, received_bytes - sizeof(Packet));
 		reliabilitySystem.ProcessAck(pack->ack, pack->ack_bits);
-		//internally handle some packets
-		if (preHandlePacket(pack))
-			continue;
-		//return packet
-		type = pack->message.type;
-		memcpy(data, pack->message.data, min(len, received_bytes));
-		return received_bytes - sizeof(Packet);
+		//let listener handle packet
+		listener->handleMessage(pack->message.type, pack->message.data, received_bytes - sizeof(Packet));
 	}
 	return 0;
 }
 
-bool UDPClient::preHandlePacket(Packet *pack) {
-	if (pack->message.type == TYPE_CONNECT_ACCEPT) {
-		if (state == Connecting) {
-			state = Connected;
-			cout << "Connected to server" << endl;
-		}
-		return true;
-	}
-	if (pack->message.type == TYPE_CONNECT_DECLINE) {
-		if (state == Connecting) {
-			state = ConnectFail;
-			cout << "Server declined connection" << endl;
-		}
-		return true;
-	}
-	return false;
-}
-
 bool UDPClient::update(int time) {
-	assert(running);
+	assert(isRunning());
 	int dt = time - this->time;
 	this->time = time;
 	reliabilitySystem.Update(dt);
-	if (isConnected() && isUnresponsive()) {
+	if (isUnresponsive()) {
 		cout << "Server has timed out" << endl;
-		state = Disconnected;
-		running = false;
-		reliabilitySystem.Reset();
 		return false;
 	}
 	return true;
 }
 
 void UDPClient::stop() {
+	reliabilitySystem.Reset();
 	socket.close();
 }
 
 
 
 
-UDPServer::UDPServer(uint32_t protocolId, int timeout) :
+int UDPServerReadThread(void *server) {
+	return ((UDPServer *)server)->loop();
+}
+
+UDPServer::UDPServer(uint32_t protocolId, int timeout, UDPServerListener *listener) :
 	protocolId(protocolId),
 	timeout(timeout),
-	running(false)
+	listener(listener),
+	thread(UDPServerReadThread, this)
 {}
 
 bool UDPServer::start(int time, uint16_t port) {
 	assert(port != ANY_PORT);
-	assert(!running);
+	assert(!isRunning());
 	this->time = time;
 	if (!socket.open(port))
 		return false;
-	running = true;
+	thread.start();
 	return true;
 }
 
-bool UDPServer::broadcastPacket(int type, int len, const uint8_t *data) {
+bool UDPServer::broadcastPacket(int type, int len, const uint8_t *data, const Address &exclude) {
 	bool success = true;
 	for (pair<const Address, ClientInfo> &client : clients) {
-		success &= sendPacket(client.first, type, len, data);
+		if (client.first != exclude)
+			success &= sendPacket(client.first, type, len, data);
 	}
 	return success;
 }
 
 bool UDPServer::sendPacket(const Address &destination, int type, int len, const uint8_t *data) {
-	assert(running);
+	assert(isRunning());
 	assert(clients.find(destination) != clients.end());
 	//make packet
 	ClientInfo &client = clients[destination];
@@ -178,7 +142,7 @@ bool UDPServer::sendPacket(const Address &destination, int type, int len, const 
 }
 
 bool UDPServer::sendUnindexedPacket(const Address &destination, int type, int len, const uint8_t *data) {
-	assert(running);
+	assert(isRunning());
 	assert(clients.find(destination) == clients.end());
 	//make packet
 	int size = sizeof(Packet) + len;
@@ -193,89 +157,50 @@ bool UDPServer::sendUnindexedPacket(const Address &destination, int type, int le
 	return socket.send(destination, (uint8_t *)pack, size) == size;
 }
 
-int UDPServer::receivePacket(Address &from, int &type, int len, uint8_t *data) {
-	assert(running);
-	int size = sizeof(Packet) + len;
-	Packet *pack = (Packet *)alloca(size);
-	while(socket.isOpen()) {
-		int received_bytes = socket.receive(from, (uint8_t *)pack, size);
+int UDPServer::loop() {
+	assert(isRunning());
+	Address from;
+	Packet *pack = (Packet *)malloc(MAX_PACKET_SIZE);
+	while(isRunning()) {
+		int received_bytes = socket.receive(from, (uint8_t *)pack, MAX_PACKET_SIZE);
 		if (received_bytes < 0)
 			return received_bytes;
 		if (received_bytes < sizeof(Packet))
 			continue;
 		if (pack->protocol != protocolId)
 			continue;
-		if (declined.find(from) != declined.end()) {
-			sendUnindexedPacket(from, TYPE_CONNECT_DECLINE, 0, NULL);
+		if (clients.find(from) == clients.end())
 			continue;
-		}
-		if (clients.find(from) == clients.end()) {
-			handleUnknownClient(from, pack, received_bytes);
-			continue;
-		}
 		//message is valid
-		if (len < received_bytes-sizeof(Packet))
-			cout << "Not enough memory to hold received packet" << endl;
+		//update tracking info
 		clients[from].lastMessageTime = time;
-		clients[from].reliabilitySystem.PacketReceived(pack->seqno, len);
+		clients[from].reliabilitySystem.PacketReceived(pack->seqno, received_bytes - sizeof(Packet));
 		clients[from].reliabilitySystem.ProcessAck(pack->ack, pack->ack_bits);
-		//internally handle some packets
-		if (preHandlePacket(from, pack, received_bytes))
-			continue;
-		//return packet
-		type = pack->message.type;
-		memcpy(data, pack->message.data, min(len, received_bytes));
-		return received_bytes - sizeof(Packet);
+		//send packet to listener
+		listener->handleMessage(from, pack->message.type, pack->message.data, received_bytes - sizeof(Packet));
 	}
 	return 0;
 }
 
-void UDPServer::handleUnknownClient(const Address &from, Packet *pack, int len) {
-	if (pack->message.type == TYPE_CONNECT_REQUEST) {
-		if (acceptNewPlayer(from, pack, len)) {
-			printf("Accepted connection from %d.%d.%d.%d:%d\n", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetPort());
-			clients[from].reliabilitySystem = ReliabilitySystem(MAX_SEQNO);
-			clients[from].lastMessageTime = time;
-			clients[from].reliabilitySystem.PacketReceived(pack->seqno, len);
-			clients[from].reliabilitySystem.ProcessAck(pack->ack, pack->ack_bits);
-			sendPacket(from, TYPE_CONNECT_ACCEPT, 0, NULL);
-			onConnect(from);
-		} else {
-			printf("Declined connection from %d.%d.%d.%d:%d\n", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetPort());
-			declined.insert(from);
-			sendUnindexedPacket(from, TYPE_CONNECT_DECLINE, 0, NULL);
-		}
-	} else {
-		cout << "Valid packet from unknown source..." << endl;
-	}
-}
-
-bool UDPServer::acceptNewPlayer(const Address &addr, Packet *request, int len) {
-	return true;
-}
-
-bool UDPServer::preHandlePacket(const Address &from, Packet *request, int len) {
-	if (request->message.type == TYPE_CONNECT_REQUEST) {
-		sendPacket(from, TYPE_CONNECT_ACCEPT, 0, NULL);
-		return true;
-	}
-	return false;
+void UDPServer::addClient(const Address &client) {
+	clients[client].reliabilitySystem = ReliabilitySystem(MAX_SEQNO);
+	clients[client].lastMessageTime = time;
 }
 
 bool UDPServer::update(int time) {
-	assert(running);
+	assert(isRunning());
 	int dt = time - this->time;
 	this->time = time;
 	bool success = true;
 	for (auto iter = clients.begin(), end = clients.end(); iter != end; iter++) {
 		iter->second.reliabilitySystem.Update(dt);
 		if (isUnresponsive(iter->first)) {
-			printf("Client %d.%d.%d.%d:%d has timed out\n", iter->first.GetA(),
-					iter->first.GetB(), iter->first.GetC(), iter->first.GetD(), iter->first.GetPort());
-			onDisconnect(iter->first);
-			iter = clients.erase(iter);
+			if (listener->handleUnresponsiveClient(iter->first)) {
+				printf("Client %d.%d.%d.%d:%d has timed out\n", iter->first.GetA(), iter->first.GetB(), iter->first.GetC(), iter->first.GetD(), iter->first.GetPort());
+				iter = clients.erase(iter);
+			}
+			success = false;
 		}
-		success = false;
 	}
 	return success;
 }
@@ -287,5 +212,6 @@ bool UDPServer::isUnresponsive(const Address &addr) {
 
 void UDPServer::stop() {
 	socket.close();
+	clients.clear();
 }
 

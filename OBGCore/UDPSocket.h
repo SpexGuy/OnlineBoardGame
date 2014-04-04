@@ -24,5 +24,5 @@ public:
 	void close();
 	~UDPSocket();
 
-	inline bool isOpen() { return socketFD != 0; }
+	inline bool isOpen() const { return socketFD != 0; }
 };

@@ -9,11 +9,8 @@
 #include <set>
 #include "Address.h"
 #include "ReliabilitySystem.h"
+#include "Thread.h"
 #include "UDPSocket.h"
-
-#define TYPE_CONNECT_REQUEST 1
-#define TYPE_CONNECT_ACCEPT 2
-#define TYPE_CONNECT_DECLINE 3
 
 #define MAX_SEQNO 0xFFFF
 typedef uint16_t seqno_t;
@@ -31,20 +28,25 @@ struct Packet {
 	Message  message;		//The message
 };
 
+class UDPClientListener {
+public:
+	virtual void handleMessage(int type, uint8_t *data, int len) = 0;
+	virtual ~UDPClientListener() {}
+};
+
+class UDPServerListener {
+public:
+	virtual void handleMessage(const Address &from, int type, uint8_t *data, int len) = 0;
+	virtual bool handleUnresponsiveClient(const Address &client);
+	virtual ~UDPServerListener() {}
+};
+
 class UDPClient {
 protected:
-	enum State {
-		Disconnected,
-		Connecting,
-		ConnectFail,
-		Connected
-	};
-
 	unsigned int protocolId;
 	int timeout;
+	UDPClientListener *listener;
 
-	bool running;
-	State state;
 	UDPSocket socket;
 	int lastMessageTime;
 	int time;
@@ -52,20 +54,17 @@ protected:
 	Address server;
 	ReliabilitySystem reliabilitySystem;
 
-	virtual bool preHandlePacket(Packet *pack);
+	Thread thread;
+
 public:
-	UDPClient(uint32_t protocolId, int timeout);
-	virtual bool connect(const Address &server, int attemptMillis = 5000, int packetSendRate = 50);
-	virtual bool start(int time, uint16_t port = ANY_PORT);
+	UDPClient(uint32_t protocolId, int timeout, UDPClientListener *listener);
+	virtual bool start(int time, const Address &server, uint16_t localPort = ANY_PORT);
 	virtual bool update(int time);
 	virtual bool sendPacket(int type, int len, const uint8_t *data);
-	virtual int receivePacket(int &type, int len, uint8_t *data);
+	virtual int  loop();
 	virtual void stop();
 
-	inline bool isConnecting() const { return state == Connecting; }
-	inline bool connectFailed() const { return state == ConnectFail; }
-	inline bool isConnected() const { return state == Connected; }
-	inline bool isRunning() const { return running; }
+	inline bool isRunning() const { return socket.isOpen(); }
 	inline bool isUnresponsive() const { return time - lastMessageTime > timeout; }
 };
 
@@ -76,33 +75,28 @@ private:
 		int lastMessageTime;
 	};
 	std::map<Address, ClientInfo> clients;
-	std::set<Address> declined;
+	UDPServerListener *listener;
 	int time;
 	UDPSocket socket;
-	bool running;
+	Thread thread;
 
 	unsigned int protocolId;
 	int timeout;
 
-protected:
-	virtual void handleUnknownClient(const Address &addr, Packet *request, int len);
-	virtual bool acceptNewPlayer(const Address &addr, Packet *request, int len);
-	virtual bool preHandlePacket(const Address &addr, Packet *pack, int len);
-
-	virtual void onConnect(const Address &player) {}
-	virtual void onDisconnect(const Address &player) {}
-
 public:
-	UDPServer(uint32_t protocolId, int timeout);
+	UDPServer(uint32_t protocolId, int timeout, UDPServerListener *listener);
+	virtual void addClient(const Address &client);
 	virtual bool start(int time, uint16_t port);
 	virtual bool update(int time);
-	virtual bool broadcastPacket(int type, int size, const uint8_t *data);
+	virtual bool broadcastPacket(int type, int size, const uint8_t *data, const Address &ignore = Address(0,0));
 	virtual bool sendPacket(const Address &destination, int type, int size, const uint8_t *data);
 	virtual bool sendUnindexedPacket(const Address &destination, int type, int size, const uint8_t *data);
-	virtual int  receivePacket(Address &from, int &type, int size, uint8_t *data);
+	virtual int  loop();
 	virtual void stop();
 
 	bool isUnresponsive(const Address &addr);
+
+	inline bool isRunning() const { return socket.isOpen(); }
 };
 
 

@@ -1,3 +1,7 @@
+/**
+	This class and its descendants are based on the following article:
+	http://www.codeproject.com/Articles/421976/How-to-create-a-Simple-Lock-Framework-for-Cplusplu
+ */
 #pragma once
 
 /**
@@ -23,6 +27,9 @@ public:
  *	The FunctionLock will lock() myLock on entry,
  *	and will automatically release the lock when
  *	the function ends (via return or exception or anything).
+ *
+ *	If, for efficiency reasons, you wish to release the
+ *	lock before the end of the function, you can call unlock().
  *	
  *	Despite the name, FunctionLock is NOT THREADSAFE, so
  *	each instance should only be handled by one thread.
