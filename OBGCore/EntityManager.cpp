@@ -55,56 +55,6 @@ EntityManager::EntityManager() {
             groundRigidBodyCI5(0,groundMotionState5,groundShape5,btVector3(0,0,0));
     btRigidBody* groundRigidBody5 = new btRigidBody(groundRigidBodyCI5);
     world->addRigidBody(groundRigidBody5);
-
-	//btCollisionShape *ceilingShape = new btStaticPlaneShape(btVector3(0, -1, 0), 0);
-	//btDefaultMotionState* ceilingMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,2.01,0)));
- //   btRigidBody::btRigidBodyConstructionInfo
- //           ceilingRigidBodyCI(0,ceilingMotionState,ceilingShape,btVector3(0,0,0));
- //   btRigidBody* ceilingRigidBody = new btRigidBody(ceilingRigidBodyCI);
- //   world->addRigidBody(ceilingRigidBody);
-
- //   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);
-
- //   btCollisionShape* fallShape = new btSphereShape(1);
-
-	//btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-1,0)));
- //   btRigidBody::btRigidBodyConstructionInfo
- //           groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
- //   btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
- //   world->addRigidBody(groundRigidBody);
-
-
- //   btDefaultMotionState* fallMotionState =
- //           new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,50,0)));
- //   btScalar mass = 1;
- //   btVector3 fallInertia(0,0,0);
- //   fallShape->calculateLocalInertia(mass,fallInertia);
- //   btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,fallMotionState,fallShape,fallInertia);
- //   btRigidBody* fallRigidBody = new btRigidBody(fallRigidBodyCI);
- //   world->addRigidBody(fallRigidBody);
-
-
- //   for (int i=0 ; i<300 ; i++) {
- //           world->stepSimulation(1/60.f,10);
-
- //           btTransform trans;
- //           fallRigidBody->getMotionState()->getWorldTransform(trans);
-
- //           std::cout << "sphere height: " << trans.getOrigin().getY() << std::endl;
- //   }
-
- //   world->removeRigidBody(fallRigidBody);
- //   delete fallRigidBody->getMotionState();
- //   delete fallRigidBody;
-
- //   world->removeRigidBody(groundRigidBody);
- //   delete groundRigidBody->getMotionState();
- //   delete groundRigidBody;
-
-
- //   delete fallShape;
-
- //   delete groundShape;
 }
 
 EntityManager::~EntityManager() {

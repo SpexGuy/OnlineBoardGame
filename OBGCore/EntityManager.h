@@ -37,6 +37,7 @@ public:
 	virtual void update();
 	virtual void clear();
 	virtual Entity* getEntityById(int id);
+	virtual std::map<int, Entity *> getEntities() { return entities; }
 	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to);
 	virtual void createPhysicsUpdates();
 };
