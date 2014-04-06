@@ -29,7 +29,8 @@ bool UDPClient::start(int time, const Address &server, uint16_t port) {
 }
 
 bool UDPClient::sendPacket(int type, int len, const uint8_t *data) {
-	assert(isRunning());
+	if (!isRunning())
+		return false;
 	assert(server.GetAddress());
 	//make packet
 	int size = sizeof(Packet) + len;
@@ -73,7 +74,7 @@ int UDPClient::loop() {
 }
 
 bool UDPClient::update(int time) {
-	assert(isRunning());
+	//assert(isRunning());
 	int dt = time - this->time;
 	this->time = time;
 	reliabilitySystem.Update(dt);
@@ -167,12 +168,19 @@ int UDPServer::loop() {
 		int received_bytes = socket.receive(from, (uint8_t *)pack, MAX_PACKET_SIZE);
 		if (received_bytes < 0)
 			return received_bytes;
-		if (received_bytes < sizeof(Packet))
+		if (received_bytes < sizeof(Packet)) {
+			cout << "too few bytes: " << received_bytes << endl;
 			continue;
-		if (pack->protocol != protocolId)
+		}
+		if (pack->protocol != protocolId) {
+			cout << "wrong protocol: " << pack->protocol << endl;
 			continue;
-		if (clients.find(from) == clients.end())
+		}
+		if (clients.find(from) == clients.end()) {
+			printf("Unknown client: %d.%d.%d.%d:%d", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetTCPPort());
 			continue;
+		}
+		cout << "Got Message!" << endl;
 		//message is valid
 		//update tracking info
 		clients[from].lastMessageTime = time;
@@ -185,6 +193,7 @@ int UDPServer::loop() {
 }
 
 void UDPServer::addClient(const Address &client) {
+	printf("Adding client %d.%d.%d.%d:%d\n", client.GetA(), client.GetB(), client.GetC(), client.GetD(), client.GetTCPPort());
 	clients[client].reliabilitySystem = ReliabilitySystem(MAX_SEQNO);
 	clients[client].lastMessageTime = time;
 }
@@ -198,7 +207,7 @@ bool UDPServer::update(int time) {
 		iter->second.reliabilitySystem.Update(dt);
 		if (isUnresponsive(iter->first)) {
 			if (listener->handleUnresponsiveClient(iter->first)) {
-				printf("Client %d.%d.%d.%d:%d has timed out\n", iter->first.GetA(), iter->first.GetB(), iter->first.GetC(), iter->first.GetD(), iter->first.GetPort());
+				printf("Client %d.%d.%d.%d:%d has timed out\n", iter->first.GetA(), iter->first.GetB(), iter->first.GetC(), iter->first.GetD(), iter->first.GetTCPPort());
 				iter = clients.erase(iter);
 			}
 			success = false;

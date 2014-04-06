@@ -27,8 +27,10 @@ public:
 	~Interaction();
 };
 
+#pragma warning(disable:4200)
 struct SerializedInteraction {
 	btVector3 mousePos;
 	int numIds;
 	int ids[0];
 };
+#pragma warning(default:4200)

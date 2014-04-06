@@ -40,20 +40,24 @@ bool ServerSocket::open(uint16_t port) {
 }
 
 Socket *ServerSocket::getNextConnection() {
-	struct sockaddr newInfo;
+	struct sockaddr_in newInfo;
 	int size = sizeof(newInfo);
-	int newFD = accept(socketFD, &newInfo, &size);
+	int newFD = accept(socketFD, (sockaddr *)&newInfo, &size);
 	if (newFD < 0) {
 		cout << "Accept had an error!" << endl;
 		return NULL;
 	}
+	assert(newInfo.sin_family == AF_INET);
+	Address client = Address::TCPAddress(ntohl(newInfo.sin_addr.s_addr), ntohs(newInfo.sin_port));
 
-	return new Socket(newFD);
+	return new Socket(newFD, client);
 }
 
 void ServerSocket::close() {
-	if (isOpen())
+	if (isOpen()) {
 		closesocket(socketFD);
+		socketFD = 0;
+	}
 }
 
 ServerSocket::~ServerSocket() {

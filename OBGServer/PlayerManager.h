@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <map>
 #include <CriticalSection.h>
 #include <PhysicsUpdateListener.h>
 #include <Thread.h>
@@ -23,7 +23,7 @@ class PlayerManager :
 	public UDPServerListener
 {
 protected:
-	std::vector<ServerConnection *> players;
+	std::map<Address, ServerConnection *> players;
 	ServerSocket socket;
 	volatile bool active;
 
@@ -37,6 +37,7 @@ public:
 	PlayerManager();
 	virtual bool start(int time, uint16_t port);
 	virtual void loop();
+	virtual void update(int time);
 	virtual void disconnectPlayer(ServerConnection *p);
 	virtual void handlePhysicsUpdate(PhysicsUpdate *update);
 	virtual void handleInteraction(Interaction *action);

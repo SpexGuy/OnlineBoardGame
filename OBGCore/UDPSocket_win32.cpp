@@ -82,12 +82,12 @@ int UDPSocket::send(const Address &to, const uint8_t *data, int len) {
 	assert(len <= MAX_UDP_SIZE);
 	assert(isOpen());
 	assert(to.GetAddress() != 0);
-	assert(to.GetPort() != 0);
+	assert(to.GetTCPPort() != 0);
 
 	sockaddr_in address;
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = htonl(to.GetAddress());
-	address.sin_port = htons((unsigned short) to.GetPort());
+	address.sin_port = htons((unsigned short) to.GetUDPPort());
 
 	int sent_bytes = sendto(socketFD, (const char*)data, len, 0, (sockaddr*)&address, sizeof(sockaddr_in));
 	assert(sent_bytes == len);
@@ -110,7 +110,7 @@ int UDPSocket::receive(Address &from, uint8_t *data, int maxLen) {
 	unsigned int address = ntohl(fromsa.sin_addr.s_addr);
 	unsigned short port = ntohs(fromsa.sin_port);
 
-	from = Address(address, port);
+	from = Address::UDPAddress(address, port);
 
 	return received_bytes;
 }

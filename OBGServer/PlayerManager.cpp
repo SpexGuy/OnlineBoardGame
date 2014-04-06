@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <iostream>
 #include <Interaction.h>
+#include <PhysicsUpdate.h>
 #include "PlayerManager.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"
@@ -60,15 +61,20 @@ void PlayerManager::loop() {
 
 void PlayerManager::addPlayer(ServerConnection *player) {
 	FunctionLock lock(playersLock);
-	players.push_back(player);
+	players[player->getPeer()] = player;
+	udpServer.addClient(player->getPeer());
 	lock.unlock();
 	firePlayerJoined(player);
 }
 
+void PlayerManager::update(int time) {
+	udpServer.update(time);
+}
+
 void PlayerManager::handlePhysicsUpdate(PhysicsUpdate *physicsUpdate) {
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		players[c]->sendUpdate(physicsUpdate);
+	for (auto &player : players) {
+		udpServer.sendPacket(player.first, TYPE_PHYSICS_UPDATE, sizeof(PhysicsUpdate), (uint8_t *)physicsUpdate);
 	}
 }
 
@@ -83,6 +89,7 @@ void PlayerManager::handleInteraction(Interaction *action) {
 void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, int len) {
 	switch(type) {
 	case TYPE_INTERACTION: {
+		cout << "Got interaction!" << endl;
 		SerializedInteraction *si = (SerializedInteraction *)data;
 		assert(len >=  si->numIds * sizeof(si->ids[0]) + sizeof(si));
 		vector<int> ids;
@@ -98,8 +105,8 @@ void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, 
 }
 
 bool PlayerManager::handleUnresponsiveClient(const Address &client) {
-	//TODO:[MW] identify and remove player
-	return false;
+	disconnectPlayer(players[client]);
+	return true;
 }
 
 void PlayerManager::disconnectPlayer(ServerConnection *player) {
@@ -108,9 +115,9 @@ void PlayerManager::disconnectPlayer(ServerConnection *player) {
 	for (auto iter = players.begin(), end = players.end();
 			iter != end; ++iter)
 	{
-		if (*iter == player) {
+		if (iter->second == player) {
 			found = true;
-			players.erase(iter);
+			iter = players.erase(iter);
 			break;
 		}
 	}
@@ -122,9 +129,9 @@ void PlayerManager::disconnectPlayer(ServerConnection *player) {
 
 void PlayerManager::broadcast(string message, ServerConnection *exclude) {
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		if (players[c] != exclude) {
-			players[c]->sendMessage(message);
+	for (auto &player : players) {
+		if (player.second != exclude) {
+			player.second->sendMessage(message);
 		}
 	}
 }
@@ -132,14 +139,15 @@ void PlayerManager::broadcast(string message, ServerConnection *exclude) {
 void PlayerManager::close() {
 	this->active = false;
 	socket.close();
+	udpServer.stop();
 }
 
 PlayerManager::~PlayerManager() {
 	if (active) close();
 
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		delete players[c];
+	for (auto &player : players) {
+		delete player.second;
 	}
 	players.clear();
 }

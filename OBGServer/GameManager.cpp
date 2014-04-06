@@ -30,7 +30,6 @@ GameManager::GameManager() {
 }
 
 void GameManager::run() {
-	int time = clock();
 	running = true;
 
 	ifstream file("assets.json");
@@ -50,13 +49,16 @@ void GameManager::run() {
 		entityManager->addEntity(entity);
 	}
 
+	int time = clock();
 	entityManager->start();
 	cout << "Waiting for Connection" << endl;
 	playerManager->start(time, 0xABC0);
 
 	while(running) {
+		time = clock();
 		entityManager->update();
 		entityManager->createPhysicsUpdates();
+		playerManager->update(time);
 	}
 	playerManager->close();
 	cout << "Server closed" << endl;

@@ -15,10 +15,12 @@
 #define MAX_SEQNO 0xFFFF
 typedef uint16_t seqno_t;
 
+#pragma warning(disable:4200) //ignore warning about zero-sized array
 struct Message {
 	uint8_t  type;			//The message type
 	uint8_t  data[0];		//The payload
 };
+#pragma warning(default:4200)
 
 struct Packet {
 	uint32_t protocol;		//The unique protocol id
@@ -88,7 +90,7 @@ public:
 	virtual void addClient(const Address &client);
 	virtual bool start(int time, uint16_t port);
 	virtual bool update(int time);
-	virtual bool broadcastPacket(int type, int size, const uint8_t *data, const Address &ignore = Address(0,0));
+	virtual bool broadcastPacket(int type, int size, const uint8_t *data, const Address &ignore = Address());
 	virtual bool sendPacket(const Address &destination, int type, int size, const uint8_t *data);
 	virtual bool sendUnindexedPacket(const Address &destination, int type, int size, const uint8_t *data);
 	virtual int  loop();
