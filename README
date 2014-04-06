@@ -1,6 +1,6 @@
 
 
-Instructions for creating a VS2012 Project (Rev. 2.2)
+Instructions for creating a VS2012 Project (Rev. 2.3)
 
 Depending on your experience with VS2012, this should take 1-2 hours to set up.
 I recommend creating a backup of the project directory after each step.
@@ -62,6 +62,7 @@ PART 1: Bullet to the head
 
 	Ensure that your project builds and runs successfully (it should just pop up a console for a second)
 	Once it works, delete that file
+
 
 
 
@@ -264,7 +265,46 @@ PART 4: The Client Project
 
 
 
-Part 5: Git the Code
+Part 5: Executive (Test) Suite
+
+	right-click(solution)->Add->New Project
+	Select Test->Native Test Project
+	Name the new project OBGTests.
+
+	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGClient and OBGServer
+	Apply
+	Go to C/C++->General
+	Change Configuration to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		$GLEW/include
+		$DEVIL/include
+		$GLM
+		$FREEGLUT/include
+		OnlineBoardGame/OBGClient
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGGraphics
+		OnlineBoardGame/OBGServer
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+		$GLEW/lib/Release/Win32
+		$DEVIL/lib
+		$FREEGLUT/lib
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		glew32.lib
+		DevIL.lib
+		ILU.lib
+		ILUT.lib
+		freeglut.lib
+		ws2_32.lib
+	Apply
+
+
+
+
+Part 6: Git the Code
 
 	Now, checkout the git repo into OnlineBoardGame.
 
@@ -281,24 +321,28 @@ Part 5: Git the Code
 	Congratulations, you're done (finally)!
 
 
-Part 6: Running the projects:
 
-IN ORDER TO RUN THE CLIENT, YOU MUST BE RUNNING THE SERVER ON LOCALHOST
 
-You must have a unique instance of visual studio running for each program you wish to run.
-In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
-RUN THE SERVER FIRST
-Then, run the client.  You can run multiple instances of the client, however they do not synchronize physics as of yet.
-The chat works though; press enter or t to talk to the other clients.
-There seems to be a bug where if an object has remained motionless for a few seconds it will become fixed, and cannot be moved.
-You can pick up an object at the beginning though, and if you throw it at other objects it will jar them free, and they can also be picked up.
+Part 7: Running the projects:
 
-Controls:
-	mouse 0 - pick up objects
-	t/enter - start chat
-	F11 - toggle fullscreen
-	esc - exit fullscreen / program
-	x - exit program
-	r - toggle wireframe
+	IN ORDER TO RUN THE CLIENT, YOU MUST BE RUNNING THE SERVER ON LOCALHOST
 
-If you want to run the project without VS, be sure to copy all non-code files into the same directory as the executable.
+	You must have a unique instance of visual studio running for each program you wish to run.
+	In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
+	RUN THE SERVER FIRST
+	Then, run the client.  You can run multiple instances of the client, however they do not synchronize physics as of yet.
+	The chat works though; press enter or t to talk to the other clients.
+	There seems to be a bug where if an object has remained motionless for a few seconds it will become fixed, and cannot be moved.
+	You can pick up an object at the beginning though, and if you throw it at other objects it will jar them free, and they can also be picked up.
+
+	Controls:
+		mouse 0 - pick up objects
+		t/enter - start chat
+		F11 - toggle fullscreen
+		esc - exit fullscreen / program
+		x - exit program
+		r - toggle wireframe
+
+	If you want to run the project without VS, be sure to copy all non-code files into the same directory as the executable.
+
+	Note: If you experience heavy lag, try building the projects in release mode
