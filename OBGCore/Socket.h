@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Address.h"
 
 #define TYPE_FILE -1
 
@@ -19,12 +20,16 @@ private:
 	int sendRawBytes(char *data, int size);
 	int readRawBytes(const void *data, int size);
 protected:
+	Address peer;
 	int socketFD;
-	bool connected;
 public:
-	Socket(int fd, bool connected = true) :
-		socketFD(fd), connected(connected) {}
-	Socket(const std::string &ip, short int port);
+	Socket(int fd, const Address &peer) :
+		socketFD(fd),
+		peer(peer)
+	{}
+	Socket();
+
+	virtual bool open(const Address &peer, int localPort = 0);
 
 	/**	returns 0 if the data is send successfully, or the number
 	 *	of bytes which are left to send if a fatal error occurs.
@@ -38,5 +43,10 @@ public:
 	 *	SerialData's data pointer will be NULL.*/
 	virtual SerialData receive();
 
+	virtual void close();
+
 	virtual ~Socket();
+
+	inline const Address &getPeer() const { return peer; }
+	inline bool isOpen() const { return socketFD != 0; }
 };

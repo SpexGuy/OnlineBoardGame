@@ -9,9 +9,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	GameManager *gm = new GameManager(argc, argv);
-	gm->run();
-	delete gm;
+	GameManager gm(argc, argv);
+	gm.run();
 	system("pause");
 	return 0;
 }

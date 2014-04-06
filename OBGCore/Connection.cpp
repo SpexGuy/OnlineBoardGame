@@ -6,13 +6,6 @@
 
 using namespace std;
 
-Connection::Connection(Socket *socket) :
-	socket(socket),
-	active(false)
-{
-	
-}
-
 int ConnectionThreadLoop(void *c) {
 	cout << "Socket Thread started apparently" << endl;
 	((Connection *)c)->loop();
@@ -20,10 +13,17 @@ int ConnectionThreadLoop(void *c) {
 	return 0;
 }
 
+Connection::Connection(Socket *socket) :
+	socket(socket),
+	active(false),
+	runThread(ConnectionThreadLoop, this)
+{
+	assert(socket);
+}
+
 void Connection::start() {
 	active = true;
-	runThread = new Thread(ConnectionThreadLoop, this);
-	if (!runThread->start()) {
+	if (!runThread.start()) {
 		cout << "Could not create client thread" << endl;
 		assert(false);
 	}
@@ -59,6 +59,5 @@ void Connection::close() {
 
 Connection::~Connection() {
 	close();
-	runThread->waitForTerminate();
-	delete runThread;
+	runThread.waitForTerminate();
 }

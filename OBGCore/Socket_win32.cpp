@@ -22,31 +22,53 @@ void SocketClose() {
 	WSACleanup();
 }
 
-Socket::Socket(const string &ip, short port) {
+Socket::Socket() :
+	socketFD(0),
+	peer()
+{}
+
+bool Socket::open(const Address &peer, int localPort) {
+	assert(!isOpen());
+	this->peer = peer;
 	socketFD = socket(PF_INET, SOCK_STREAM, 0);
 	if (socketFD <= 0) {
 		cerr << "Could not create socket" << endl;
 		socketFD = 0;
-		return;
+		return false;
+	}
+
+	if (localPort != 0) {
+		// bind to port
+		sockaddr_in address;
+		address.sin_family = AF_INET;
+		address.sin_addr.s_addr = INADDR_ANY;
+		address.sin_port = htons((unsigned short) localPort);
+		if (bind(socketFD, (const sockaddr*) &address, sizeof(sockaddr_in)) < 0) {
+			printf("failed to bind socket\n");
+			close();
+			return false;
+		}
 	}
 
 	struct sockaddr target;
 	struct sockaddr_in *target4 = (sockaddr_in *) &target;
 
 	target4->sin_family = AF_INET;
-	target4->sin_port = htons(port);
-	target4->sin_addr.S_un.S_addr = inet_addr(ip.c_str());
+	target4->sin_port = htons(peer.GetTCPPort());
+	target4->sin_addr.s_addr = htonl(peer.GetAddress());
 	memset(target4->sin_zero, 0, sizeof(target4->sin_zero));
 
 	if (connect(socketFD, &target, sizeof(target)) < 0) {
 		cout << "Unable to connect!" << endl;
 		closesocket(socketFD);
 		socketFD = 0;
+		return false;
 	}
+	return true;
 }
 
 int Socket::sendRawBytes(char *byteData, int size) {
-	if (!connected) return -1;
+	if (!isOpen()) return -1;
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
 		int bytesSent = send(socketFD, byteData, bytesLeft, 0);
@@ -80,7 +102,7 @@ int Socket::readRawBytes(const void *data, int size) {
 }
 
 int Socket::sendData(int type, const void *data, int size) {
-	if (!connected) return -1;
+	if (!isOpen()) return -1;
 	int ntype = htonl(type);
 	int nsize = htonl(size);
 
@@ -95,7 +117,7 @@ int Socket::sendData(int type, const void *data, int size) {
 }
 
 int Socket::sendFile(const string &filename) {
-	if (!connected) return -1;
+	if (!isOpen()) return -1;
 	cout << "Sending file: " << filename << endl;
 	//open file for binary read
 	ifstream file(filename.c_str(), ios::in | ios::binary | ios::ate);
@@ -213,16 +235,15 @@ SerialData Socket::receive() {
 	return ret;
 }
 
-
-
-
-Socket::~Socket() {
-	if (socketFD != 0)
+void Socket::close() {
+	if (socketFD != 0) {
 		closesocket(socketFD);
+		socketFD = 0;
+	}
 }
 
-
-
-
+Socket::~Socket() {
+	close();
+}
 
 #endif
