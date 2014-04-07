@@ -27,5 +27,6 @@ public:
 	virtual void getWorldTransform(btTransform &t) const { t = transform; }
 	inline void setRigidBody(btRigidBody *body) { physicsBody = body; }
 	inline btRigidBody *getPhysicsBody() { return physicsBody; }
+	inline bool getHidden() { return hidden; }
 	inline Asset *getType() { return type; }
 };
