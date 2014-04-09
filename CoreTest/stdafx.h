@@ -6,10 +6,8 @@
 #pragma once
 
 #include "targetver.h"
-#include <string>
+
 // Headers for CppUnitTest
 #include "CppUnitTest.h"
-#include "LinearMath\btVector3.h"
 
 // TODO: reference additional headers your program requires here
-std::wstring ToString(const btVector3 &vec);

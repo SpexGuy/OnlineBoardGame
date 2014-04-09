@@ -37,8 +37,8 @@ EntityManager::EntityManager() {
 
 	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -2);
 	btDefaultMotionState* groundMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI3(0,groundMotionState3,groundShape3,btVector3(0,0,0));
+    btRigidBody::btRigidBodyConstructionInfo 
+			groundRigidBodyCI3(0,groundMotionState3,groundShape3,btVector3(0,0,0));
     btRigidBody* groundRigidBody3 = new btRigidBody(groundRigidBodyCI3);
     world->addRigidBody(groundRigidBody3);
 
@@ -128,9 +128,6 @@ void EntityManager::update() {
 		for(auto iter2 = ++iter1; iter2 != end; ++iter2) {
 			Entity *ent2 = iter2->second;
 
-			if(ent1->getType()->getGroup() == ent2->getType()->getGroup()) { //&& similar positions && stackable) {
-				//stack them
-			}
 		}
 	}
 }
