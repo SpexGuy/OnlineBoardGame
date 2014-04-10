@@ -14,11 +14,10 @@ protected:
 	volatile long int lastCommTime;	
 	std::string name;
 
-	virtual void processData(const SerialData &data);
+	virtual void processData(uint8_t type, const uint8_t *data, uint16_t len);
 	virtual void handleFatalError();
 public:
 	ServerConnection(PlayerManager *owner, Socket *socket);
-	virtual bool isUnresponsive();
 	virtual void sendUpdate(PhysicsUpdate *update);
 	virtual void sendMessage(const std::string &message);
 	virtual ~ServerConnection();

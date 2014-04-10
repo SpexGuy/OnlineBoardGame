@@ -89,7 +89,6 @@ void PlayerManager::handleInteraction(Interaction *action) {
 void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, int len) {
 	switch(type) {
 	case TYPE_INTERACTION: {
-		cout << "Got interaction!" << endl;
 		SerializedInteraction *si = (SerializedInteraction *)data;
 		assert(len >=  si->numIds * sizeof(si->ids[0]) + sizeof(si));
 		vector<int> ids;
@@ -105,7 +104,10 @@ void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, 
 }
 
 bool PlayerManager::handleUnresponsiveClient(const Address &client) {
-	disconnectPlayer(players[client]);
+	auto iter = players.find(client);
+	if (iter != players.end()) {
+		disconnectPlayer(iter->second);
+	}
 	return true;
 }
 

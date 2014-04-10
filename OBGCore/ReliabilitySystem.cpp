@@ -8,6 +8,7 @@ ReliabilitySystem::ReliabilitySystem(unsigned int max_sequence) {
 }
 
 void ReliabilitySystem::Reset() {
+	FunctionLock lock(thisLock);
 	local_sequence = 0;
 	remote_sequence = 0;
 	sentQueue.clear();
@@ -25,6 +26,7 @@ void ReliabilitySystem::Reset() {
 }
 
 void ReliabilitySystem::PacketSent(int size) {
+	FunctionLock lock(thisLock);
 	if (sentQueue.exists(local_sequence)) {
 		printf("local sequence %d exists\n", local_sequence);
 		for (PacketQueue::iterator itor = sentQueue.begin(); itor != sentQueue.end(); ++itor)
@@ -45,6 +47,7 @@ void ReliabilitySystem::PacketSent(int size) {
 }
 
 void ReliabilitySystem::PacketReceived(unsigned int sequence, int size) {
+	FunctionLock lock(thisLock);
 	recv_packets++;
 	if (receivedQueue.exists(sequence))
 		return;
@@ -58,6 +61,7 @@ void ReliabilitySystem::PacketReceived(unsigned int sequence, int size) {
 }
 
 void ReliabilitySystem::Update(float deltaTime) {
+	FunctionLock lock(thisLock);
 	acks.clear();
 	AdvanceQueueTime(deltaTime);
 	UpdateQueues();
@@ -68,6 +72,7 @@ void ReliabilitySystem::Update(float deltaTime) {
 }
 
 void ReliabilitySystem::Validate() {
+	FunctionLock lock(thisLock);
 	sentQueue.verify_sorted(max_sequence);
 	receivedQueue.verify_sorted(max_sequence);
 	pendingAckQueue.verify_sorted(max_sequence);
@@ -81,11 +86,11 @@ int ReliabilitySystem::bit_index_for_sequence(unsigned int sequence, unsigned in
 	assert(sequence != ack);
 	assert(!sequence_more_recent(sequence, ack, max_sequence));
 	if (sequence > ack) {
-		//TODO: Why does this fail?
-		//assert(ack < 33);
-		if (max_sequence < sequence) {
+		//TODO: This fails because too many physics updates per tick
+		//if (ack >= 33)
+		//	assert(ack < 33);
+		if (max_sequence < sequence)
 			assert(max_sequence >= sequence);
-		}
  		return ack + (max_sequence - sequence);
 	} else {
 		assert(ack >= 1);
@@ -139,16 +144,10 @@ void ReliabilitySystem::process_ack(unsigned int ack, unsigned int ack_bits,
 	}
 }
 
-void ReliabilitySystem::GetAcks(unsigned int ** acks, int & count) {
-	count = (int) this->acks.size();
-	if (count > 0)
-		*acks = &this->acks[0];
-	else
-		*acks = NULL;
-}
 
 //TODO:[MW] WTF Why is this function?
 void ReliabilitySystem::AdvanceQueueTime(float deltaTime) {
+	FunctionLock lock(thisLock);
 	for (PacketQueue::iterator itor = sentQueue.begin(); itor != sentQueue.end(); itor++)
 		itor->time += deltaTime;
 
@@ -163,6 +162,7 @@ void ReliabilitySystem::AdvanceQueueTime(float deltaTime) {
 }
 
 void ReliabilitySystem::UpdateQueues() {
+	FunctionLock lock(thisLock);
 	const float epsilon = 0.001f;
 
 	while (sentQueue.size() && sentQueue.front().time > rtt_maximum + epsilon)
@@ -185,6 +185,7 @@ void ReliabilitySystem::UpdateQueues() {
 }
 
 void ReliabilitySystem::UpdateStats() {
+	FunctionLock lock(thisLock);
 	int sent_bytes_per_second = 0;
 	for (PacketQueue::iterator itor = sentQueue.begin(); itor != sentQueue.end(); ++itor)
 		sent_bytes_per_second += itor->size;
@@ -200,4 +201,18 @@ void ReliabilitySystem::UpdateStats() {
 	acked_bytes_per_second /= rtt_maximum;
 	sent_bandwidth = sent_bytes_per_second * (8 / 1000.0f);
 	acked_bandwidth = acked_bytes_per_second * (8 / 1000.0f);
+}
+
+void ReliabilitySystem::ProcessAck(unsigned int ack, unsigned int ack_bits) {
+	FunctionLock lock(thisLock);
+	process_ack(ack, ack_bits, pendingAckQueue, ackedQueue, acks, acked_packets, rtt, max_sequence);
+}
+
+unsigned int ReliabilitySystem::GenerateAckBits() {
+	FunctionLock lock(thisLock);
+	return generate_ack_bits(GetRemoteSequence(), receivedQueue, max_sequence);
+}
+
+ReliabilitySystem::~ReliabilitySystem() {
+	FunctionLock lock(thisLock);
 }

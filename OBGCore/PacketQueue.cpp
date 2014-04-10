@@ -8,8 +8,8 @@
 #include "PacketQueue.h"
 
 bool PacketQueue::exists(unsigned int sequence) {
-	for (iterator itor = begin(); itor != end(); ++itor)
-		if (itor->sequence == sequence)
+	for (auto &packet : *this)
+		if (packet.sequence == sequence)
 			return true;
 	return false;
 }

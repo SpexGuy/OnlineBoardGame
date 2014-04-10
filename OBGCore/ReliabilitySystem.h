@@ -6,10 +6,13 @@
 */
 #pragma once
 #include <vector>
+#include "CriticalSection.h"
 #include "PacketQueue.h"
 
 class ReliabilitySystem {
 private:
+	ReliabilitySystem &operator=(const ReliabilitySystem &other);
+
 	unsigned int max_sequence;
 	unsigned int local_sequence;		// local sequence number for most recently sent packet
 	unsigned int remote_sequence;		// remote sequence number for most recently received packet
@@ -32,22 +35,33 @@ private:
 	PacketQueue ackedQueue;				// acked packets (kept until rtt_maximum * 2)
 
 protected:
+	/* Always take these locks in top-down order */
+	CriticalSection thisLock;
 	void AdvanceQueueTime(float deltaTime);
 	void UpdateQueues();
 	void UpdateStats();
+
+	// utility functions
+	static inline bool sequence_more_recent(unsigned int s1, unsigned int s2, unsigned int max_sequence) { return (s1 > s2) && (s1 - s2 <= max_sequence/2) || (s2 > s1) && (s2 - s1 > max_sequence/2); }
+	static int bit_index_for_sequence(unsigned int sequence, unsigned int ack, unsigned int max_sequence);
+	static unsigned int generate_ack_bits(unsigned int ack, const PacketQueue & received_queue, unsigned int max_sequence);
+	static void process_ack(unsigned int ack, unsigned int ack_bits,
+							PacketQueue & pending_ack_queue, PacketQueue & acked_queue,
+							std::vector<unsigned int> & acks, unsigned int & acked_packets,
+							float & rtt, unsigned int max_sequence);
 
 public:
 	ReliabilitySystem(unsigned int max_sequence = 0x0000FFFF);
 	void Reset();
 	void PacketSent(int size);
 	void PacketReceived(unsigned int sequence, int size);
-	inline unsigned int GenerateAckBits() { return generate_ack_bits(GetRemoteSequence(), receivedQueue, max_sequence); }
-	inline void ProcessAck(unsigned int ack, unsigned int ack_bits) { process_ack(ack, ack_bits, pendingAckQueue, ackedQueue, acks, acked_packets, rtt, max_sequence); }
+	unsigned int GenerateAckBits();
+	void ProcessAck(unsigned int ack, unsigned int ack_bits);
 	void Update(float deltaTime);
 	void Validate();
+	virtual ~ReliabilitySystem();
 
 	// data accessors
- 	void GetAcks(unsigned int ** acks, int & count);
 	inline unsigned int GetLocalSequence() const { return local_sequence; }
 	inline unsigned int GetRemoteSequence() const { return remote_sequence; }
 	inline unsigned int GetMaxSequence() const { return max_sequence; }
@@ -60,12 +74,4 @@ public:
 	inline float GetRoundTripTime() const { return rtt; }
 	inline int GetHeaderSize() const { return 12; }
 
-	// utility functions
-	static inline bool sequence_more_recent(unsigned int s1, unsigned int s2, unsigned int max_sequence) { return (s1 > s2) && (s1 - s2 <= max_sequence/2) || (s2 > s1) && (s2 - s1 > max_sequence/2); }
-	static int bit_index_for_sequence(unsigned int sequence, unsigned int ack, unsigned int max_sequence);
-	static unsigned int generate_ack_bits(unsigned int ack, const PacketQueue & received_queue, unsigned int max_sequence);
-	static void process_ack(unsigned int ack, unsigned int ack_bits,
-							PacketQueue & pending_ack_queue, PacketQueue & acked_queue,
-							std::vector<unsigned int> & acks, unsigned int & acked_packets,
-							float & rtt, unsigned int max_sequence);
 };

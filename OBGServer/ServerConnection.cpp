@@ -14,55 +14,47 @@ ServerConnection::ServerConnection(PlayerManager *owner, Socket *sock) :
 
 }
 
-void ServerConnection::processData(const SerialData &data) {
+void ServerConnection::processData(uint8_t type, const uint8_t *data, uint16_t len) {
 	string message;
-	switch(data.type) {
-
+	switch(type) {
 	case TYPE_FILE:
-		cout << "Server received a file?  " << (char *)data.data << endl;
-		free(data.data);
+		cout << "Server received a file?  " << (char *)data << endl;
 		break;
 
 	case TYPE_FILE_REQUEST:
-		cout << "Received a file request for: " << (char *)data.data << endl;
-		socket->sendFile(string((char *)data.data));
-		free(data.data);
+		cout << "Received a file request for: " << (char *)data << endl;
+		socket->sendFile(string((char *)data));
 		break;
 
 	case TYPE_PHYSICS_UPDATE:
 		cout << "...The server just got a physics update.  WTF?!" << endl;
-		free(data.data);
 		assert(false);
 		break;
 
 	case TYPE_INTERACTION: {
-		SerializedInteraction *serial = (SerializedInteraction *)data.data;
-		assert(data.size == sizeof(SerializedInteraction) + serial->numIds*sizeof(int));
+		SerializedInteraction *serial = (SerializedInteraction *)data;
+		assert(len == sizeof(SerializedInteraction) + serial->numIds*sizeof(int));
 		vector<int> ids(serial->numIds);
 		for (int c = 0; c < serial->numIds; c++) {
 			ids[c] = serial->ids[c];
 		}
 		Interaction action(serial->mousePos, ids);
 		owner->handleInteraction(&action);
-		free(data.data);
 		break;
 	}
 	case TYPE_MESSAGE:
-		owner->handleMessage(string((char *)data.data), this);
-		free(data.data);
+		owner->handleMessage(string((char *)data), this);
 		break;
 
 	case TYPE_SET_USERNAME:
 		message = name;
-		name = string((char *)data.data);
-		free(data.data);
+		name = string((char *)data);
 		message = message.append(" changed his username to ").append(name);
 		owner->broadcast(message, NULL);
 		break;
 
 	default:
-		cout << "The server just got an unknown message type: " << data.type << endl;
-		free(data.data);
+		cout << "The server just got an unknown message type: " << type << endl;
 		assert(false);
 	}
 }
@@ -71,22 +63,17 @@ void ServerConnection::handleFatalError() {
 	owner->disconnectPlayer(this);
 }
 
-bool ServerConnection::isUnresponsive() {
-	//TODO:[MW] connection is unresponsive
-	return false;
-}
-
 void ServerConnection::sendUpdate(PhysicsUpdate *update) {
 	//With TCP, socket disconnect is detected by
 	//reads. When we switch, this will need to detect.
-	int sent = socket->sendData(TYPE_PHYSICS_UPDATE, update, sizeof(PhysicsUpdate));
+	int sent = socket->sendData(TYPE_PHYSICS_UPDATE, (const uint8_t *)update, sizeof(PhysicsUpdate));
 	if (sent != 0) {
 		handleFatalError();
 	}
 }
 
 void ServerConnection::sendMessage(const string &msg) {
-	int sent = socket->sendData(TYPE_MESSAGE, msg.c_str(), msg.length() + 1);
+	int sent = socket->sendData(TYPE_MESSAGE, (const uint8_t *)msg.c_str(), msg.length() + 1);
 	if (sent != 0)
 		handleFatalError();
 }

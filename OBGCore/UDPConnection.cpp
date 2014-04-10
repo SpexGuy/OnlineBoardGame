@@ -44,6 +44,7 @@ bool UDPClient::sendPacket(int type, int len, const uint8_t *data) {
 	//send packet
 	if (socket.send(server, (uint8_t *)pack, size) != size)
 		return false;
+	//cout << pack->seqno << endl;
 	reliabilitySystem.PacketSent(len);
 	return true;
 }
@@ -88,6 +89,7 @@ bool UDPClient::update(int time) {
 void UDPClient::stop() {
 	reliabilitySystem.Reset();
 	socket.close();
+	thread.waitForTerminate();
 }
 
 
@@ -117,6 +119,7 @@ bool UDPServer::start(int time, uint16_t port) {
 
 bool UDPServer::broadcastPacket(int type, int len, const uint8_t *data, const Address &exclude) {
 	bool success = true;
+	FunctionLock lock(clientsLock);
 	for (pair<const Address, ClientInfo> &client : clients) {
 		if (client.first != exclude)
 			success &= sendPacket(client.first, type, len, data);
@@ -125,6 +128,7 @@ bool UDPServer::broadcastPacket(int type, int len, const uint8_t *data, const Ad
 }
 
 bool UDPServer::sendPacket(const Address &destination, int type, int len, const uint8_t *data) {
+	FunctionLock lock(clientsLock);
 	assert(isRunning());
 	assert(clients.find(destination) != clients.end());
 	//make packet
@@ -132,21 +136,24 @@ bool UDPServer::sendPacket(const Address &destination, int type, int len, const 
 	int size = sizeof(Packet) + len;
 	Packet *pack = (Packet *) alloca(size);
 	pack->protocol = protocolId;
-	pack->seqno = client.reliabilitySystem.GetLocalSequence();
-	pack->ack = client.reliabilitySystem.GetRemoteSequence();
-	pack->ack_bits = client.reliabilitySystem.GenerateAckBits();
+	pack->seqno = client.reliabilitySystem->GetLocalSequence();
+	pack->ack = client.reliabilitySystem->GetRemoteSequence();
+	pack->ack_bits = client.reliabilitySystem->GenerateAckBits();
 	pack->message.type = type;
 	memcpy(pack->message.data, data, len);
 	//send packet
 	if (socket.send(destination, (uint8_t *)pack, size) != size)
 		return false;
-	client.reliabilitySystem.PacketSent(len);
+	//cout << pack->seqno << endl;
+	client.reliabilitySystem->PacketSent(len);
 	return true;
 }
 
 bool UDPServer::sendUnindexedPacket(const Address &destination, int type, int len, const uint8_t *data) {
 	assert(isRunning());
+	FunctionLock lock(clientsLock);
 	assert(clients.find(destination) == clients.end());
+	lock.unlock();
 	//make packet
 	int size = sizeof(Packet) + len;
 	Packet *pack = (Packet *) alloca(size);
@@ -176,16 +183,17 @@ int UDPServer::loop() {
 			cout << "wrong protocol: " << pack->protocol << endl;
 			continue;
 		}
+		FunctionLock lock(clientsLock);
 		if (clients.find(from) == clients.end()) {
-			printf("Unknown client: %d.%d.%d.%d:%d", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetTCPPort());
+			printf("Unknown client: %d.%d.%d.%d:%d\n", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetTCPPort());
 			continue;
 		}
-		cout << "Got Message!" << endl;
 		//message is valid
 		//update tracking info
 		clients[from].lastMessageTime = time;
-		clients[from].reliabilitySystem.PacketReceived(pack->seqno, received_bytes - sizeof(Packet));
-		clients[from].reliabilitySystem.ProcessAck(pack->ack, pack->ack_bits);
+		clients[from].reliabilitySystem->PacketReceived(pack->seqno, received_bytes - sizeof(Packet));
+		clients[from].reliabilitySystem->ProcessAck(pack->ack, pack->ack_bits);
+		lock.unlock();
 		//send packet to listener
 		listener->handleMessage(from, pack->message.type, pack->message.data, received_bytes - sizeof(Packet));
 	}
@@ -193,8 +201,9 @@ int UDPServer::loop() {
 }
 
 void UDPServer::addClient(const Address &client) {
+	FunctionLock lock(clientsLock);
 	printf("Adding client %d.%d.%d.%d:%d\n", client.GetA(), client.GetB(), client.GetC(), client.GetD(), client.GetTCPPort());
-	clients[client].reliabilitySystem = ReliabilitySystem(MAX_SEQNO);
+	clients[client].reliabilitySystem = new ReliabilitySystem(MAX_SEQNO);
 	clients[client].lastMessageTime = time;
 }
 
@@ -203,12 +212,16 @@ bool UDPServer::update(int time) {
 	int dt = time - this->time;
 	this->time = time;
 	bool success = true;
-	for (auto iter = clients.begin(), end = clients.end(); iter != end; iter++) {
-		iter->second.reliabilitySystem.Update(dt);
+	FunctionLock lock(clientsLock);
+	for (auto iter = clients.begin(); iter != clients.end(); ++iter) {
+		iter->second.reliabilitySystem->Update(dt);
 		if (isUnresponsive(iter->first)) {
 			if (listener->handleUnresponsiveClient(iter->first)) {
 				printf("Client %d.%d.%d.%d:%d has timed out\n", iter->first.GetA(), iter->first.GetB(), iter->first.GetC(), iter->first.GetD(), iter->first.GetTCPPort());
+				delete iter->second.reliabilitySystem;
 				iter = clients.erase(iter);
+				if (iter == clients.end())
+					break;
 			}
 			success = false;
 		}
@@ -217,12 +230,16 @@ bool UDPServer::update(int time) {
 }
 
 bool UDPServer::isUnresponsive(const Address &addr) {
+	FunctionLock lock(clientsLock);
 	assert(clients.find(addr) != clients.end());
 	return time - clients[addr].lastMessageTime > timeout;
 }
 
 void UDPServer::stop() {
 	socket.close();
+	FunctionLock lock(clientsLock);
 	clients.clear();
+	lock.unlock();
+	thread.waitForTerminate();
 }
 

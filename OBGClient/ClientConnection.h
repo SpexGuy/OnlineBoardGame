@@ -19,7 +19,7 @@ class ClientConnection :
 protected:
 	Event fileDownloaded;
 	UDPClient udpClient;
-	void processData(const SerialData &data);
+	void processData(uint8_t type, const uint8_t *data, uint16_t len);
 	virtual void handleFatalError();
 
 public:
