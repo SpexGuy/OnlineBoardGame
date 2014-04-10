@@ -258,6 +258,8 @@ PART 4: The Client Projects
 		ILU.lib
 		ILUT.lib
 		freeglut.lib
+        OBGGraphics.lib
+        OBGClient.lib
 		ws2_32.lib
         
 
