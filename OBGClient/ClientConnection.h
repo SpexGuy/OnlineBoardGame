@@ -1,8 +1,10 @@
 #pragma once
-#include <PhysicsUpdateEventBroadcaster.h>
+#include <Address.h>
 #include <Connection.h>
 #include <Event.h>
 #include <InteractionListener.h>
+#include <PhysicsUpdateEventBroadcaster.h>
+#include <UDPConnection.h>
 #include "MessageEventBroadcaster.h"
 #include "MessageListener.h"
 
@@ -11,21 +13,26 @@ class ClientConnection :
 	public PhysicsUpdateEventBroadcaster,
 	public MessageEventBroadcaster,
 	public InteractionListener,
-	public MessageListener
+	public MessageListener,
+	public UDPClientListener
 {
 protected:
 	Event fileDownloaded;
-
-	void processData(const SerialData &data);
+	UDPClient udpClient;
+	void processData(uint8_t type, const uint8_t *data, uint16_t len);
 	virtual void handleFatalError();
 
 public:
-	ClientConnection(std::string ip, short port);
+	ClientConnection();
 
+	virtual bool connect(int time, const Address &addr, int localPort);
+	virtual void update(int time);
 	virtual void setUsername(const std::string &username);
 	virtual void downloadFile(const std::string &filename);
 	virtual void handleInteraction(Interaction *action);
 	virtual void handleMessage(const std::string &message);
+
+	virtual void handleMessage(int type, uint8_t *data, int len);
 
 	virtual ~ClientConnection();
 };

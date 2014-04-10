@@ -1,5 +1,7 @@
 #include <assert.h>
 #include <iostream>
+#include <Interaction.h>
+#include <PhysicsUpdate.h>
 #include "PlayerManager.h"
 #include "ServerConnection.h"
 #include "ServerSocket.h"
@@ -14,26 +16,36 @@ int PlayerManagerThreadLoop(void *pm) {
 	return 0;
 }
 
-PlayerManager::PlayerManager(short port) :
-	socket(new ServerSocket(port)),
+PlayerManager::PlayerManager() :
+	socket(),
 	active(false),
 	thread(PlayerManagerThreadLoop, this),
+	udpServer(0xABCD4321, 500, this),
 	playersLock()
 {
 
 }
 
-void PlayerManager::start() {
+bool PlayerManager::start(int time, uint16_t port) {
 	active = true;
+	if (!socket.open(port)) {
+		cout << "Could not open ServerSocket" << endl;
+		return false;
+	}
 	if (!thread.start()) {
 		cout << "Could not create client thread" << endl;
-		assert(false);
+		return false;
 	}
+	if (!udpServer.start(time, port+1)) {
+		cout << "Could not start udpServer" << endl;
+		return false;
+	}
+	return true;
 }
 
 void PlayerManager::loop() {
 	while(active) {
-		Socket *sock = socket->getNextConnection();
+		Socket *sock = socket.getNextConnection();
 		if (sock == NULL) {
 			active = false;
 			break;
@@ -49,15 +61,20 @@ void PlayerManager::loop() {
 
 void PlayerManager::addPlayer(ServerConnection *player) {
 	FunctionLock lock(playersLock);
-	players.push_back(player);
+	players[player->getPeer()] = player;
+	udpServer.addClient(player->getPeer());
 	lock.unlock();
 	firePlayerJoined(player);
 }
 
+void PlayerManager::update(int time) {
+	udpServer.update(time);
+}
+
 void PlayerManager::handlePhysicsUpdate(PhysicsUpdate *physicsUpdate) {
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		players[c]->sendUpdate(physicsUpdate);
+	for (auto &player : players) {
+		udpServer.sendPacket(player.first, TYPE_PHYSICS_UPDATE, sizeof(PhysicsUpdate), (uint8_t *)physicsUpdate);
 	}
 }
 
@@ -69,15 +86,40 @@ void PlayerManager::handleInteraction(Interaction *action) {
 	fireInteraction(action);
 }
 
+void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, int len) {
+	switch(type) {
+	case TYPE_INTERACTION: {
+		SerializedInteraction *si = (SerializedInteraction *)data;
+		assert(len >=  si->numIds * sizeof(si->ids[0]) + sizeof(si));
+		vector<int> ids;
+		for (int c = 0; c < si->numIds; c++)
+			ids.push_back(si->ids[c]);
+		Interaction action(si->mousePos, ids);
+		handleInteraction(&action);
+		break;
+	}
+	default:
+		cout << "Unknown UDP message type: " << type << endl;
+	}
+}
+
+bool PlayerManager::handleUnresponsiveClient(const Address &client) {
+	auto iter = players.find(client);
+	if (iter != players.end()) {
+		disconnectPlayer(iter->second);
+	}
+	return true;
+}
+
 void PlayerManager::disconnectPlayer(ServerConnection *player) {
 	bool found = false;
 	FunctionLock lock(playersLock);
 	for (auto iter = players.begin(), end = players.end();
 			iter != end; ++iter)
 	{
-		if (*iter == player) {
+		if (iter->second == player) {
 			found = true;
-			players.erase(iter);
+			iter = players.erase(iter);
 			break;
 		}
 	}
@@ -89,25 +131,25 @@ void PlayerManager::disconnectPlayer(ServerConnection *player) {
 
 void PlayerManager::broadcast(string message, ServerConnection *exclude) {
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		if (players[c] != exclude) {
-			players[c]->sendMessage(message);
+	for (auto &player : players) {
+		if (player.second != exclude) {
+			player.second->sendMessage(message);
 		}
 	}
 }
 
 void PlayerManager::close() {
 	this->active = false;
-	delete socket;
-	socket = NULL;
+	socket.close();
+	udpServer.stop();
 }
 
 PlayerManager::~PlayerManager() {
 	if (active) close();
 
 	FunctionLock lock(playersLock);
-	for (unsigned int c = 0; c < players.size(); c++) {
-		delete players[c];
+	for (auto &player : players) {
+		delete player.second;
 	}
 	players.clear();
 }

@@ -4,14 +4,9 @@
 #include "Socket.h"
 #include "Thread.h"
 
-using namespace std;
+#define MAX_PACKET_SIZE 4096
 
-Connection::Connection(Socket *socket) :
-	socket(socket),
-	active(false)
-{
-	
-}
+using namespace std;
 
 int ConnectionThreadLoop(void *c) {
 	cout << "Socket Thread started apparently" << endl;
@@ -20,29 +15,38 @@ int ConnectionThreadLoop(void *c) {
 	return 0;
 }
 
+Connection::Connection(Socket *socket) :
+	socket(socket),
+	active(false),
+	runThread(ConnectionThreadLoop, this)
+{
+	assert(socket);
+}
+
 void Connection::start() {
 	active = true;
-	runThread = new Thread(ConnectionThreadLoop, this);
-	if (!runThread->start()) {
+	if (!runThread.start()) {
 		cout << "Could not create client thread" << endl;
 		assert(false);
 	}
 }
 
 void Connection::loop() {
+	uint8_t *data = new uint8_t[MAX_PACKET_SIZE];
+	uint8_t type;
 	while(active) {
-		SerialData data = socket->receive();
-		if (data.data != NULL) {
-			processData(data);
+		int len = socket->receive(type, data, MAX_PACKET_SIZE);
+		if (!active) break;
+		if (len >= 0) {
+			processData(type, data, len);
 		} else {
 			cout << "Fatal error in socket read.  Closing loop." << endl;
-			if (active) {
-				handleFatalError();
-				active = false;
-			}
+			handleFatalError();
+			active = false;
 			break;
 		}
 	}
+	delete[] data;
 }
 
 int Connection::sendFile(const std::string &file) {
@@ -59,6 +63,5 @@ void Connection::close() {
 
 Connection::~Connection() {
 	close();
-	runThread->waitForTerminate();
-	delete runThread;
+	runThread.waitForTerminate();
 }

@@ -8,6 +8,7 @@
 #include <json.h>
 #include <Socket.h>
 
+#include <GLErrorCheck.h>
 #include <GLSLProgram.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
@@ -88,7 +89,7 @@ GameManager::GameManager(int argc, char *argv[]) {
 	//init everything
 	SocketInit();
 	graphicsManager = new GraphicsManager(argc, argv);
-	connection = new ClientConnection("127.0.0.1", 0xABC0);
+	connection = new ClientConnection();
 	inputHandler = new UserInputHandler();
 	entityManager = new ClientEntityManager();
 	//set up listeners
@@ -108,11 +109,6 @@ void GameManager::run() {
 	visible = true;
 
 	graphicsManager->start();
-	connection->start();
-	inputHandler->start();
-
-	graphicsManager->addRenderable(inputHandler->getChatBox());
-	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
 	ifstream file("assets.json");
 	assert(file);
@@ -147,6 +143,15 @@ void GameManager::run() {
 	glutTimerFunc(PERIOD, updateFunc, 0);
 
 	entityManager->start();
+	if (!connection->connect(clock(), Address::TCPAddress(0x7F000001, 0xABC0), 0xABC8)) {
+		cout << "Could not connect to server. Continuing..." << endl;
+	} else {
+		connection->start();
+	}
+	inputHandler->start();
+
+	graphicsManager->addRenderable(inputHandler->getChatBox());
+	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
 	glutMainLoop();
 }
@@ -154,15 +159,17 @@ void GameManager::run() {
 void GameManager::update() {
 	if (running) {
 		glutTimerFunc(PERIOD, updateFunc, 0);
+		clock_t time = clock();
 		inputHandler->update();
 		entityManager->update();
-		entityManager->createPhysicsUpdates();
+		connection->update(time);
 		glutPostRedisplay();
 	}
 }
 
 void GameManager::display() {
 	if (running && visible) {
+		checkError("Before display");
 		graphicsManager->display();
 	}
 }

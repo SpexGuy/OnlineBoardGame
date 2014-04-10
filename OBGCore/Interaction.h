@@ -3,6 +3,16 @@
 #include "btBulletDynamicsCommon.h"
 
 using std::vector;
+class Interaction {
+private:
+	Interaction();
+public:
+	vector<int> ids;
+	btVector3 mousePos;
+	Interaction(const btVector3& mousePos, const vector<int> &ids);
+	~Interaction();
+};
+
 /** This class has no constructor or destructor.
  *	It should be allocated with malloc() and
  *	destroyed with free().
@@ -17,12 +27,10 @@ using std::vector;
  *	and the deserialization code in
  *	ServerConnection::processData(..).
  */
-class Interaction {
-private:
-	Interaction();
-public:
-	vector<int> ids;
+#pragma warning(disable:4200)
+struct SerializedInteraction {
 	btVector3 mousePos;
-	Interaction(const btVector3& mousePos, vector<int> ids);
-	~Interaction();
+	int numIds;
+	int ids[0];
 };
+#pragma warning(default:4200)

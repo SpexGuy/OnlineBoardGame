@@ -12,6 +12,7 @@
 using namespace std;
 
 EntityManager::EntityManager() {
+	FunctionLock lock(worldLock);
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
 	collisionConfiguration = new btDefaultCollisionConfiguration;
@@ -58,7 +59,7 @@ EntityManager::EntityManager() {
 }
 
 EntityManager::~EntityManager() {
-
+	FunctionLock lock(worldLock);
 	//Remove the objects from the physics world
 	for(pair<int, Entity*> e : entities) {
 		world->removeRigidBody(e.second->getPhysicsBody());
@@ -73,11 +74,13 @@ EntityManager::~EntityManager() {
 }
 
 void EntityManager::addEntity(Entity *e) {
+	FunctionLock lock(worldLock);
 	entities[e->getId()] = e;
 	world->addRigidBody(e->getPhysicsBody());
 }
 
 void EntityManager::handleInteraction(Interaction *action) {
+	FunctionLock lock(worldLock);
 	for(int &i : action->ids) {
 		assert(i != 0);
 		if(i < 0) {
@@ -101,12 +104,29 @@ void EntityManager::handleInteraction(Interaction *action) {
 	}
 }
 
+void EntityManager::createPhysicsUpdates() {
+	FunctionLock lock(worldLock);
+	for(pair<int, Entity*> p : entities) {
+		Entity * e = p.second;
+		btRigidBody& physBody = * e->getPhysicsBody();
+		btTransform transform = physBody.getWorldTransform();
+		btVector3 linear = physBody.getLinearVelocity();
+		btVector3 angular = physBody.getAngularVelocity();
+		PhysicsUpdate *update = PhysicsUpdate::create(e->getId(), transform, linear, angular);
+
+		firePhysicsUpdate(update);
+
+		update->emancipate();
+	}
+}
+
 void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
+	FunctionLock lock(worldLock);
 	Entity* ent = entities[update->entityId];
 	
 	btRigidBody& physBody = *ent->getPhysicsBody();
 	
-	physBody.getMotionState()->setWorldTransform(update->transform);
+	physBody.setWorldTransform(update->transform);
 	physBody.setLinearVelocity(update->linearVel);
 	physBody.setAngularVelocity(update->angularVel);
 }
@@ -119,7 +139,9 @@ void EntityManager::update() {
 	//Step physics simulation
 
 	clock_t currTime = clock();
+	FunctionLock lock(worldLock);
 	world->stepSimulation(float(currTime - lastTime)/float(CLOCKS_PER_SEC), 10);
+	lock.unlock();
 	lastTime = currTime;
 	
 	//Combine stackable entities
@@ -130,6 +152,18 @@ void EntityManager::update() {
 
 		}
 	}
+	//This is the WRONG WAY to iterate physics objects.
+	//Use AABBs and the collision broadphase instead.
+	//for(auto iter1 = entities.begin(), end = entities.end(); iter1 != end;) {
+	//	Entity *ent1 = iter1->second;
+	//	for(auto iter2 = ++iter1; iter2 != end; ++iter2) {
+	//		Entity *ent2 = iter2->second;
+
+	//		if(ent1->getType()->getGroup() == ent2->getType()->getGroup()) { //&& similar positions && stackable) {
+	//			//stack them
+	//		}
+	//	}
+	//}
 }
 
 void EntityManager::clear() {
@@ -145,31 +179,13 @@ Entity* EntityManager::getEntityById(int id) {
 
 Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to) {
 	btCollisionWorld::ClosestRayResultCallback callback(from, to);
-	world->rayTest(from, to, callback);
+	FunctionLock lock(worldLock);
+		world->rayTest(from, to, callback);
+	lock.unlock();
 
 	if(callback.hasHit()) {
 		const btCollisionObject *collided = callback.m_collisionObject;
-		for(pair<int, Entity *> e : entities) {
-			if(e.second->getPhysicsBody() == collided) {
-				return e.second;
-			}
-		}
+		return (Entity *) ((btRigidBody *)collided)->getMotionState();
 	}
 	return NULL;
-}
-
-void EntityManager::createPhysicsUpdates() {
-	for(pair<int, Entity*> p : entities) {
-		Entity * e = p.second;
-		btRigidBody& physBody = * e->getPhysicsBody();
-		btTransform transform;
-		physBody.getMotionState()->getWorldTransform(transform);
-		btVector3 linear = physBody.getLinearVelocity();
-		btVector3 angular = physBody.getAngularVelocity();
-		PhysicsUpdate *update = PhysicsUpdate::create(e->getId(), transform, linear, angular);
-
-		firePhysicsUpdate(update);
-
-		update->emancipate();
-	}
 }
