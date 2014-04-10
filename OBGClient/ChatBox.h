@@ -30,6 +30,7 @@ public:
 	virtual void cancel();
 	virtual void render();
 	virtual ~ChatBox();
+	inline std::string** getMessages() { return messages; };
 
 	inline bool isEditMode() { return editMode; }
 };

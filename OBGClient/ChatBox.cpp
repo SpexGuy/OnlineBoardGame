@@ -44,6 +44,7 @@ void ChatBox::enterEditMode() {
 }
 
 void ChatBox::submit() {
+	assert(editMode);
 	editMode = false;
 	FunctionLock lock(inputLock);
 		if (input.size() == 0) return;

@@ -97,6 +97,24 @@ PART 2: Lots of Libraries
 		freeglut.lib
 		ws2_32.lib
 	Apply
+    
+    right-click(solution)->Add->New Project
+	Select Test->Native Unit Test Practice
+	Name the new project OBGCoreTests.
+    right-click(OBGCoreTests)->Properties->Common Properties->Framework and References->Add New Reference
+	Check BulletCollision, BulletDynamics, LinearMath
+	Apply
+    Click Configuration Properties
+    Change Configuration to All Configurations
+    Edit Additional Include Directories; add:
+        $BULLET/src
+		OnlineBoardGame/OBGCore
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+        OnlineBoardGame/Debug
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		OBGCore.lib
 
 	In the libraries you downloaded, find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug.
 
@@ -177,7 +195,7 @@ PART 3: The Server Project
 
 
 
-PART 4: The Client Project
+PART 4: The Client Projects
 	
 	right-click(solution)->Add->New Project
 	Select Empty Project
@@ -210,7 +228,37 @@ PART 4: The Client Project
 		freeglut.lib
 		ws2_32.lib
 	Apply
-
+    
+    right-click(solution)->Add->New Project
+	Select Test->Native Unit Test Practice
+	Name the new project OBGClientTests.
+    right-click(OBGClientTests)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGCore and OBGClient.
+	Apply
+    Click Configuration Properties
+    Change Configuration to All Configurations
+    Edit Additional Include Directories; add:
+        $GLEW/include
+		$GLM
+		$FREEGLUT/include
+		OnlineBoardGame/OBGGraphics
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGClient
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+		$GLEW/lib/Release/Win32
+		$DEVIL/lib
+		$FREEGLUT/lib
+        OnlineBoardGame/Debug
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		glew32.lib
+		DevIL.lib
+		ILU.lib
+		ILUT.lib
+		freeglut.lib
+		ws2_32.lib
+        
 
 	**** SANITY CHECK ****
 	right-click(OBGClient)->Set as StartUp Project
@@ -288,10 +336,6 @@ IN ORDER TO RUN THE CLIENT, YOU MUST BE RUNNING THE SERVER ON LOCALHOST
 You must have a unique instance of visual studio running for each program you wish to run.
 In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
 RUN THE SERVER FIRST
-Then, run the client.  You can run multiple instances of the client, however they do not synchronize physics as of yet.
-The chat works though; press enter or t to talk to the other clients.
-There seems to be a bug where if an object has remained motionless for a few seconds it will become fixed, and cannot be moved.
-You can pick up an object at the beginning though, and if you throw it at other objects it will jar them free, and they can also be picked up.
 
 Controls:
 	mouse 0 - pick up objects
