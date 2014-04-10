@@ -73,9 +73,10 @@ public:
 class UDPServer {
 private:
 	struct ClientInfo {
-		ReliabilitySystem reliabilitySystem;
+		ReliabilitySystem *reliabilitySystem;
 		int lastMessageTime;
 	};
+	CriticalSection clientsLock;
 	std::map<Address, ClientInfo> clients;
 	UDPServerListener *listener;
 	int time;

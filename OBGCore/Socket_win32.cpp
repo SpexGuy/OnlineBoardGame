@@ -27,7 +27,7 @@ Socket::Socket() :
 	peer()
 {}
 
-bool Socket::open(const Address &peer, int localPort) {
+bool Socket::open(const Address &peer, uint16_t localPort) {
 	assert(!isOpen());
 	this->peer = peer;
 	socketFD = socket(PF_INET, SOCK_STREAM, 0);
@@ -67,11 +67,11 @@ bool Socket::open(const Address &peer, int localPort) {
 	return true;
 }
 
-int Socket::sendRawBytes(char *byteData, int size) {
+int Socket::sendRawBytes(const uint8_t *byteData, uint16_t size) {
 	if (!isOpen()) return -1;
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
-		int bytesSent = send(socketFD, byteData, bytesLeft, 0);
+		int bytesSent = send(socketFD, (const char *)byteData, bytesLeft, 0);
 		if (bytesSent < 0) {
 			cout << "Failed to send bytes" << endl;
 			return bytesLeft;
@@ -82,11 +82,10 @@ int Socket::sendRawBytes(char *byteData, int size) {
 	return 0;
 }
 
-int Socket::readRawBytes(const void *data, int size) {
-	char *byteData = (char *) data;
+int Socket::readRawBytes(uint8_t *data, uint16_t size) {
 	int bytesLeft = size;
 	while(bytesLeft > 0) {
-		int bytesRecv = recv(socketFD, byteData, bytesLeft, 0);
+		int bytesRecv = recv(socketFD, (char *)data, bytesLeft, 0);
 		if (bytesRecv < 0) {
 			cout << "Could not receive bytes" << endl;
 			return bytesLeft;
@@ -95,24 +94,23 @@ int Socket::readRawBytes(const void *data, int size) {
 			cout << "Disconnection!" << endl;
 			return bytesLeft;
 		}
-		byteData += bytesRecv;
+		data += bytesRecv;
 		bytesLeft -= bytesRecv;
 	}
 	return 0;
 }
 
-int Socket::sendData(int type, const void *data, int size) {
+int Socket::sendData(uint8_t type, const uint8_t *data, uint16_t size) {
 	if (!isOpen()) return -1;
-	int ntype = htonl(type);
-	int nsize = htonl(size);
+	uint16_t nsize = htons(size);
 
-	int bytesLeft = sendRawBytes((char *) &ntype, sizeof(ntype));
+	int bytesLeft = sendRawBytes((uint8_t *) &type, sizeof(type));
 	if (bytesLeft != 0) return bytesLeft;
 
-	bytesLeft = sendRawBytes((char *) &nsize, sizeof(nsize));
+	bytesLeft = sendRawBytes((uint8_t *) &nsize, sizeof(nsize));
 	if (bytesLeft != 0) return bytesLeft;
 
-	bytesLeft = sendRawBytes((char *) data, size);
+	bytesLeft = sendRawBytes((uint8_t *) data, size);
 	return bytesLeft;
 }
 
@@ -129,14 +127,14 @@ int Socket::sendFile(const string &filename) {
 	cout << "file length is " << size;
 	file.seekg(0, ios::beg);
 	//send header data
-	int bl = sendData(TYPE_FILE, filename.c_str(), filename.length()+1);
+	int bl = sendData(TYPE_FILE, (const uint8_t *)filename.c_str(), filename.length()+1);
 	if (bl != 0) {
 		cout << "Could not send file header" << endl;
 		file.close();
 		return -1;
 	}
 	cout << "Sent file header" << endl;
-	bl = sendRawBytes((char *) &size, sizeof(size));
+	bl = sendRawBytes((uint8_t *) &size, sizeof(size));
 	if (bl != 0) {
 		cout << "Could not send file header" << endl;
 		file.close();
@@ -147,7 +145,7 @@ int Socket::sendFile(const string &filename) {
 	while (bytesLeft > 0) {
 		int chunkSize = bytesLeft < FILE_BUFFER_SIZE ? bytesLeft : FILE_BUFFER_SIZE;
 		file.read(buffer, chunkSize);
-		bl = sendRawBytes(buffer, chunkSize);
+		bl = sendRawBytes((uint8_t *)buffer, chunkSize);
 		if (bl != 0) {
 			cout << "Could not send bytes" << endl;
 			file.close();
@@ -162,77 +160,51 @@ int Socket::sendFile(const string &filename) {
 	return 0;
 }
 
-SerialData Socket::receive() {
-	int type;
+int Socket::receive(uint8_t &type, uint8_t *data, uint16_t maxSize) {
+	assert(isOpen());
 	int bytesLeft = readRawBytes(&type, sizeof(type));
-	type = ntohl(type);
-	
-	SerialData ret;
-	if (bytesLeft != 0) {
-		ret.data = NULL;
-		return ret;
-	}
+	if (bytesLeft != 0) return -1;
 
-	int size;
-	bytesLeft = readRawBytes(&size, sizeof(size));
-	size = ntohl(size);
+	uint16_t size;
+	bytesLeft = readRawBytes((uint8_t *)&size, sizeof(size));
+	size = ntohs(size);
+	if (bytesLeft != 0) return -1;
 
-	if (bytesLeft != 0) {
-		ret.data = NULL;
-		return ret;
-	}
-
-
-	char *data = (char *) malloc(size);
-	if (data == NULL) {
-		cout << "Could not malloc " << size << " bytes!" << endl;
+	if (maxSize < size) {
+		cout << "Read Buffer Too Small!!!!!" << endl;
 		assert(false);
+		return -1;
 	}
 	bytesLeft = readRawBytes(data, size);
-	if (bytesLeft != 0) {
-		free(data);
-		ret.data = NULL;
-		return ret;
-	}
+	if (bytesLeft != 0) return -1;
 
 	if (type == TYPE_FILE) {
 		cout << "Receiving a file: " << data << endl;
 		long fileLength;
-		bytesLeft = readRawBytes(&fileLength, sizeof(fileLength));
-		if (bytesLeft != 0) {
-			free(data);
-			ret.data = NULL;
-			return ret;
-		}
+		bytesLeft = readRawBytes((uint8_t *)&fileLength, sizeof(fileLength));
+		if (bytesLeft != 0) return -1;
+
 		cout << "Length is " << fileLength << endl;
-
-		ofstream outFile(data);
+		ofstream outFile((char *)data);
 		char *buffer = new char[FILE_BUFFER_SIZE];
+		assert(buffer != NULL);
 
-		long fileBytesLeft = fileLength;
+		long fileBytesLeft = -1;
 
 		while(fileBytesLeft > 0) {
 			int chunkSize = fileBytesLeft < FILE_BUFFER_SIZE ? fileBytesLeft : FILE_BUFFER_SIZE;
-			bytesLeft = readRawBytes(buffer, chunkSize);
+			bytesLeft = readRawBytes((uint8_t *)buffer, chunkSize);
 			if (bytesLeft != 0) {
-				free(data);
-				ret.data = NULL;
 				delete[] buffer;
-				return ret;
+				return -1;
 			}
 			outFile.write(buffer, chunkSize);
 			fileBytesLeft -= chunkSize;
 			cout << "Received " << (fileLength - fileBytesLeft) << " of " << fileLength << " bytes." << endl;
 		}
-
 		delete[] buffer;
-
 	}
-
-	ret.data = data;
-	ret.size = size;
-	ret.type = type;
-	return ret;
+	return size;
 }
 
 void Socket::close() {

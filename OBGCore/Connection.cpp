@@ -4,6 +4,8 @@
 #include "Socket.h"
 #include "Thread.h"
 
+#define MAX_PACKET_SIZE 4096
+
 using namespace std;
 
 int ConnectionThreadLoop(void *c) {
@@ -30,19 +32,21 @@ void Connection::start() {
 }
 
 void Connection::loop() {
+	uint8_t *data = new uint8_t[MAX_PACKET_SIZE];
+	uint8_t type;
 	while(active) {
-		SerialData data = socket->receive();
-		if (data.data != NULL) {
-			processData(data);
+		int len = socket->receive(type, data, MAX_PACKET_SIZE);
+		if (!active) break;
+		if (len >= 0) {
+			processData(type, data, len);
 		} else {
 			cout << "Fatal error in socket read.  Closing loop." << endl;
-			if (active) {
-				handleFatalError();
-				active = false;
-			}
+			handleFatalError();
+			active = false;
 			break;
 		}
 	}
+	delete[] data;
 }
 
 int Connection::sendFile(const std::string &file) {

@@ -59,6 +59,7 @@ void GameManager::run() {
 		entityManager->update();
 		entityManager->createPhysicsUpdates();
 		playerManager->update(time);
+		sleep(max((1000/60) - int(clock() - time), 0));
 	}
 	playerManager->close();
 	cout << "Server closed" << endl;

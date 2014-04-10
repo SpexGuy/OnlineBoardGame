@@ -17,8 +17,6 @@ protected:
 public:
 	UDPSocket();
 	bool open(uint16_t localPort = ANY_PORT);
-	bool connect(std::string ip, uint16_t port);
-	bool connect(uint32_t ip, uint16_t port);
 	int  send(const Address &to, const uint8_t *data, int len);
 	int  receive(Address &from, uint8_t *data, int maxLen);
 	void close();

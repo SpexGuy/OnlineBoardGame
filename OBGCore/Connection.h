@@ -19,7 +19,7 @@ protected:
 	volatile bool active;
 
 	virtual int  sendFile(const std::string &name);
-	virtual void processData(const SerialData &data) = 0;
+	virtual void processData(uint8_t type, const uint8_t *data, uint16_t len) = 0;
 	virtual void handleFatalError() = 0;
 public:
 	Connection(Socket *socket);

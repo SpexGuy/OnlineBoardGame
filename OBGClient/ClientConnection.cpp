@@ -30,39 +30,37 @@ void ClientConnection::handleMessage(int type, uint8_t *data, int len) {
 	case TYPE_PHYSICS_UPDATE:
 		assert(len == sizeof(PhysicsUpdate));
 		firePhysicsUpdate((PhysicsUpdate *) data);
+		break;
+	default:
+		cout << "Unknown UDP type: " << type;
 	}
 }
 
-void ClientConnection::processData(const SerialData &data) {
-	switch(data.type) {
+void ClientConnection::processData(uint8_t type, const uint8_t *data, uint16_t size) {
+	switch(type) {
 	case TYPE_FILE:
-		cout << "Client got a file: " << data.data << endl;
+		cout << "Client got a file: " << (char *)data << endl;
 		fileDownloaded.notify();
-		free(data.data);
 		break;
 
 	case TYPE_INTERACTION:
 		cout << "Client got an interaction...? Through TCP?!" << endl;
-		free(data.data);
 		assert(false);
 		break;
 
 	case TYPE_PHYSICS_UPDATE:
 		cout << "Got physics update through TCP?" << endl;
-		assert(data.size == sizeof(PhysicsUpdate));
-		firePhysicsUpdate((PhysicsUpdate *) data.data);
+		assert(size == sizeof(PhysicsUpdate));
+		firePhysicsUpdate((PhysicsUpdate *) data);
 		break;
 
 	case TYPE_MESSAGE:
-		cout << "Got message: " << (char *)data.data << endl;
-		fireMessage(string((char *) data.data));
-		free(data.data);
+		cout << "Got message: " << (char *)data << endl;
+		fireMessage(string((char *) data));
 		break;
 
 	default:
-		cout << "Client got an unknown type: " << data.type << endl;
-		free(data.data);
-		assert(false);
+		cout << "Client got an unknown type: " << type << endl;
 	}
 }
 
@@ -72,7 +70,7 @@ void ClientConnection::handleFatalError() {
 }
 
 void ClientConnection::setUsername(const string &un) {
-	socket->sendData(TYPE_SET_USERNAME, un.c_str(), un.length()+1);
+	socket->sendData(TYPE_SET_USERNAME, (const uint8_t *)un.c_str(), un.length()+1);
 }
 
 void ClientConnection::handleInteraction(Interaction *action) {
@@ -88,13 +86,13 @@ void ClientConnection::handleInteraction(Interaction *action) {
 }
 
 void ClientConnection::handleMessage(const string &message) {
-	socket->sendData(TYPE_MESSAGE, message.c_str(), message.length() + 1);
+	socket->sendData(TYPE_MESSAGE, (const uint8_t *)message.c_str(), message.length() + 1);
 }
 
 void ClientConnection::downloadFile(const string &filename) {
 	//ensure not set from async load
 	fileDownloaded.reset();
-	socket->sendData(TYPE_FILE_REQUEST, filename.c_str(), filename.length() + 1);
+	socket->sendData(TYPE_FILE_REQUEST, (const uint8_t *)filename.c_str(), filename.length() + 1);
 	//wait for file to download
 	cout << "waiting for file to download" << endl;
 	fileDownloaded.wait();
