@@ -14,6 +14,7 @@
 #define CHAR_BACKSPACE 0x08
 #define CHAR_ENTER '\r'
 
+
 #define ROTATIONAL_VELOCITY 100
 
 using namespace std;
@@ -22,6 +23,7 @@ using namespace glm;
 UserInputHandler::UserInputHandler() {
 	chat = new ChatBox();
 	wireframe = false;
+	rotations = 0;
 }
 
 void UserInputHandler::start() {
@@ -44,7 +46,7 @@ void UserInputHandler::update() {
 	
 	vec3 worldPos = pointer->getWorldPos();
 	btVector3 btPos(worldPos.x, worldPos.y, worldPos.z);
-	Interaction *interaction = new Interaction(btPos, idList);
+	Interaction *interaction = new Interaction(btPos, idList, rotations);
 	fireInteraction(interaction);
 	delete interaction;
 }
@@ -88,37 +90,33 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 			break;
 		case 'w':
 		case 'W':
-			//cout << "W pressed" << endl;
-			//if (heldList.size() > 0 && heldList[0] > 0) {
-			//	cout << "rotating entity " << heldList[0] << endl;
-			//	//btRigidBody *bod = GameManager::inst()->getEntityManager()->getEntityById(heldList[0])->getPhysicsBody();
-			//	//bod->setAngularFactor(btVector3(1,1,1));
-			//	//bod->setAngularVelocity(btVector3(-ROTATIONAL_VELOCITY,ROTATIONAL_VELOCITY,ROTATIONAL_VELOCITY));
-			//	//bod->activate(true);
-			//} else {
-			//	cout << "Nothing to rotate" << endl;
-			//}
 			//Rotate -x
+			rotations |= ROT_NEG_X;
 			break;
 		case 's':
 		case 'S':
 			//Rotate x
+			rotations |= ROT_POS_X;
 			break;
 		case 'a':
 		case 'A':
 			//Rotate z
+			rotations |= ROT_POS_Z;
 			break;
 		case 'd':
 		case 'D':
 			//rotate -z
+			rotations |= ROT_NEG_Z;
 			break;
 		case 'q':
 		case 'Q':
 			//rotate y
+			rotations |= ROT_POS_Y;
 			break;
 		case 'e':
 		case 'E':
 			//rotate -y
+			rotations |= ROT_NEG_Y;
 			break;
 		case 'r':
 		case 'R':
@@ -127,6 +125,43 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 			break;
 		default:
 			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
+		}
+	}
+}
+
+void UserInputHandler::keyReleased(unsigned char c, int x, int y) {
+	switch(c) {	
+		if(!chat->isEditMode()) {
+			case 'w':
+			case 'W':
+				//Rotate -x
+				rotations &= ~ROT_NEG_X;
+				break;
+			case 's':
+			case 'S':
+				//Rotate x
+				rotations &= ~ROT_POS_X;
+				break;
+			case 'a':
+			case 'A':
+				//Rotate z
+				rotations &= ~ROT_POS_Z;
+				break;
+			case 'd':
+			case 'D':
+				//rotate -z
+				rotations &= ~ROT_NEG_Z;
+				break;
+			case 'q':
+			case 'Q':
+				//rotate y
+				rotations &= ~ROT_POS_Y;
+				break;
+			case 'e':
+			case 'E':
+				//rotate -y
+				rotations &= ~ROT_NEG_Y;
+				break;
 		}
 	}
 }

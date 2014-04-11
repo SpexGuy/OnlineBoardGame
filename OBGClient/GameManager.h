@@ -23,6 +23,7 @@ public:
 	virtual void update();
 	virtual void display();
 	virtual void keyPressed(unsigned char c, int x, int y);
+	virtual void keyReleased(unsigned char c, int x, int y);
 	virtual void specialKeyPressed(int k, int x, int y);
 	virtual void mousePressed(int button, int state, int x, int y);
 	virtual void mouseDragged(int x, int y);

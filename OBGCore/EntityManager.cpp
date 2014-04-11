@@ -100,8 +100,26 @@ void EntityManager::handleInteraction(Interaction *action) {
 			}
 			physBody.setLinearVelocity(v);
 			physBody.setGravity(btVector3(0,0,0));
-			physBody.setAngularFactor(btVector3(0.1, 0.1, 0.1));
-			physBody.setAngularVelocity(btVector3(0, 0, 0));
+			btVector3 rotations = btVector3(0.0, 0.0, 0.0);
+			if(action->rotations & ROT_POS_X) {
+				rotations += btVector3(1.0, 0.0, 0.0);
+			}
+			if(action->rotations & ROT_NEG_X) {
+				rotations += btVector3(-1.0, 0.0, 0.0);
+			}
+			if(action->rotations & ROT_POS_Y) {
+				rotations += btVector3(0.0, 1.0, 0.0);
+			}
+			if(action->rotations & ROT_NEG_Y) {
+				rotations += btVector3(0.0, -1.0, 0.0);
+			}
+			if(action->rotations & ROT_POS_Z) {
+				rotations += btVector3(0.0, 0.0, 1.0);
+			}
+			if(action->rotations & ROT_NEG_Z) {
+				rotations += btVector3(0.0, 0.0, -1.0);
+			}
+			physBody.setAngularVelocity(rotations);
 			physBody.activate(true);
 		}
 	}
@@ -191,6 +209,7 @@ Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVect
 			const btCollisionObject *collided = callback.m_collisionObjects[i];
 			int id = ((Entity *)(((btRigidBody *)collided)->getMotionState()))->getId();
 			if(((btRigidBody *)collided)->getMotionState() != groundEnt && find(heldList.begin(), heldList.end(), id) == heldList.end()) {
+				btQuaternion quat = btQuaternion();
 				return (Entity *) ((btRigidBody *)collided)->getMotionState();
 			}
 		}

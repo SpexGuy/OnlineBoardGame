@@ -38,7 +38,7 @@ void ServerConnection::processData(uint8_t type, const uint8_t *data, uint16_t l
 		for (int c = 0; c < serial->numIds; c++) {
 			ids[c] = serial->ids[c];
 		}
-		Interaction action(serial->mousePos, ids);
+		Interaction action(serial->mousePos, ids, serial->rotations);
 		owner->handleInteraction(&action);
 		break;
 	}

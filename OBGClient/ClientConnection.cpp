@@ -79,6 +79,7 @@ void ClientConnection::handleInteraction(Interaction *action) {
 	struct SerializedInteraction *serial = (SerializedInteraction *)alloca(size);
 	serial->mousePos = action->mousePos;
 	serial->numIds = action->ids.size();
+	serial->rotations = action->rotations;
 	for (unsigned int c = 0; c < action->ids.size(); c++) {
 		serial->ids[c] = action->ids[c];
 	}

@@ -50,6 +50,10 @@ void keyboardFunc(unsigned char c, int x, int y) {
 	instance->keyPressed(c, x, y);
 }
 
+void keyboardUpFunc(unsigned char c, int x, int y) {
+	instance->keyReleased(c, x, y);
+}
+
 void specialFunc(int k, int x, int y) {
 	instance->specialKeyPressed(k, x, y);
 }
@@ -133,6 +137,7 @@ void GameManager::run() {
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 	glutDisplayFunc(displayFunc);
 	glutKeyboardFunc(keyboardFunc);
+	glutKeyboardUpFunc(keyboardUpFunc);
 	glutSpecialFunc(specialFunc);
 	glutMouseFunc(mouseFunc);
 	glutMotionFunc(motionFunc);
@@ -176,6 +181,10 @@ void GameManager::display() {
 
 void GameManager::keyPressed(unsigned char c, int x, int y) {
 	inputHandler->keyPressed(c, x, y);
+}
+
+void GameManager::keyReleased(unsigned char c, int x, int y) {
+	inputHandler->keyReleased(c, x, y);
 }
 
 void GameManager::specialKeyPressed(int k, int x, int y) {

@@ -94,7 +94,7 @@ void PlayerManager::handleMessage(const Address &from, int type, uint8_t *data, 
 		vector<int> ids;
 		for (int c = 0; c < si->numIds; c++)
 			ids.push_back(si->ids[c]);
-		Interaction action(si->mousePos, ids);
+		Interaction action(si->mousePos, ids, si->rotations);
 		handleInteraction(&action);
 		break;
 	}
