@@ -180,16 +180,19 @@ Entity* EntityManager::getEntityById(int id) {
 	return entities[id];
 }
 
-Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to) {
-	btCollisionWorld::ClosestRayResultCallback callback(from, to);
+Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to, vector<int> heldList) {
+	btCollisionWorld::AllHitsRayResultCallback  callback(from, to);
 	FunctionLock lock(worldLock);
 		world->rayTest(from, to, callback);
 	lock.unlock();
 
 	if(callback.hasHit()) {
-		const btCollisionObject *collided = callback.m_collisionObject;
-		if(((btRigidBody *)collided)->getMotionState() != groundEnt) {
-			return (Entity *) ((btRigidBody *)collided)->getMotionState();
+		for(int i = 0; i < callback.m_collisionObjects.size(); i ++) {
+			const btCollisionObject *collided = callback.m_collisionObjects[i];
+			int id = ((Entity *)(((btRigidBody *)collided)->getMotionState()))->getId();
+			if(((btRigidBody *)collided)->getMotionState() != groundEnt && find(heldList.begin(), heldList.end(), id) == heldList.end()) {
+				return (Entity *) ((btRigidBody *)collided)->getMotionState();
+			}
 		}
 	}
 	return NULL;

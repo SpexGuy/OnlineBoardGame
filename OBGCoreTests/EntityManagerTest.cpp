@@ -86,7 +86,7 @@ namespace OBGCoreTests
 
 			entityManager->addEntity(entity);
 
-			Entity* actual = entityManager->getIntersectingEntity(btVector3(0.0, 3.0, 0.0), btVector3(0.0, -0.5, 0.0));
+			Entity* actual = entityManager->getIntersectingEntity(btVector3(0.0, 3.0, 0.0), btVector3(0.0, -0.5, 0.0), std::vector<int>());
 			Assert::AreEqual(entity->getId(), actual->getId());
 
 			teardown();
@@ -98,7 +98,7 @@ namespace OBGCoreTests
 			
 			entityManager->addEntity(entity);
 
-			Entity* actual = entityManager->getIntersectingEntity(btVector3(1.0, 3.0, 0.0), btVector3(1.0, -0.5, 0.0));
+			Entity* actual = entityManager->getIntersectingEntity(btVector3(1.0, 3.0, 0.0), btVector3(1.0, -0.5, 0.0), std::vector<int>());
 			Assert::IsNull(actual);
 
 

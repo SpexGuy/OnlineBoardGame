@@ -150,7 +150,7 @@ void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 	case 0:{ //left click
 		if(state == GLUT_DOWN) {
 			vec3 pos = pointer->getWorldPos();
-			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z));
+			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), vector<int>());
 			if(clickedEntity != NULL) {
 				int id = clickedEntity->getId();
 				heldList.push_back(id);
@@ -164,9 +164,17 @@ void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 		}
 		break;
 	}
-	case 1: //right click
+	case 1: //middle click
 		break;
-	case 2: //middle click
+	case 2: //right click
+		if(state == GLUT_DOWN && heldList.size() != 0) {
+			vec3 pos = pointer->getWorldPos();
+			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), lastHeldList);
+			if(clickedEntity != NULL) {
+				int id = clickedEntity->getId();
+				heldList.push_back(id);
+			}
+		}
 		break;
 	case 3: //back button
 		break;
