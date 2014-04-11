@@ -17,7 +17,7 @@ namespace OBGCoreTests
 		{
 			vector<int> vec = vector<int>();
 			vec.push_back(1);
-			Interaction *interaction = new Interaction(btVector3(1.0, 2.0, 3.0), vec);
+			Interaction *interaction = new Interaction(btVector3(1.0, 2.0, 3.0), vec, 0);
 
 			Assert::AreEqual(1.0, (double) interaction->mousePos.getX());
 			Assert::AreEqual(2.0, (double) interaction->mousePos.getY());
