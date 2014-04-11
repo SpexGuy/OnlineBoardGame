@@ -1,6 +1,6 @@
 
 
-Instructions for creating a VS2012 Project (Rev. 2.3)
+Instructions for creating a VS2012 Project (Rev. 2.4)
 
 Depending on your experience with VS2012, this should take 1-2 hours to set up.
 I recommend creating a backup of the project directory after each step.
@@ -63,14 +63,32 @@ PART 1: Bullet to the head
 	Ensure that your project builds and runs successfully (it should just pop up a console for a second)
 	Once it works, delete that file
 
+	right-click(OBGCore)->Properties->Configuration Properties->General
+	Change Configuration to All Configurations
+	Change Configuration Type from Application to Static Library
+	Apply
+
 
 
 
 PART 2: Lots of Libraries
 
-	right-click(OBGCore)->Properties->Configuration Properties->General
+	right-click(solution)->Add->New Project
+	Select Test->Native Unit Test Practice
+	Name the new project OBGCoreTests.
+	delete unittest1.cpp
+
+	right-click(OBGCoreTests)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGCore
+	Apply
+	Click Configuration Properties
 	Change Configuration to All Configurations
-	Change Configuration Type from Application to Static Library
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		OnlineBoardGame/OBGCore
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		ws2_32.lib
 	Apply
 
 	right-click(solution)->Add->New Project
@@ -98,24 +116,6 @@ PART 2: Lots of Libraries
 		freeglut.lib
 		ws2_32.lib
 	Apply
-    
-    right-click(solution)->Add->New Project
-	Select Test->Native Unit Test Practice
-	Name the new project OBGCoreTests.
-    right-click(OBGCoreTests)->Properties->Common Properties->Framework and References->Add New Reference
-	Check BulletCollision, BulletDynamics, LinearMath
-	Apply
-    Click Configuration Properties
-    Change Configuration to All Configurations
-    Edit Additional Include Directories; add:
-        $BULLET/src
-		OnlineBoardGame/OBGCore
-	Go to Linker->General
-	Edit Additional Library Directories; add:
-        OnlineBoardGame/Debug
-	Go to Linker->Input
-	Edit Additional Dependencies; add:
-		OBGCore.lib
 
 	In the libraries you downloaded, find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug.
 
@@ -163,21 +163,21 @@ PART 2: Lots of Libraries
 
 	Compile and run it.  A window should pop up, and the console should say "SUCCESS". Delete the file once it works.
 
-
-
-
-PART 3: The Server Project
-
 	right-click(OBGGraphics)->Properties->Configuration Properties->General
 	Change Configuration to All Configurations
 	Change Configuration Type from Application to Static Library
 	Apply
 
+
+
+
+PART 3: The Server Project
+
 	right-click(solution)->Add->New Project
 	Select Empty Project
 	Name the new project OBGServer.
 
-	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	right-click(OBGServer)->Properties->Common Properties->Framework and References->Add New Reference
 	Check OBGCore
 
 	Go to C/C++->General
@@ -193,16 +193,58 @@ PART 3: The Server Project
 	right-click(OBGServer)->Set as StartUp Project
 	Repeat the sanity check from Part 1 for this project.
 
+	right-click(OBGServer)->Properties->Configuration Properties->General
+	Change Configuration to All Configurations
+	Change Configuration Type from Application to Static Library
+	Apply
+	
+	right-click(solution)->Add->New Project
+	Select Test->Native Unit Test Practice
+	Name the new project OBGServerTests.
+	delete unittest1.cpp
+
+	right-click(OBGServerTests)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGServer
+	Apply
+	Click Configuration Properties
+	Change Configuration to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGServer
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		ws2_32.lib
+	Apply
+
+	right-click(solution)->Add->New Project
+	Select Empty Project
+	Name the new project OBGServerRunner.
+
+	right-click(OBGServerRunner)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGServer
+	Apply
+	Click Configuration Properties
+	Change Configuration to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGServer
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		ws2_32.lib
+	Apply
+
 
 
 
 PART 4: The Client Projects
-	
+
 	right-click(solution)->Add->New Project
 	Select Empty Project
 	Name the new project OBGClient.
 
-	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
+	right-click(OBGClient)->Properties->Common Properties->Framework and References->Add New Reference
 	Check OBGCore and OBGGraphics
 	Apply
 	Go to C/C++->General
@@ -229,39 +271,6 @@ PART 4: The Client Projects
 		freeglut.lib
 		ws2_32.lib
 	Apply
-    
-    right-click(solution)->Add->New Project
-	Select Test->Native Unit Test Practice
-	Name the new project OBGClientTests.
-    right-click(OBGClientTests)->Properties->Common Properties->Framework and References->Add New Reference
-	Check OBGCore and OBGClient.
-	Apply
-    Click Configuration Properties
-    Change Configuration to All Configurations
-    Edit Additional Include Directories; add:
-        $GLEW/include
-		$GLM
-		$FREEGLUT/include
-		OnlineBoardGame/OBGGraphics
-		OnlineBoardGame/OBGCore
-		OnlineBoardGame/OBGClient
-	Go to Linker->General
-	Edit Additional Library Directories; add:
-		$GLEW/lib/Release/Win32
-		$DEVIL/lib
-		$FREEGLUT/lib
-        OnlineBoardGame/Debug
-	Go to Linker->Input
-	Edit Additional Dependencies; add:
-		glew32.lib
-		DevIL.lib
-		ILU.lib
-		ILUT.lib
-		freeglut.lib
-        OBGGraphics.lib
-        OBGClient.lib
-		ws2_32.lib
-        
 
 	**** SANITY CHECK ****
 	right-click(OBGClient)->Set as StartUp Project
@@ -312,19 +321,20 @@ PART 4: The Client Projects
 	Compile and run it.  Note that OBGServer will not link since it has no entry point.  You should still be able to run the program. It should have the same outcome as sanity check 2.
 	Delete the source file.
 
-
-
-
-Part 5: Executive (Test) Suite
-
-	right-click(solution)->Add->New Project
-	Select Test->Native Test Project
-	Name the new project OBGTests.
-
-	right-click(OBGCore)->Properties->Common Properties->Framework and References->Add New Reference
-	Check OBGClient and OBGServer
+	right-click(OBGClient)->Properties->Configuration Properties->General
+	Change Configuration to All Configurations
+	Change Configuration Type from Application to Static Library
 	Apply
-	Go to C/C++->General
+	
+	right-click(solution)->Add->New Project
+	Select Test->Native Unit Test Practice
+	Name the new project OBGClientTests.
+	delete unittest1.cpp
+
+	right-click(OBGClientTests)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGClient.
+	Apply
+	Click Configuration Properties
 	Change Configuration to All Configurations
 	Edit Additional Include Directories; add:
 		$BULLET/src
@@ -332,10 +342,9 @@ Part 5: Executive (Test) Suite
 		$DEVIL/include
 		$GLM
 		$FREEGLUT/include
-		OnlineBoardGame/OBGClient
-		OnlineBoardGame/OBGCore
 		OnlineBoardGame/OBGGraphics
-		OnlineBoardGame/OBGServer
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGClient
 	Go to Linker->General
 	Edit Additional Library Directories; add:
 		$GLEW/lib/Release/Win32
@@ -350,6 +359,41 @@ Part 5: Executive (Test) Suite
 		freeglut.lib
 		ws2_32.lib
 	Apply
+	
+	right-click(solution)->Add->New Project
+	Select Empty Project
+	Name the new project OBGClientRunner.
+	delete unittest1.cpp
+
+	right-click(OBGClientRunner)->Properties->Common Properties->Framework and References->Add New Reference
+	Check OBGClient.
+	Apply
+	Click Configuration Properties
+	Change Configuration to All Configurations
+	Edit Additional Include Directories; add:
+		$BULLET/src
+		$GLEW/include
+		$DEVIL/include
+		$GLM
+		$FREEGLUT/include
+		OnlineBoardGame/OBGGraphics
+		OnlineBoardGame/OBGCore
+		OnlineBoardGame/OBGClient
+	Go to Linker->General
+	Edit Additional Library Directories; add:
+		$GLEW/lib/Release/Win32
+		$DEVIL/lib
+		$FREEGLUT/lib
+	Go to Linker->Input
+	Edit Additional Dependencies; add:
+		glew32.lib
+		DevIL.lib
+		ILU.lib
+		ILUT.lib
+		freeglut.lib
+		ws2_32.lib
+	Apply
+
 
 
 
@@ -373,9 +417,18 @@ Part 6: Git the Code
 
 
 
+Part 7: The Final Test(s)
+	
+	Go to Test->Run->All Tests
+	See all the green check marks
+	Celebrate your triumph over visual studio project setup
 
-    You must have a unique instance of visual studio running for each program you wish to run.
-    In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
+
+
+
+
+	You must have a unique instance of visual studio running for each program you wish to run.
+	In order to run a project, right-click on the project (OBGClient or OBGServer) and click Set as StartUp Project.
 
 
 	If you want to run the project without VS, be sure to copy all non-code files into the same directory as the executable.
