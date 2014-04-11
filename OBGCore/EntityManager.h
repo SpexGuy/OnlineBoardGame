@@ -23,6 +23,7 @@ protected:
 	btCollisionDispatcher* dispatcher;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btBroadphaseInterface* broadphase;
+	Entity *groundEnt;
 	clock_t lastTime;
 	CriticalSection worldLock;
 

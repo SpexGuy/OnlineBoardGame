@@ -12,6 +12,8 @@
 using namespace std;
 
 EntityManager::EntityManager() {
+
+	groundEnt = new Entity(NULL, -1, btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
 	FunctionLock lock(worldLock);
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
@@ -25,35 +27,36 @@ EntityManager::EntityManager() {
 	btCollisionShape *groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+            groundRigidBodyCI(0,groundEnt,groundShape,btVector3(0,0,0));
     btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);
 
 	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -2);
 	btDefaultMotionState* groundMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI2(0,groundMotionState2,groundShape2,btVector3(0,0,0));
+            groundRigidBodyCI2(0,groundEnt,groundShape2,btVector3(0,0,0));
     btRigidBody* groundRigidBody2 = new btRigidBody(groundRigidBodyCI2);
     world->addRigidBody(groundRigidBody2);
 
 	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -2);
 	btDefaultMotionState* groundMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo 
-			groundRigidBodyCI3(0,groundMotionState3,groundShape3,btVector3(0,0,0));
+			groundRigidBodyCI3(0,groundEnt,groundShape3,btVector3(0,0,0));
     btRigidBody* groundRigidBody3 = new btRigidBody(groundRigidBodyCI3);
     world->addRigidBody(groundRigidBody3);
 
 	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -2);
 	btDefaultMotionState* groundMotionState4 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI4(0,groundMotionState4,groundShape4,btVector3(0,0,0));
+            groundRigidBodyCI4(0,groundEnt,groundShape4,btVector3(0,0,0));
     btRigidBody* groundRigidBody4 = new btRigidBody(groundRigidBodyCI4);
     world->addRigidBody(groundRigidBody4);
 
 	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -2);
 	btDefaultMotionState* groundMotionState5 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI5(0,groundMotionState5,groundShape5,btVector3(0,0,0));
+            groundRigidBodyCI5(0,groundEnt,groundShape5,btVector3(0,0,0));
+	
     btRigidBody* groundRigidBody5 = new btRigidBody(groundRigidBodyCI5);
     world->addRigidBody(groundRigidBody5);
 }
@@ -185,7 +188,9 @@ Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVect
 
 	if(callback.hasHit()) {
 		const btCollisionObject *collided = callback.m_collisionObject;
-		return (Entity *) ((btRigidBody *)collided)->getMotionState();
+		if(((btRigidBody *)collided)->getMotionState() != groundEnt) {
+			return (Entity *) ((btRigidBody *)collided)->getMotionState();
+		}
 	}
 	return NULL;
 }

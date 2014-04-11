@@ -22,7 +22,7 @@ namespace OBGCoreTests
 
 		void setup() {
 			entityManager = new EntityManager();
-			box = new BoxInflater(btVector3(0.5, 0.5, 0.5));
+			box = new BoxInflater(btVector3(0.25, 0.25, 0.25));
 			asset = new Asset("Box", "1", 10.0f, btVector3(0.0, 0.0, 0.0), btTransform(btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 2.0, 0.0)), box); 
 			entity = asset->createEntity(btTransform(btQuaternion(), btVector3(0.0 ,1.0, 0.0)), 1);
 		}
@@ -115,8 +115,7 @@ namespace OBGCoreTests
 
 			entityManager->handlePhysicsUpdate(update);
 			update->emancipate();
-			btTransform transform;
-			entity->getPhysicsBody()->getMotionState()->getWorldTransform(transform);
+			btTransform transform = entity->getPhysicsBody()->getWorldTransform();
 			btVector3 pos = transform.getOrigin();
 			Assert::AreEqual(4.0, (double) pos.getX());
 			Assert::AreEqual(2.0, (double) pos.getY());
@@ -131,22 +130,21 @@ namespace OBGCoreTests
 			entityManager->addEntity(entity);
 
 			EntityManager *testManager = new EntityManager();
-			BoxInflater *testBox = new BoxInflater(btVector3(0.5, 0.5, 0.5));
+			BoxInflater *testBox = new BoxInflater(btVector3(0.25, 0.25, 0.25));
 			Asset* testAsset = new Asset("Box", "1", 10.0f, btVector3(0.0, 0.0, 0.0), btTransform(btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 2.0, 0.0)), testBox); 
-			Entity *testEntity = testAsset->createEntity(btTransform(btQuaternion(), btVector3(0.0 ,0.0, 0.0)), 1);
+			Entity *testEntity = testAsset->createEntity(btTransform(btQuaternion(0,0,0,1), btVector3(0.0 ,0.0, 0.0)), 1);
 			btTransform transform = btTransform(btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(4.0, 5.0, 6.0));
 			testEntity->getPhysicsBody()->setAngularVelocity(btVector3(0.0, 1.0, 0.0));
 			testEntity->getPhysicsBody()->setLinearVelocity(btVector3(1.0, 2.0, 3.0));
-			testEntity->getPhysicsBody()->getMotionState()->setWorldTransform(transform);
-
+			testEntity->getPhysicsBody()->setWorldTransform(transform);
 			testManager->addEntity(testEntity);
+
 			testManager->registerPhysicsUpdateListener(entityManager);
 
 			testManager->createPhysicsUpdates();
-			
-			btTransform actualTransform;
+
 			btRigidBody *actualBody = entity->getPhysicsBody();
-			actualBody->getMotionState()->getWorldTransform(actualTransform);
+			btTransform actualTransform = actualBody->getWorldTransform();
 			btVector3 vec = actualTransform.getOrigin();
 
 
