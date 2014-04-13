@@ -161,6 +161,9 @@ bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, 
 		CollisionShapeInflater *shape = getCollider(file.asString());
 		*retShape = shape;
 		return shape != NULL;
+	} else if (type.asString() == string("Empty")) {
+		*retShape = new EmptyInflater();
+		return true;
 	} else if (type.asString() == string("Compound")) {
 		Value colliders = collider["Colliders"];
 		assert(colliders.isArray());

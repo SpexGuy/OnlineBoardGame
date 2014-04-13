@@ -7,6 +7,15 @@ public:
 	virtual ~CollisionShapeInflater() {}
 };
 
+class EmptyInflater :
+	public CollisionShapeInflater {
+protected:
+public:
+	EmptyInflater() {}
+	virtual btEmptyShape *inflate();
+	virtual ~EmptyInflater() {}
+};
+
 class SphereInflater :
 	public CollisionShapeInflater {
 protected:

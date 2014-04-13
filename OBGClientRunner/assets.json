@@ -22,6 +22,43 @@
    			"Radius":1
 		   }
       },
+      "ttrBoard":{
+         "Group":"board",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrBoard.obj",
+         "ColorTex":"ticketToRideBoard.jpg",
+         "NormalTex":"whiteblack.jpg",
+         "SpecularTex":"whiteblack.jpg",
+         "Mass":0,
+         "CoMx":0,
+         "CoMy":0,
+         "CoMz":0,
+         "Collider":{
+            "Type":"Empty",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1]
+         }
+      },
+      "ttrToken":{
+         "Group":"tokens",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrTrain.obj",
+         "ColorTex":"whiteblack.jpg",
+         "NormalTex":"whiteblack.jpg",
+         "SpecularTex":"whiteblack.jpg",
+         "Mass": 0.2,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Box",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.01,0.02,0.04]
+         }
+      },
       "othelloToken":{
          "Group":"tokens",
          "StackType":null,
@@ -45,7 +82,7 @@
          "Group":"board",
          "StackType":null,
          "ShakeType":null,
-         "Mesh":"othelloBoard.obj",
+         "Mesh":"BSGRaiderHD-v4_fixed.obj",
          "ColorTex":"felt.jpg",
          "NormalTex":"felt.jpg",
          "SpecularTex":"felt.jpg",

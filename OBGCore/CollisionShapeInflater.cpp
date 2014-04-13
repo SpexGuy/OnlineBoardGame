@@ -2,6 +2,10 @@
 
 using namespace std;
 
+btEmptyShape *EmptyInflater::inflate() {
+	return new btEmptyShape();
+}
+
 btSphereShape *SphereInflater::inflate() {
 	return new btSphereShape(radius);
 }
