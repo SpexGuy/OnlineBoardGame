@@ -8,6 +8,7 @@
 	
 #define MAX_PICKUP_VELOCITY 100
 #define PICKUP_POWER 10
+#define ROTATION_SPEED 1.5
 
 using namespace std;
 
@@ -101,22 +102,22 @@ void EntityManager::handleInteraction(Interaction *action) {
 			physBody.setGravity(btVector3(0,0,0));
 			btVector3 rotations = btVector3(0.0, 0.0, 0.0);
 			if(action->rotations & ROT_POS_X) {
-				rotations += btVector3(1.0, 0.0, 0.0);
+				rotations += btVector3(ROTATION_SPEED, 0.0, 0.0);
 			}
 			if(action->rotations & ROT_NEG_X) {
-				rotations += btVector3(-1.0, 0.0, 0.0);
+				rotations += btVector3(-ROTATION_SPEED, 0.0, 0.0);
 			}
 			if(action->rotations & ROT_POS_Y) {
-				rotations += btVector3(0.0, 1.0, 0.0);
+				rotations += btVector3(0.0, ROTATION_SPEED, 0.0);
 			}
 			if(action->rotations & ROT_NEG_Y) {
-				rotations += btVector3(0.0, -1.0, 0.0);
+				rotations += btVector3(0.0, -ROTATION_SPEED, 0.0);
 			}
 			if(action->rotations & ROT_POS_Z) {
-				rotations += btVector3(0.0, 0.0, 1.0);
+				rotations += btVector3(0.0, 0.0, ROTATION_SPEED);
 			}
 			if(action->rotations & ROT_NEG_Z) {
-				rotations += btVector3(0.0, 0.0, -1.0);
+				rotations += btVector3(0.0, 0.0, -ROTATION_SPEED);
 			}
 			physBody.setAngularVelocity(rotations);
 			physBody.activate(true);

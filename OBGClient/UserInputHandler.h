@@ -20,7 +20,7 @@ private:
 public:
 	UserInputHandler();
 	virtual void start();
-	virtual void update();
+	virtual void update(int time);
 	virtual void keyPressed(unsigned char c, int x, int y);
 	virtual void keyReleased(unsigned char c, int x, int y);
 	virtual void specialKeyPressed(int k, int x, int y);

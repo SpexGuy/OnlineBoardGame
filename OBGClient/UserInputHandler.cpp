@@ -31,7 +31,8 @@ void UserInputHandler::start() {
 	pointer = new MousePointer();
 }
 
-void UserInputHandler::update() {
+void UserInputHandler::update(int time) {
+	pointer->update(time);
 	vector<int> idList = vector<int>();
 	for(int i : lastHeldList) {
 		if(find(begin(heldList), end(heldList), i) == end(heldList)) {
@@ -128,6 +129,10 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 		case 'Z':
 			GameManager::inst()->getGraphicsManager()->toggleZoom();
 			break;
+		case 'f':
+		case 'F':
+			pointer->goLow();
+			break;
 		default:
 			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
 		}
@@ -166,6 +171,10 @@ void UserInputHandler::keyReleased(unsigned char c, int x, int y) {
 			case 'E':
 				//rotate -y
 				rotations &= ~ROT_NEG_Y;
+				break;
+			case 'f':
+			case 'F':
+				pointer->goHigh();
 				break;
 		}
 	}

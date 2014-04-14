@@ -14,7 +14,9 @@ using namespace glm;
 
 #define BOARD_DIM 20
 
-MousePointer::MousePointer() {
+MousePointer::MousePointer() :
+	height(0, 100, MOUSE_HEIGHT)
+{
 	vector<VertexPNT> points;
 	vector<GLuint> faces;
 
@@ -42,8 +44,11 @@ MousePointer::MousePointer() {
 
 	material = new TextureMaterial(texture, texShader);
 
-	height = MOUSE_HEIGHT;
 	screenPos = ivec2(0,0);
+}
+
+void MousePointer::update(int time) {
+	height.update(time);
 }
 
 void MousePointer::render() {
@@ -58,11 +63,11 @@ vec3 MousePointer::getWorldPos() {
 	float z = float(screenPos.y)/size.y;
 	x = BOARD_DIM * (2*x - 1);
 	z = BOARD_DIM * (2*z - 1);
-	return vec3(x, height, z);
+	return vec3(x, height.get(), z);
 }
 
 void MousePointer::setWorldPos(const vec3 &worldPos) {
-	height = worldPos.y;
+	height.set(worldPos.y);
 	int x = (int)(((worldPos.x/BOARD_DIM)+1)/2);
 	int y = (int)(((worldPos.z/BOARD_DIM)+1)/2);
 	screenPos = ivec2(x, y);

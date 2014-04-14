@@ -165,8 +165,9 @@ void GameManager::update() {
 	if (running) {
 		glutTimerFunc(PERIOD, updateFunc, 0);
 		clock_t time = clock();
-		inputHandler->update();
+		inputHandler->update(time);
 		entityManager->update();
+		graphicsManager->update(time);
 		connection->update(time);
 		glutPostRedisplay();
 	}
