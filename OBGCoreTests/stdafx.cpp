@@ -7,8 +7,16 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 
-std::wstring ToString(const btVector3 &vec) {
-	std::wstringstream wstream;
+using namespace std;
+
+wstring ToString(const btVector3 &vec) {
+	wstringstream wstream;
 	wstream << vec.getX() << ", " << vec.getY() << ", " << vec.getZ();
+	return wstream.str();
+}
+
+wstring ToString(const Address &addr) {
+	wstringstream wstream;
+	wstream << addr.GetA() << '.' << addr.GetB() << '.' << addr.GetC() << '.' << addr.GetD() << ':' << addr.GetTCPPort();
 	return wstream.str();
 }

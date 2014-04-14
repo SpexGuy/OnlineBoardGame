@@ -14,7 +14,7 @@ namespace OBGCoreTests
 	public:
 
 		
-		TEST_METHOD(LoadMeshTest)
+		TEST_METHOD(LoadCollisionMeshTest)
 		{
 			std::istringstream stream = std::istringstream(
 				"v 0.0 0.0 1.0 \n"

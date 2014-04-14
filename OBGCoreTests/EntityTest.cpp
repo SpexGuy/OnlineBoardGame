@@ -10,30 +10,22 @@ namespace OBGCoreTests
 {
 	TEST_CLASS(EntityTest)
 	{
-	public:
+	private:
 		btTransform transform;
 		BoxInflater *box;;
 		Asset *asset;
 		Entity *entity;
 
-		void setup()
-		{
+	public:
+		TEST_METHOD_INITIALIZE(setup) {
 			transform = btTransform(btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(1.0, 2.0, 3.0));
 			box = new BoxInflater(btVector3(0.5, 0.5, 0.5));
 			asset = new Asset("Box", "1", 1.0, btVector3(), transform, box);
 			entity = new Entity(asset, 5, transform);
 		}
 
-		void teardown()
+		TEST_METHOD(EntityShowAndHideTest)
 		{
-			delete box;
-			delete asset;
-			delete entity;
-		}
-
-		TEST_METHOD(ShowAndHide)
-		{
-			setup();
 			Assert::IsFalse(entity->getHidden());
 			entity->hide();
 			Assert::IsTrue(entity->getHidden());
@@ -41,5 +33,10 @@ namespace OBGCoreTests
 			Assert::IsFalse(entity->getHidden());
 		}
 
+		TEST_METHOD_CLEANUP(teardown) {
+			delete box;
+			delete asset;
+			delete entity;
+		}
 	};
 }

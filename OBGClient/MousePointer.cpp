@@ -12,16 +12,16 @@
 using namespace std;
 using namespace glm;
 
-#define BOARD_DIM 2
+#define BOARD_DIM 20
 
 MousePointer::MousePointer() {
 	vector<VertexPNT> points;
 	vector<GLuint> faces;
 
-	points.push_back(VertexPNT(vec3(-.1,-.1,0), vec3(0,0,1), vec2(0,0)));
-	points.push_back(VertexPNT(vec3(0.1,-.1,0), vec3(0,0,1), vec2(1,0)));
-	points.push_back(VertexPNT(vec3(0.1,0.1,0), vec3(0,0,1), vec2(1,1)));
-	points.push_back(VertexPNT(vec3(-.1,0.1,0), vec3(0,0,1), vec2(0,1)));
+	points.push_back(VertexPNT(vec3(-1,-1,0), vec3(0,0,1), vec2(0,0)));
+	points.push_back(VertexPNT(vec3(1,-1,0), vec3(0,0,1), vec2(1,0)));
+	points.push_back(VertexPNT(vec3(1,1,0), vec3(0,0,1), vec2(1,1)));
+	points.push_back(VertexPNT(vec3(-1,1,0), vec3(0,0,1), vec2(0,1)));
 
 	faces.push_back(0);
 	faces.push_back(1);

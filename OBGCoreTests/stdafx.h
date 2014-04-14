@@ -7,9 +7,10 @@
 
 #include "targetver.h"
 #include <string>
-// Headers for CppUnitTest
-#include "CppUnitTest.h"
-#include "LinearMath\btVector3.h"
+#include <CppUnitTest.h>
+#include <btBulletDynamicsCommon.h>
+#include <Address.h>
 
-// TODO: reference additional headers your program requires here
 std::wstring ToString(const btVector3 &vec);
+
+std::wstring ToString(const Address &addr);

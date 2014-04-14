@@ -23,30 +23,27 @@ namespace OBGCoreTests
 		
 		TEST_METHOD(BoxInflaterTest)
 		{
-			 BoxInflater *inflater = new BoxInflater(btVector3(1.0, 2.0, 3.0));
-			 btBoxShape *box = inflater->inflate();
-			 btVector3 halfExtents = box->getHalfExtentsWithMargin();
-			 
-			 Assert::AreEqual(1.0, (double)halfExtents.getX());
-			 Assert::AreEqual(2.0, (double)halfExtents.getY());
-			 Assert::AreEqual(3.0, (double)halfExtents.getZ());
-
-			 delete inflater;
-			 delete box;
+			btVector3 param(1,2,3);
+			BoxInflater *inflater = new BoxInflater(param);
+			btBoxShape *box = inflater->inflate();
+			btVector3 halfExtents = box->getHalfExtentsWithMargin();
+			
+			Assert::AreEqual(param, halfExtents);
+			delete inflater;
+			delete box;
 		}
 
 		TEST_METHOD(CylinderInflaterTest)
 		{
-			 CylinderInflater *inflater = new CylinderInflater(btVector3(1.0, 2.0, 3.0));
-			 btCylinderShape *cylinder = inflater->inflate();
-			 btVector3 halfExtents = cylinder->getHalfExtentsWithMargin();
-			 
-			 Assert::AreEqual(1.0, (double)halfExtents.getX());
-			 Assert::AreEqual(2.0, (double)halfExtents.getY());
-			 Assert::AreEqual(3.0, (double)halfExtents.getZ());
+			btVector3 param(1,2,3);
+			CylinderInflater *inflater = new CylinderInflater(param);
+			btCylinderShape *cylinder = inflater->inflate();
+			btVector3 halfExtents = cylinder->getHalfExtentsWithMargin();
+			
+			Assert::AreEqual(param, halfExtents);
 
-			 delete inflater;
-			 delete cylinder;
+			delete inflater;
+			delete cylinder;
 		}
 
 		TEST_METHOD(ConeInflaterTest)

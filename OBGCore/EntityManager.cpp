@@ -6,7 +6,7 @@
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
 	
-#define MAX_PICKUP_VELOCITY 10
+#define MAX_PICKUP_VELOCITY 100
 #define PICKUP_POWER 10
 
 using namespace std;
@@ -22,7 +22,7 @@ EntityManager::EntityManager() {
     solver = new btSequentialImpulseConstraintSolver;
     world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
-	world->setGravity(btVector3(0.0f, -10.0f, 0.0f));
+	world->setGravity(btVector3(0.0f, -50.0f, 0.0f));
 
 	btCollisionShape *groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
@@ -31,32 +31,31 @@ EntityManager::EntityManager() {
     btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);
 
-	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -2);
+	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -20);
 	btDefaultMotionState* groundMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI2(0,groundEnt,groundShape2,btVector3(0,0,0));
     btRigidBody* groundRigidBody2 = new btRigidBody(groundRigidBodyCI2);
     world->addRigidBody(groundRigidBody2);
 
-	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -2);
+	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -20);
 	btDefaultMotionState* groundMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo 
 			groundRigidBodyCI3(0,groundEnt,groundShape3,btVector3(0,0,0));
     btRigidBody* groundRigidBody3 = new btRigidBody(groundRigidBodyCI3);
     world->addRigidBody(groundRigidBody3);
 
-	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -2);
+	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -20);
 	btDefaultMotionState* groundMotionState4 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI4(0,groundEnt,groundShape4,btVector3(0,0,0));
     btRigidBody* groundRigidBody4 = new btRigidBody(groundRigidBodyCI4);
     world->addRigidBody(groundRigidBody4);
 
-	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -2);
+	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -20);
 	btDefaultMotionState* groundMotionState5 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI5(0,groundEnt,groundShape5,btVector3(0,0,0));
-	
     btRigidBody* groundRigidBody5 = new btRigidBody(groundRigidBodyCI5);
     world->addRigidBody(groundRigidBody5);
 }
@@ -133,23 +132,20 @@ void EntityManager::createPhysicsUpdates() {
 		btTransform transform = physBody.getWorldTransform();
 		btVector3 linear = physBody.getLinearVelocity();
 		btVector3 angular = physBody.getAngularVelocity();
-		PhysicsUpdate *update = PhysicsUpdate::create(e->getId(), transform, linear, angular);
-
-		firePhysicsUpdate(update);
-
-		update->emancipate();
+		PhysicsUpdate update(e->getId(), transform, linear, angular);
+		firePhysicsUpdate(&update);
 	}
 }
 
 void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
 	FunctionLock lock(worldLock);
-	Entity* ent = entities[update->entityId];
+	Entity* ent = entities[update->getEntityId()];
 	
 	btRigidBody& physBody = *ent->getPhysicsBody();
 	
-	physBody.setWorldTransform(update->transform);
-	physBody.setLinearVelocity(update->linearVel);
-	physBody.setAngularVelocity(update->angularVel);
+	physBody.setWorldTransform(update->getWorldTransform());
+	physBody.setLinearVelocity(update->getLinearVelocity());
+	physBody.setAngularVelocity(update->getAngularVelocity());
 }
 
 void EntityManager::start() {

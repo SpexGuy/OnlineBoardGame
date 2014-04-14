@@ -45,9 +45,9 @@
          "StackType":null,
          "ShakeType":null,
          "Mesh":"ttrTrain.obj",
-         "ColorTex":"whiteblack.jpg",
-         "NormalTex":"whiteblack.jpg",
-         "SpecularTex":"whiteblack.jpg",
+         "ColorTex":"green.jpg",
+         "NormalTex":"green.jpg",
+         "SpecularTex":"green.jpg",
          "Mass": 0.2,
          "CoMx": 0,
          "CoMy": 0,
@@ -56,7 +56,7 @@
             "Type":"Box",
             "Position":[0,0,0],
             "Rotation":[0,0,0,1],
-            "HalfExtents":[0.01,0.02,0.04]
+            "HalfExtents":[0.5,1,2]
          }
       },
       "othelloToken":{

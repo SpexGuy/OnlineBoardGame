@@ -14,16 +14,6 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-// --------------- ToString Functions ------------------------
-wstring ToString(const Address &addr) {
-	char buffer[22];
-	int size = sprintf_s(buffer, "%d.%d.%d.%d:%d", addr.GetA(), addr.GetB(), addr.GetC(), addr.GetD(), addr.GetTCPPort());
-	Assert::IsTrue(size <= 22);
-	string str(buffer);
-	return wstring(str.begin(), str.end());
-}
-
-
 // --------------- Thread Utility Functions ------------------
 Socket *sock;
 int BasicServerSocket(void *server) {
@@ -60,7 +50,7 @@ namespace OBGTests {
 			SocketInit();
 			Assert::IsTrue(_CrtCheckMemory() == TRUE);
 		}
-		TEST_METHOD(testTCPConnect) {
+		TEST_METHOD(TCPConnectTest) {
 			bool success = false;
 			//setup server
 			ServerSocket *serverListener = new ServerSocket();
@@ -79,7 +69,7 @@ namespace OBGTests {
 			Assert::AreEqual(server->getPeer().GetAddress(), uint32_t(0x7F000001));
 			Assert::IsTrue(_CrtCheckMemory() == TRUE);
 		}
-		TEST_METHOD(testUDPConnect) {
+		TEST_METHOD(UDPConnectTest) {
 			bool success = false;
 			UDPSocket *client = new UDPSocket();
 			UDPSocket *server = new UDPSocket();
@@ -111,8 +101,8 @@ namespace OBGTests {
 
 	TEST_CLASS(StreamSocketTests) {
 	private:
-		static Socket *client;
-		static Socket *server;
+		Socket *client;
+		Socket *server;
 	public:
 		TEST_METHOD_INITIALIZE(start) {
 			SocketInit();
@@ -132,7 +122,7 @@ namespace OBGTests {
 			delete serverListener;
 			Assert::IsTrue(_CrtCheckMemory() == TRUE);
 		}
-		TEST_METHOD(testTCPRaw) {
+		TEST_METHOD(TCPRawTest) {
 			rawLeft = -2;
 			rawToRead = 11;
 			memcpy(rawData, "fail", 5);
@@ -146,7 +136,7 @@ namespace OBGTests {
 			Assert::AreEqual((const char *)msg, (const char *)rawData, L"Messages did not match");
 			Assert::IsTrue(_CrtCheckMemory() == TRUE);
 		}
-		TEST_METHOD(testTCPData) {
+		TEST_METHOD(TCPDataTest) {
 			cout << 0 << endl;
 			len = -2;
 			memcpy(data, "fail", 5);
@@ -180,7 +170,3 @@ namespace OBGTests {
 		}
 	};
 }
-
-Socket *OBGTests::StreamSocketTests::client;
-Socket *OBGTests::StreamSocketTests::server;
-

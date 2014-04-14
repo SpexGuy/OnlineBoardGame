@@ -15,7 +15,7 @@ GraphicsManager::GraphicsManager(int argc, char *argv[]) {
 void GraphicsManager::start() {
 	OBGGraphicsCreateContext();
 	GraphicsContext::inst()->setView(
-		glm::lookAt(vec3(0.0f, 4.0f, 2.0f),
+		glm::lookAt(vec3(0.0f, 40.0f, 20.0f),
 					vec3(0.0f, 0.0f, 0.0f),
 					vec3(0.0f, 1.0f, 0.0f)));
 }
@@ -31,8 +31,7 @@ void GraphicsManager::display() {
 void GraphicsManager::reshape(int x, int y) {
 	GraphicsContext::inst()->setSize(x, y);
 	GraphicsContext::inst()->setProjection(
-		glm::perspective(45.0f, float(x)/y, 0.1f, 10.0f));
-
+		glm::perspective(45.0f, float(x)/y, 0.1f, 50.0f));
 }
 
 void GraphicsManager::addRenderable(Renderable *r) {

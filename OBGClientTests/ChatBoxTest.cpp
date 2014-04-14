@@ -23,7 +23,7 @@ namespace OBGClientTests
 		void teardown() {
 			delete chatBox;
 		}
-		TEST_METHOD(HandleMessage)
+		TEST_METHOD(ChatHandleMessageTest)
 		{
 			setup();
 
@@ -67,7 +67,7 @@ namespace OBGClientTests
 			teardown();
 		}
 
-		TEST_METHOD(CancelTest) {
+		TEST_METHOD(ChatCancelTest) {
 			setup();
 
 			chatBox->enterEditMode();

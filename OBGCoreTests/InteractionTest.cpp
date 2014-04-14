@@ -13,15 +13,14 @@ namespace OBGCoreTests
 	{
 	public:
 		
-		TEST_METHOD(Constructor)
+		TEST_METHOD(InteractionConstructorTest)
 		{
+			btVector3 expPos(1,2,3);
 			vector<int> vec = vector<int>();
 			vec.push_back(1);
-			Interaction *interaction = new Interaction(btVector3(1.0, 2.0, 3.0), vec, 0);
+			Interaction *interaction = new Interaction(expPos, vec, 0);
 
-			Assert::AreEqual(1.0, (double) interaction->mousePos.getX());
-			Assert::AreEqual(2.0, (double) interaction->mousePos.getY());
-			Assert::AreEqual(3.0, (double) interaction->mousePos.getZ());
+			Assert::AreEqual(expPos, interaction->mousePos);
 			Assert::AreEqual(1, vec.at(0));
 		}
 	};
