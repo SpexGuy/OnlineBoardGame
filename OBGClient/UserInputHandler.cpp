@@ -2,12 +2,13 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "ChatBox.h"
-#include "GameManager.h"
-#include "UserInputHandler.h"
 #include "ClientEntityManager.h"
-#include "Interaction.h"
 #include "Entity.h"
+#include "GameManager.h"
+#include "GraphicsManager.h"
+#include "Interaction.h"
 #include "MousePointer.h"
+#include "UserInputHandler.h"
 
 #define CHAR_ESCAPE 0x1B
 #define CHAR_DELETE 0x7F
@@ -122,6 +123,10 @@ void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
 		case 'R':
 			wireframe = !wireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+			break;
+		case 'z':
+		case 'Z':
+			GameManager::inst()->getGraphicsManager()->toggleZoom();
 			break;
 		default:
 			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
