@@ -1,4 +1,5 @@
 #pragma once
+#include "Address.h"
 
 class GraphicsManager;
 class ClientEntityManager;
@@ -12,8 +13,11 @@ protected:
 	ClientConnection	*connection;
 	UserInputHandler	*inputHandler;
 
+	Address serverIp;
+
 	bool running;
 	bool visible;
+	bool connected;
 
 public:
 	static GameManager *inst();

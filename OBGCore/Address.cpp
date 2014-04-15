@@ -5,12 +5,12 @@ Address::Address() {
 	port = 0;
 }
 
-Address::Address(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned short port) {
+Address::Address(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint16_t port) {
 	this->address = (a << 24) | (b << 16) | (c << 8) | d;
 	this->port = port;
 }
 
-Address::Address(unsigned int address, unsigned short port) {
+Address::Address(uint32_t address, uint16_t port) {
 	this->address = address;
 	this->port = port;
 }

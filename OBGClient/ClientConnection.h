@@ -26,7 +26,7 @@ public:
 	ClientConnection();
 
 	virtual bool connect(int time, const Address &addr, int localPort);
-	virtual void update(int time);
+	virtual bool update(int time);
 	virtual void setUsername(const std::string &username);
 	virtual void downloadFile(const std::string &filename);
 	virtual void handleInteraction(Interaction *action);

@@ -48,7 +48,7 @@
          "ColorTex":"green.jpg",
          "NormalTex":"green.jpg",
          "SpecularTex":"green.jpg",
-         "Mass": 0.2,
+         "Mass": 0.01,
          "CoMx": 0,
          "CoMy": 0,
          "CoMz": 0,

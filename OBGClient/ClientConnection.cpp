@@ -21,8 +21,8 @@ bool ClientConnection::connect(int time, const Address &server, int localPort) {
 	return true;
 }
 
-void ClientConnection::update(int time) {
-	udpClient.update(time);
+bool ClientConnection::update(int time) {
+	return udpClient.update(time);
 }
 
 void ClientConnection::handleMessage(int type, uint8_t *data, int len) {

@@ -3,328 +3,328 @@
 	"Version":0.1,
 	"Entities":[
 		{
-			"Asset":"othelloBoard",
+			"Asset":"ttrBoard",
 			"Position":[0,0,0],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.75,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[-1.75,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-1.25,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[-1.25,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.75,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[-0.75,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[-0.25,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[-0.25,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.25,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[0.25,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[0.75,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[0.75,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.25,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[1.25,1,1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,-1.75],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,-1.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,-1.25],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,-1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,-0.75],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,-0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,-0.25],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,-0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,0.25],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,0.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,0.75],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,0.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,1.25],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,1.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"othelloToken",
-			"Position":[1.75,0.125,1.75],
+			"Asset":"ttrToken",
+			"Position":[1.75,1,1.75],
 			"Rotation":[0,0,0,1]
 		}
 	]

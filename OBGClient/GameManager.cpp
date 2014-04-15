@@ -90,6 +90,14 @@ GameManager *GameManager::inst() {
 
 GameManager::GameManager(int argc, char *argv[]) {
 	running = false;
+	//parse arguments
+	if (argc > 1) {
+		serverIp = Address::TCPAddress(string(argv[1]), 0xABC0);
+	}
+	if (!serverIp) {
+		cout << "Connecting to localhost" << endl;
+		serverIp = Address::TCPAddress(0x7F000001, 0xABC0);
+	}
 	//init everything
 	SocketInit();
 	graphicsManager = new GraphicsManager(argc, argv);
@@ -148,7 +156,8 @@ void GameManager::run() {
 	glutTimerFunc(PERIOD, updateFunc, 0);
 
 	entityManager->start();
-	if (!connection->connect(clock(), Address::TCPAddress(0x7F000001, 0xABC0), 0xABC8)) {
+	connected = connection->connect(clock(), serverIp, 0xABC8);
+	if (!connected) {
 		cout << "Could not connect to server. Continuing..." << endl;
 	} else {
 		connection->start();
@@ -168,7 +177,8 @@ void GameManager::update() {
 		inputHandler->update(time);
 		entityManager->update();
 		graphicsManager->update(time);
-		connection->update(time);
+		if (connected)
+			connected = connection->update(time);
 		glutPostRedisplay();
 	}
 }
