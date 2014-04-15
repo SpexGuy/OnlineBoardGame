@@ -1,8 +1,8 @@
-asset = "ttrTrainGreen"
-sx = -38
+asset = "ttrTrainRed"
+sx = 20.4
 dx = 0.8
 nx = 15
-sz = -38
+sz = -19.75
 dz = 2.5
 nz = 3
 

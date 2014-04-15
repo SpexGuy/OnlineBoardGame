@@ -59,6 +59,82 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
+      "ttrTrainBlue":{
+         "Group":"train",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrTrain.obj",
+         "ColorTex":"blue.jpg",
+         "NormalTex":"green.jpg",
+         "SpecularTex":"green.jpg",
+         "Mass": 0.1,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Box",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.32,0.485,1.11]
+         }
+      },
+      "ttrTrainBlack":{
+         "Group":"train",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrTrain.obj",
+         "ColorTex":"black.jpg",
+         "NormalTex":"green.jpg",
+         "SpecularTex":"green.jpg",
+         "Mass": 0.1,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Box",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.32,0.485,1.11]
+         }
+      },
+      "ttrTrainRed":{
+         "Group":"train",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrTrain.obj",
+         "ColorTex":"red.jpg",
+         "NormalTex":"green.jpg",
+         "SpecularTex":"green.jpg",
+         "Mass": 0.1,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Box",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.32,0.485,1.11]
+         }
+      },
+      "ttrTrainYellow":{
+         "Group":"train",
+         "StackType":null,
+         "ShakeType":null,
+         "Mesh":"ttrTrain.obj",
+         "ColorTex":"yellow.jpg",
+         "NormalTex":"green.jpg",
+         "SpecularTex":"green.jpg",
+         "Mass": 0.1,
+         "CoMx": 0,
+         "CoMy": 0,
+         "CoMz": 0,
+         "Collider":{
+            "Type":"Box",
+            "Position":[0,0,0],
+            "Rotation":[0,0,0,1],
+            "HalfExtents":[0.32,0.485,1.11]
+         }
+      },
       "othelloToken":{
          "Group":"tokens",
          "StackType":null,

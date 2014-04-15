@@ -7,324 +7,1153 @@
 			"Position":[0,0,0],
 			"Rotation":[0,0,0,1]
 		},
+
+
+
+
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-31.6,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-31.6,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-31.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.8,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.8,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.8,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.0,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.75,1,1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.0,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-30.0,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-29.2,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-29.2,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-29.2,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-28.4,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-28.4,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-28.4,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-1.25,1,1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-27.6,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-27.6,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-27.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.8,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.8,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.8,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.0,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.0,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.75,1,1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-26.0,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-25.2,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-25.2,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-25.2,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-24.4,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-24.4,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-24.4,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-23.6,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[-0.25,1,1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-23.6,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-23.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.8,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.8,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.8,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.0,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.0,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-22.0,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.25,1,1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-21.2,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,-1.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-21.2,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,-1.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-21.2,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,-0.75],
+			"Asset":"ttrTrainBlack",
+			"Position":[-20.4,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,-0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-20.4,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,0.25],
+			"Asset":"ttrTrainBlack",
+			"Position":[-20.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+
+
+
+
+
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-18.6,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,0.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-18.6,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,1.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-18.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[0.75,1,1.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.8,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,-1.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.8,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,-1.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.8,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,-0.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.0,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,-0.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.0,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,0.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-17.0,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,0.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-16.2,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,1.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-16.2,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.25,1,1.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-16.2,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,-1.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-15.4,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,-1.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-15.4,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,-0.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-15.4,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,-0.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-14.6,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,0.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-14.6,0.5,-17.25],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,0.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-14.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,1.25],
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.8,0.5,-19.75],
 			"Rotation":[0,0,0,1]
 		},
 		{
-			"Asset":"ttrToken",
-			"Position":[1.75,1,1.75],
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-13.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-12.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-12.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-12.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-11.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-11.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-11.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-10.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-10.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-10.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-9.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-8.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-8.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-8.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-7.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-7.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainGreen",
+			"Position":[-7.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+
+
+
+
+
+
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-5.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-5.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-5.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-4.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-3.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-3.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-3.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-2.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-2.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-2.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-1.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-1.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-1.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-0.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-0.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[-0.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[0.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[1.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[1.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[1.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[2.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[2.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[2.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[3.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[3.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[3.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[4.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[5.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[5.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainBlue",
+			"Position":[5.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+
+
+
+
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[7.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[7.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[7.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[8.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[8.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[8.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[9.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[10.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[10.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[10.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[11.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[11.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[11.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[12.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[12.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[12.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[13.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[14.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[14.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[14.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[15.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[15.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[15.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[16.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[16.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[16.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[17.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[18.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[18.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainYellow",
+			"Position":[18.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+
+
+
+
+
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[20.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[20.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[20.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[21.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[21.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[21.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[22.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[23.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[23.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[23.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[24.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[24.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[24.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[25.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[25.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[25.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[26.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[27.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[27.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[27.6,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[28.4,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[28.4,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[28.4,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[29.2,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[29.2,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[29.2,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.0,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.0,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.0,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.8,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.8,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[30.8,0.5,-14.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[31.6,0.5,-19.75],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[31.6,0.5,-17.25],
+			"Rotation":[0,0,0,1]
+		},
+		{
+			"Asset":"ttrTrainRed",
+			"Position":[31.6,0.5,-14.75],
 			"Rotation":[0,0,0,1]
 		}
 	]
