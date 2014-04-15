@@ -1,12 +1,13 @@
 #include <assert.h>
 #include <iostream>
+#include "Constants.h"
 #include "EntityManager.h"
 #include "Entity.h"
 #include "Asset.h"
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
 	
-#define MAX_PICKUP_VELOCITY 100
+#define MAX_PICKUP_VELOCITY 5*BOARD_SIZE
 #define PICKUP_POWER 10
 #define ROTATION_SPEED 1.5
 
@@ -32,28 +33,28 @@ EntityManager::EntityManager() {
     btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);
 
-	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -20);
+	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -BOARD_SIZE);
 	btDefaultMotionState* groundMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI2(0,groundEnt,groundShape2,btVector3(0,0,0));
     btRigidBody* groundRigidBody2 = new btRigidBody(groundRigidBodyCI2);
     world->addRigidBody(groundRigidBody2);
 
-	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -20);
+	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -BOARD_SIZE);
 	btDefaultMotionState* groundMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo 
 			groundRigidBodyCI3(0,groundEnt,groundShape3,btVector3(0,0,0));
     btRigidBody* groundRigidBody3 = new btRigidBody(groundRigidBodyCI3);
     world->addRigidBody(groundRigidBody3);
 
-	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -20);
+	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -BOARD_SIZE);
 	btDefaultMotionState* groundMotionState4 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI4(0,groundEnt,groundShape4,btVector3(0,0,0));
     btRigidBody* groundRigidBody4 = new btRigidBody(groundRigidBodyCI4);
     world->addRigidBody(groundRigidBody4);
 
-	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -20);
+	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -BOARD_SIZE);
 	btDefaultMotionState* groundMotionState5 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo
             groundRigidBodyCI5(0,groundEnt,groundShape5,btVector3(0,0,0));

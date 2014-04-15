@@ -3,18 +3,22 @@
 #include <GL/freeglut.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GraphicsContext.h>
+#include "Constants.h"
 #include "GameManager.h"
 #include "GraphicsManager.h"
 #include "MousePointer.h"
 #include "UserInputHandler.h"
 
 #define ZOOM_SCALE 0.4
+#define CAM_Y 2*BOARD_SIZE
+#define CAM_Z BOARD_SIZE
+#define CAM_POS vec3(0,CAM_Y,CAM_Z)
 
 using namespace std;
 using namespace glm;
 
 GraphicsManager::GraphicsManager(int argc, char *argv[]) :
-	cameraPos(0, 250, vec3(0,40,20))
+	cameraPos(0, 250, CAM_POS)
 {
 	OBGGraphicsInit(argc, argv);
 	zoomed = false;
@@ -22,16 +26,12 @@ GraphicsManager::GraphicsManager(int argc, char *argv[]) :
 
 void GraphicsManager::start() {
 	OBGGraphicsCreateContext();
-	GraphicsContext::inst()->setView(
-		glm::lookAt(vec3(0.0f, 40.0f, 20.0f),
-					vec3(0.0f, 0.0f, 0.0f),
-					vec3(0.0f, 1.0f, 0.0f)));
 }
 
 void GraphicsManager::display() {
 	vec3 pos = cameraPos.get();
 	GraphicsContext::inst()->setView(
-		glm::lookAt(pos, pos - vec3(0,40,20), vec3(0,1,0)));
+		glm::lookAt(pos, pos - CAM_POS, vec3(0,1,0)));
 	GraphicsContext::inst()->setupFrame();
 	for (unsigned int c = 0; c < renderables.size(); c++) {
 		renderables[c]->render();
@@ -42,7 +42,7 @@ void GraphicsManager::display() {
 void GraphicsManager::update(int time) {
 	if (zoomed) {
 		vec3 mouse = GameManager::inst()->getInputHandler()->getMousePointer()->getWorldPos();
-		cameraPos.setTarget(vec3(mouse.x, 40*ZOOM_SCALE, mouse.z + 20*ZOOM_SCALE));
+		cameraPos.setTarget(vec3(mouse.x, CAM_Y*ZOOM_SCALE, mouse.z + CAM_Z*ZOOM_SCALE));
 	}
 	cameraPos.update(time);
 }
@@ -51,16 +51,16 @@ void GraphicsManager::toggleZoom() {
 	zoomed = !zoomed;
 	if (zoomed) {
 		vec3 mouse = GameManager::inst()->getInputHandler()->getMousePointer()->getWorldPos();
-		cameraPos.set(vec3(mouse.x, 40*ZOOM_SCALE, mouse.z + 20*ZOOM_SCALE));
+		cameraPos.set(vec3(mouse.x, CAM_Y*ZOOM_SCALE, mouse.z + CAM_Z*ZOOM_SCALE));
 	} else {
-		cameraPos.set(vec3(0,40,20));
+		cameraPos.set(CAM_POS);
 	}
 }
 
 void GraphicsManager::reshape(int x, int y) {
 	GraphicsContext::inst()->setSize(x, y);
 	GraphicsContext::inst()->setProjection(
-		glm::perspective(45.0f, float(x)/y, 0.1f, 80.0f));
+		glm::perspective(45.0f, float(x)/y, 0.1f, 2.0f*CAM_Y));
 }
 
 void GraphicsManager::addRenderable(Renderable *r) {

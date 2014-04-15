@@ -2,10 +2,11 @@
 #include <GraphicsMesh.h>
 #include <Material.h>
 #include <Renderable.h>
+#include "Constants.h"
 #include "SmoothValue.h"
 
-#define MOUSE_HEIGHT 5
-#define MOUSE_LOW_HEIGHT 0.2
+#define MOUSE_HEIGHT BOARD_SIZE/4.0f
+#define MOUSE_LOW_HEIGHT BOARD_SIZE/50.0f
 
 class MousePointer :
 	public Renderable

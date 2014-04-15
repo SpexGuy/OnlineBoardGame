@@ -12,8 +12,6 @@
 using namespace std;
 using namespace glm;
 
-#define BOARD_DIM 20
-
 MousePointer::MousePointer() :
 	height(0, 100, MOUSE_HEIGHT)
 {
@@ -61,15 +59,15 @@ vec3 MousePointer::getWorldPos() {
 	ivec2 size = GraphicsContext::inst()->getSize();
 	float x = float(screenPos.x)/size.x;
 	float z = float(screenPos.y)/size.y;
-	x = BOARD_DIM * (2*x - 1);
-	z = BOARD_DIM * (2*z - 1);
+	x = BOARD_SIZE * (2*x - 1);
+	z = BOARD_SIZE * (2*z - 1);
 	return vec3(x, height.get(), z);
 }
 
 void MousePointer::setWorldPos(const vec3 &worldPos) {
 	height.set(worldPos.y);
-	int x = (int)(((worldPos.x/BOARD_DIM)+1)/2);
-	int y = (int)(((worldPos.z/BOARD_DIM)+1)/2);
+	int x = (int)(((worldPos.x/BOARD_SIZE)+1)/2);
+	int y = (int)(((worldPos.z/BOARD_SIZE)+1)/2);
 	screenPos = ivec2(x, y);
 }
 

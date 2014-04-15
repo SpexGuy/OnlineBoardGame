@@ -40,15 +40,15 @@
             "Rotation":[0,0,0,1]
          }
       },
-      "ttrToken":{
-         "Group":"tokens",
+      "ttrTrainGreen":{
+         "Group":"train",
          "StackType":null,
          "ShakeType":null,
          "Mesh":"ttrTrain.obj",
          "ColorTex":"green.jpg",
          "NormalTex":"green.jpg",
          "SpecularTex":"green.jpg",
-         "Mass": 0.01,
+         "Mass": 0.1,
          "CoMx": 0,
          "CoMy": 0,
          "CoMz": 0,
@@ -56,7 +56,7 @@
             "Type":"Box",
             "Position":[0,0,0],
             "Rotation":[0,0,0,1],
-            "HalfExtents":[0.165,0.25,0.55]
+            "HalfExtents":[0.32,0.485,1.11]
          }
       },
       "othelloToken":{
