@@ -16,50 +16,37 @@ using namespace std;
 EntityManager::EntityManager() {
 
 	groundEnt = new Entity(NULL, -1, btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-	FunctionLock lock(worldLock);
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
 	collisionConfiguration = new btDefaultCollisionConfiguration;
     dispatcher = new btCollisionDispatcher(collisionConfiguration);
     solver = new btSequentialImpulseConstraintSolver;
-    world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	btCompoundShape *walls = new btCompoundShape();
+	//floor
+	walls->addChildShape(btTransform(btQuaternion(0,0,0,1), btVector3(0,-BOARD_SIZE,0)),
+					 new btBoxShape(btVector3(2*BOARD_SIZE, BOARD_SIZE, 2*BOARD_SIZE)));
+	//left wall
+	walls->addChildShape(btTransform(btQuaternion(0,0,0,1), btVector3(-2*BOARD_SIZE,0,0)),
+					 new btBoxShape(btVector3(BOARD_SIZE, 2*BOARD_SIZE, 2*BOARD_SIZE)));
+	//right wall
+	walls->addChildShape(btTransform(btQuaternion(0,0,0,1), btVector3(2*BOARD_SIZE,0,0)),
+					 new btBoxShape(btVector3(BOARD_SIZE, 2*BOARD_SIZE, 2*BOARD_SIZE)));
+	//far wall
+	walls->addChildShape(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,-2*BOARD_SIZE)),
+					 new btBoxShape(btVector3(2*BOARD_SIZE, 2*BOARD_SIZE, BOARD_SIZE)));
+	//near wall
+	walls->addChildShape(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,2*BOARD_SIZE)),
+					 new btBoxShape(btVector3(2*BOARD_SIZE, 2*BOARD_SIZE, BOARD_SIZE)));
+	//prepare for entry into world
+    btRigidBody::btRigidBodyConstructionInfo
+            wallsRBCI(0,groundEnt,walls,btVector3(0,0,0));
 
+	//take lock to modify world
+	FunctionLock lock(worldLock);
+	world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	world->getDispatchInfo().m_useContinuous=true;
 	world->setGravity(btVector3(0.0f, -50.0f, 0.0f));
-
-	btCollisionShape *groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI(0,groundEnt,groundShape,btVector3(0,0,0));
-    btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-    world->addRigidBody(groundRigidBody);
-
-	btCollisionShape *groundShape2 = new btStaticPlaneShape(btVector3(-1, 1, 0), -BOARD_SIZE);
-	btDefaultMotionState* groundMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI2(0,groundEnt,groundShape2,btVector3(0,0,0));
-    btRigidBody* groundRigidBody2 = new btRigidBody(groundRigidBodyCI2);
-    world->addRigidBody(groundRigidBody2);
-
-	btCollisionShape *groundShape3 = new btStaticPlaneShape(btVector3(1, 1, 0), -BOARD_SIZE);
-	btDefaultMotionState* groundMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo 
-			groundRigidBodyCI3(0,groundEnt,groundShape3,btVector3(0,0,0));
-    btRigidBody* groundRigidBody3 = new btRigidBody(groundRigidBodyCI3);
-    world->addRigidBody(groundRigidBody3);
-
-	btCollisionShape *groundShape4 = new btStaticPlaneShape(btVector3(0, 1, 1), -BOARD_SIZE);
-	btDefaultMotionState* groundMotionState4 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI4(0,groundEnt,groundShape4,btVector3(0,0,0));
-    btRigidBody* groundRigidBody4 = new btRigidBody(groundRigidBodyCI4);
-    world->addRigidBody(groundRigidBody4);
-
-	btCollisionShape *groundShape5 = new btStaticPlaneShape(btVector3(0, 1, -1), -BOARD_SIZE);
-	btDefaultMotionState* groundMotionState5 = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo
-            groundRigidBodyCI5(0,groundEnt,groundShape5,btVector3(0,0,0));
-    btRigidBody* groundRigidBody5 = new btRigidBody(groundRigidBodyCI5);
-    world->addRigidBody(groundRigidBody5);
+	world->addRigidBody(new btRigidBody(wallsRBCI));
 }
 
 EntityManager::~EntityManager() {
@@ -79,6 +66,8 @@ EntityManager::~EntityManager() {
 
 void EntityManager::addEntity(Entity *e) {
 	FunctionLock lock(worldLock);
+	e->getPhysicsBody()->setCcdMotionThreshold(0.05);
+	e->getPhysicsBody()->setCcdSweptSphereRadius(0.2);
 	entities[e->getId()] = e;
 	world->addRigidBody(e->getPhysicsBody());
 }
@@ -154,33 +143,23 @@ void EntityManager::start() {
 	lastTime = clock();
 }
 
-void EntityManager::update() {
+void EntityManager::update(int time) {
 	//Step physics simulation
 
-	clock_t currTime = clock();
 	FunctionLock lock(worldLock);
-	world->stepSimulation(float(currTime - lastTime)/float(CLOCKS_PER_SEC), 10);
+	world->stepSimulation(float(time - lastTime)/float(CLOCKS_PER_SEC), 10, 0.005);
 	lock.unlock();
-	lastTime = currTime;
+	lastTime = time;
 	
 	//Combine stackable entities
-	for(auto iter1 = entities.begin(), end = entities.end(); iter1 != end;) {
-		Entity *ent1 = iter1->second;
-		for(auto iter2 = ++iter1; iter2 != end; ++iter2) {
-			Entity *ent2 = iter2->second;
-
-		}
-	}
+	//TODO:[JK] I commented this out the first time for a reason.
 	//This is the WRONG WAY to iterate physics objects.
-	//Use AABBs and the collision broadphase instead.
+	//Use AABBs and the collision broadphase (or maybe even narrowphase) instead.
 	//for(auto iter1 = entities.begin(), end = entities.end(); iter1 != end;) {
 	//	Entity *ent1 = iter1->second;
 	//	for(auto iter2 = ++iter1; iter2 != end; ++iter2) {
 	//		Entity *ent2 = iter2->second;
-
-	//		if(ent1->getType()->getGroup() == ent2->getType()->getGroup()) { //&& similar positions && stackable) {
-	//			//stack them
-	//		}
+	//
 	//	}
 	//}
 }

@@ -21,7 +21,6 @@
 #include "ChatBox.h"
 #include "ClientConnection.h"
 #include "ClientEntityManager.h"
-#include "CollisionMeshRenderer.h"
 #include "GameManager.h"
 #include "GraphicsAsset.h"
 #include "GraphicsAssetPack.h"
@@ -175,7 +174,7 @@ void GameManager::update() {
 		glutTimerFunc(PERIOD, updateFunc, 0);
 		clock_t time = clock();
 		inputHandler->update(time);
-		entityManager->update();
+		entityManager->update(time);
 		graphicsManager->update(time);
 		if (connected)
 			connected = connection->update(time);

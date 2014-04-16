@@ -56,7 +56,7 @@ void GameManager::run() {
 
 	while(running) {
 		time = clock();
-		entityManager->update();
+		entityManager->update(time);
 		entityManager->createPhysicsUpdates();
 		playerManager->update(time);
 		sleep(max((1000/60) - int(clock() - time), 0));

@@ -1,16 +1,16 @@
 #include "ClientEntityManager.h"
-#include "CollisionMeshRenderer.h"
+#include "GLDebugDrawer.h"
 
 void ClientEntityManager::start() {
 	EntityManager::start();
-	//world->setDebugDrawer(new CollisionMeshRenderer());
-	//world->getDebugDrawer()->setDebugMode(
-	//	btIDebugDraw::DBG_DrawWireframe |
-	//	btIDebugDraw::DBG_DrawAabb);
+	world->setDebugDrawer(new GLDebugDrawer());
+	world->getDebugDrawer()->setDebugMode(
+		btIDebugDraw::DBG_DrawWireframe |
+		btIDebugDraw::DBG_DrawAabb);
 }
 
-void ClientEntityManager::update() {
-	EntityManager::update();
+void ClientEntityManager::update(int time) {
+	EntityManager::update(time);
 	//world->debugDrawWorld();
 }
 

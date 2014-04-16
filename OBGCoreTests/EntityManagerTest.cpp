@@ -148,7 +148,7 @@ namespace OBGCoreTests
 			//Not much for us to verify since bullet is so well tested and documented,
 			//so here we just verify there are no errors.
 			entityManager->start();
-			entityManager->update();
+			entityManager->update(10);
 		}
 
 		TEST_METHOD_CLEANUP(teardown) {

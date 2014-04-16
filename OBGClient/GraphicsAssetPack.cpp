@@ -65,10 +65,10 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	bool success = parseCollider(collider, &transform, &shape);
 	assert(success);
 
-	Texture *tex = (new TextureGroup())
-		->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR))
-		->addTexture(new ILTexture(getImage(specTex.asString()), CHANNEL_SPECULAR))
-		->addTexture(new ILTexture(getImage(normalTex.asString()), CHANNEL_NORMAL));
+	TextureGroup *tex = new TextureGroup();
+	tex->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR));
+	tex->addTexture(new ILTexture(getImage(specTex.asString()), CHANNEL_SPECULAR));
+	tex->addTexture(new ILTexture(getImage(normalTex.asString()), CHANNEL_NORMAL));
 
 	GraphicsMesh *mesh = getMesh(meshName.asString());
 
