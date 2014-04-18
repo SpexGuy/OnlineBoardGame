@@ -1,6 +1,5 @@
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GraphicsContext.h>
 #include "Constants.h"
@@ -29,6 +28,9 @@ void GraphicsManager::start() {
 }
 
 void GraphicsManager::display() {
+	ivec2 size = GraphicsContext::inst()->getWindowSize();
+	GraphicsContext::inst()->setProjection(
+		glm::perspective(45.0f, float(size.x)/size.y, 0.1f, 2.0f*CAM_Y));
 	vec3 pos = cameraPos.get();
 	GraphicsContext::inst()->setView(
 		glm::lookAt(pos, pos - CAM_POS, vec3(0,1,0)));
@@ -36,7 +38,7 @@ void GraphicsManager::display() {
 	for (unsigned int c = 0; c < renderables.size(); c++) {
 		renderables[c]->render();
 	}
-	glutSwapBuffers();
+	GraphicsContext::inst()->swapBuffers();
 }
 
 void GraphicsManager::update(int time) {
@@ -55,12 +57,6 @@ void GraphicsManager::toggleZoom() {
 	} else {
 		cameraPos.set(CAM_POS);
 	}
-}
-
-void GraphicsManager::reshape(int x, int y) {
-	GraphicsContext::inst()->setSize(x, y);
-	GraphicsContext::inst()->setProjection(
-		glm::perspective(45.0f, float(x)/y, 0.1f, 2.0f*CAM_Y));
 }
 
 void GraphicsManager::addRenderable(Renderable *r) {

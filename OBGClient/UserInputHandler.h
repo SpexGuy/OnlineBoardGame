@@ -21,13 +21,12 @@ public:
 	UserInputHandler();
 	virtual void start();
 	virtual void update(int time);
-	virtual void keyPressed(unsigned char c, int x, int y);
-	virtual void keyReleased(unsigned char c, int x, int y);
-	virtual void specialKeyPressed(int k, int x, int y);
-	virtual void mousePressed(int button, int state, int x, int y);
-	virtual void mouseDragged(int x, int y);
+	virtual void keyPressed(int key, int scancode, int mods);
+	virtual void keyReleased(int key, int scancode, int mods);
+	virtual void mousePressed(int button, int mods);
+	virtual void mouseReleased(int button, int mods);
 	virtual void mouseMoved(int x, int y);
-	~UserInputHandler();
+	virtual ~UserInputHandler();
 
 	inline ChatBox *getChatBox() { return chat; }
 	inline MousePointer *getMousePointer() { return pointer; }

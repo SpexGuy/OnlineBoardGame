@@ -56,7 +56,7 @@ void MousePointer::render() {
 }
 
 vec3 MousePointer::getWorldPos() {
-	ivec2 size = GraphicsContext::inst()->getSize();
+	ivec2 size = GraphicsContext::inst()->getWindowSize();
 	float x = float(screenPos.x)/size.x;
 	float z = float(screenPos.y)/size.y;
 	x = BOARD_SIZE * (2*x - 1);

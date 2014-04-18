@@ -15,6 +15,5 @@ public:
 	virtual void update(int time);
 	virtual void display();
 	virtual void toggleZoom();
-	virtual void reshape(int x, int y);
 	virtual void addRenderable(Renderable *r);
 };

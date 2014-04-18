@@ -1,5 +1,4 @@
 #include <iostream>
-#include <GL/freeglut.h>
 #include "GLErrorCheck.h"
 
 using namespace std;

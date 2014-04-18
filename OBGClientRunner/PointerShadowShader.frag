@@ -5,10 +5,10 @@ uniform sampler2D colorTex;
 uniform vec3 pointerPos;
 uniform vec3 lightEyePos;
 
-in vec3 fWorldPosition;
-in vec3 fEyePosition;
-in vec3 fNormal;
-in vec2 fTexCoord;
+centroid in vec3 fWorldPosition;
+centroid in vec3 fEyePosition;
+centroid in vec3 fNormal;
+centroid in vec2 fTexCoord;
 
 layout (location = 0) out vec4 FragColor;
 

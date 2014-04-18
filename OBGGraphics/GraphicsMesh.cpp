@@ -6,7 +6,7 @@
 #include <vector>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <GL/freeglut.h>
+#include <time.h>
 #include "GLErrorCheck.h"
 #include "GraphicsContext.h"
 #include "GraphicsMesh.h"
@@ -27,7 +27,7 @@ void GraphicsMesh::trimString(string & str) {
 
 GraphicsMesh* GraphicsMesh::loadMesh(istream *stream) {
 	istream &objStream = *stream;
-	int time = glutGet(GLUT_ELAPSED_TIME);
+	clock_t time = clock();
 	vector<vec3> points;
 	vector<vec3> normals;
 	vector<vec2> texCoords;
@@ -122,7 +122,7 @@ GraphicsMesh* GraphicsMesh::loadMesh(istream *stream) {
 		getline(objStream, line);
 	}
 
-	cout << "Loaded mesh from " << objStream << " in " << glutGet(GLUT_ELAPSED_TIME) - time << "ms" << endl;
+	cout << "Loaded mesh from " << objStream << " in " << clock() - time << "ms" << endl;
 
 	GraphicsMesh *mesh = new GraphicsMesh(verts, faces);
 	return mesh;

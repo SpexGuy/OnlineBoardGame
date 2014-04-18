@@ -15,8 +15,6 @@ protected:
 
 	Address serverIp;
 
-	bool running;
-	bool visible;
 	bool connected;
 
 public:
@@ -24,17 +22,13 @@ public:
 
 	GameManager(int argc, char *argv[]);
 	virtual void run();
-	virtual void update();
+	virtual void update(int time);
 	virtual void display();
-	virtual void keyPressed(unsigned char c, int x, int y);
-	virtual void keyReleased(unsigned char c, int x, int y);
-	virtual void specialKeyPressed(int k, int x, int y);
-	virtual void mousePressed(int button, int state, int x, int y);
-	virtual void mouseDragged(int x, int y);
+	virtual void keyPressed(int key, int scancode, int mods);
+	virtual void keyReleased(int key, int scancode, int mods);
+	virtual void mousePressed(int button, int mods);
+	virtual void mouseReleased(int button, int mods);
 	virtual void mouseMoved(int x, int y);
-	virtual void visibilityChanged(int state);
-	virtual void reshape(int x, int y);
-	virtual void close();
 	virtual ~GameManager();
 
 	//accessors

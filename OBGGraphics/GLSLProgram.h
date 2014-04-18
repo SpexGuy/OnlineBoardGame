@@ -7,7 +7,6 @@ using std::string;
 #include <map>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;

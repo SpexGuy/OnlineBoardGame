@@ -2,7 +2,6 @@
 #include <fstream>
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <glm/glm.hpp>
 
 #include <json.h>
@@ -10,6 +9,7 @@
 
 #include <GLErrorCheck.h>
 #include <GLSLProgram.h>
+#include <GraphicsContext.h>
 #include <GraphicsMesh.h>
 #include <ILTexture.h>
 #include <Texture.h>
@@ -37,50 +37,25 @@ using namespace glm;
 
 GameManager *instance = NULL;
 
-void updateFunc(int value) {
-	instance->update();
+void keyboardFunc(GLFWwindow *window, int key, int scancode, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		instance->keyPressed(key, scancode, mods);
+	} else if (action == GLFW_RELEASE) {
+		instance->keyReleased(key, scancode, mods);
+	}
 }
 
-void displayFunc() {
-	instance->display();
+void mouseFunc(GLFWwindow *window, int button, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		instance->mousePressed(button, mods);
+	} else if (action == GLFW_RELEASE) {
+		instance->mouseReleased(button, mods);
+	}
 }
 
-void keyboardFunc(unsigned char c, int x, int y) {
-	instance->keyPressed(c, x, y);
+void motionFunc(GLFWwindow *window, double x, double y) {
+	instance->mouseMoved(int(x), int(y));
 }
-
-void keyboardUpFunc(unsigned char c, int x, int y) {
-	instance->keyReleased(c, x, y);
-}
-
-void specialFunc(int k, int x, int y) {
-	instance->specialKeyPressed(k, x, y);
-}
-
-void mouseFunc(int button, int state, int x, int y) {
-	instance->mousePressed(button, state, x, y);
-}
-
-void motionFunc(int x, int y) {
-	instance->mouseDragged(x, y);
-}
-
-void passiveMotionFunc(int x, int y) {
-	instance->mouseMoved(x, y);
-}
-
-void visibilityFunc(int state) {
-	instance->visibilityChanged(state);
-}
-
-void reshapeFunc(int x, int y) {
-	instance->reshape(x, y);
-}
-
-void closeFunc() {
-	instance->close();
-}
-
 
 GameManager *GameManager::inst() {
 	return instance;
@@ -88,7 +63,6 @@ GameManager *GameManager::inst() {
 
 
 GameManager::GameManager(int argc, char *argv[]) {
-	running = false;
 	//parse arguments
 	if (argc > 1) {
 		serverIp = Address::TCPAddress(string(argv[1]), 0xABC0);
@@ -116,9 +90,6 @@ GameManager::GameManager(int argc, char *argv[]) {
 }
 
 void GameManager::run() {
-	running = true;
-	visible = true;
-
 	graphicsManager->start();
 
 	ifstream file("assets.json");
@@ -134,25 +105,14 @@ void GameManager::run() {
 	GraphicsAssetPack *pack = new GraphicsAssetPack(root);
 	vector<Entity *> entities = pack->loadGame();
 	assert(entities.size() > 0);
-	//((GraphicsEntity *) entities[0])->render();
 	for (Entity *entity : entities) {
 		graphicsManager->addRenderable((GraphicsEntity *)entity);
 		entityManager->addEntity(entity);
-		//entity->hide();
 	}
 
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-	glutDisplayFunc(displayFunc);
-	glutKeyboardFunc(keyboardFunc);
-	glutKeyboardUpFunc(keyboardUpFunc);
-	glutSpecialFunc(specialFunc);
-	glutMouseFunc(mouseFunc);
-	glutMotionFunc(motionFunc);
-	glutPassiveMotionFunc(passiveMotionFunc);
-	glutVisibilityFunc(visibilityFunc);
-	glutReshapeFunc(reshapeFunc);
-	glutCloseFunc(closeFunc);
-	glutTimerFunc(PERIOD, updateFunc, 0);
+	GraphicsContext::inst()->setKeyCallback(keyboardFunc);
+	GraphicsContext::inst()->setMouseCallback(mouseFunc);
+	GraphicsContext::inst()->setMouseMotionCallback(motionFunc);
 
 	entityManager->start();
 	connected = connection->connect(clock(), serverIp, 0xABC8);
@@ -166,67 +126,58 @@ void GameManager::run() {
 	graphicsManager->addRenderable(inputHandler->getChatBox());
 	graphicsManager->addRenderable(inputHandler->getMousePointer());
 
-	glutMainLoop();
+	//TODO: do this in a different thread so that
+	//windows freezing the main thread on ui changes
+	//does not cause a connection timeout
+	while (!GraphicsContext::inst()->shouldCloseWindow()) {
+		clock_t time(clock());
+		update(time);
+		while(clock() - time < PERIOD)
+			; //wait for timestep
+	}
+	GraphicsContext::inst()->closeWindow();
 }
 
-void GameManager::update() {
-	if (running) {
-		glutTimerFunc(PERIOD, updateFunc, 0);
-		clock_t time = clock();
-		inputHandler->update(time);
-		entityManager->update(time);
-		graphicsManager->update(time);
-		if (connected)
-			connected = connection->update(time);
-		glutPostRedisplay();
-	}
+void GameManager::update(int time) {
+	GraphicsContext::inst()->pollEvents();
+	inputHandler->update(time);
+	entityManager->update(time);
+	graphicsManager->update(time);
+	if (connected)
+		connected = connection->update(time);
+	display();
 }
 
 void GameManager::display() {
-	if (running && visible) {
+	if (GraphicsContext::inst()->isVisible()) {
 		checkError("Before display");
 		graphicsManager->display();
 	}
 }
 
-void GameManager::keyPressed(unsigned char c, int x, int y) {
-	inputHandler->keyPressed(c, x, y);
+void GameManager::keyPressed(int k, int s, int m) {
+	inputHandler->keyPressed(k,s,m);
 }
 
-void GameManager::keyReleased(unsigned char c, int x, int y) {
-	inputHandler->keyReleased(c, x, y);
+void GameManager::keyReleased(int k, int s, int m) {
+	inputHandler->keyReleased(k,s,m);
 }
 
-void GameManager::specialKeyPressed(int k, int x, int y) {
-	inputHandler->specialKeyPressed(k,x,y);
+void GameManager::mousePressed(int button, int mods) {
+	inputHandler->mousePressed(button, mods);
 }
 
-void GameManager::mousePressed(int button, int state, int x, int y) {
-	inputHandler->mousePressed(button, state, x, y);
-}
-
-void GameManager::mouseDragged(int x, int y) {
-	inputHandler->mouseDragged(x, y);
+void GameManager::mouseReleased(int button, int mods) {
+	inputHandler->mouseReleased(button, mods);
 }
 
 void GameManager::mouseMoved(int x, int y) {
-	inputHandler->mouseDragged(x, y);
-}
-
-void GameManager::visibilityChanged(int state) {
-	visible = (state != GLUT_NOT_VISIBLE);
-}
-
-void GameManager::reshape(int x, int y) {
-	graphicsManager->reshape(x, y);
-}
-
-void GameManager::close() {
-	running = false;
-	glutLeaveMainLoop();
+	inputHandler->mouseMoved(x, y);
 }
 
 GameManager::~GameManager() {
+	delete entityManager;
+	delete inputHandler;
 	delete graphicsManager;
 	delete connection;
 	SocketClose();

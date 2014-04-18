@@ -1,5 +1,5 @@
-#include <GraphicsContext.h>
 #include "ChatBox.h"
+#include <GraphicsContext.h>
 
 #define FONT_SIZE 10
 #define LINE_SIZE 22

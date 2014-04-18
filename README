@@ -9,15 +9,20 @@ I recommend creating a backup of the project directory after each step.
 
 PART 1: Bullet to the head
 
-	Download glm, freeglut, DevIL, glew, and Bullet. They can be found at:
+	Download glm, freeglut, GLFW, DevIL, glew, and Bullet. They can be found at:
 		http://sourceforge.net/projects/ogl-math/files/
 		http://www.transmissionzero.co.uk/software/freeglut-devel/
+		http://sourceforge.net/projects/glfw/files/glfw/3.0.4/glfw-3.0.4.bin.WIN32.zip/download
 		http://sourceforge.net/projects/openil/files/DevIL%20Windows%20SDK/1.7.8/DevIL-SDK-x86-1.7.8.zip/download
 		http://sourceforge.net/projects/glew/files/glew/1.10.0/glew-1.10.0-win32.zip/download
 		http://code.google.com/p/bullet/downloads/detail?name=bullet-2.82-r2704.zip&can=2&q=
-	The directories you put them in will henceforth be denoted as $GLM, $FREEGLUT, $DEVIL, $GLEW, and $BULLET, respectively.
+	The directories you put them in will henceforth be denoted as $GLM, $FREEGLUT, $GLFW, $DEVIL, $GLEW, and $BULLET, respectively.
+	(note the difference between GLFW and GLEW)
 
-	Run $BULLET/build/vs2010.bat
+	Run $BULLET/build/vs2010.bat to build bullet.
+
+	In the libraries you downloaded, find glfw3.dll, freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug. (you may need to create this folder)
+
 
 	Go to File->New->Project
 	Select Empty Project
@@ -68,11 +73,6 @@ PART 1: Bullet to the head
 	Change Configuration Type from Application to Static Library
 	Apply
 
-
-
-
-PART 2: Lots of Libraries
-
 	right-click(solution)->Add->New Project
 	Select Test->Native Unit Test Practice
 	Name the new project OBGCoreTests.
@@ -91,77 +91,25 @@ PART 2: Lots of Libraries
 		ws2_32.lib
 	Apply
 
+
+
+
+PART 2: Graphicsing
+
 	right-click(solution)->Add->New Project
 	Select Empty Project
 	Name the new project OBGGraphics.
 
 	right-click(OBGGraphics)->Properties->Configuration Properties->General
+	Set Configuration to All Configurations
 	Go to C/C++->General
 	Edit Additional Include Directories; add:
 		$GLEW/include
 		$DEVIL/include
 		$GLM
+		$GLFW/include
 		$FREEGLUT/include
-	Go to Linker->General
-	Edit Additional Library Directories; add:
-		$GLEW/lib/Release/Win32
-		$DEVIL/lib
-		$FREEGLUT/lib
-	Go to Linker->Input
-	Edit Additional Dependencies; add:
-		glew32.lib
-		DevIL.lib
-		ILU.lib
-		ILUT.lib
-		freeglut.lib
-		ws2_32.lib
 	Apply
-
-	In the libraries you downloaded, find freeglut.dll, DevIL.dll, ILU.dll, ILUT.dll, and glew32.dll, and copy them to OnlineBoardGame/Debug.
-
-	**** SANITY CHECK ****
-	right-click(OBGGraphics)->Set as StartUp Project
-	Create a source file in OBGGraphics containing the following:
-
-		#include <iostream>
-		#include <GL/glew.h>
-		#include <GL/freeglut.h>
-		#include <IL/il.h>
-		#include <IL/ilu.h>
-		#include <IL/ilut.h>
-		#include <glm/glm.hpp>
-
-		using namespace std;
-		using namespace glm;
-
-		int main(int argc, char *argv[]) {
-			glutInit(&argc, argv);
-			ilInit();
-			iluInit();
-			ilutInit();
-
-			glutInitWindowSize(1024, 512);
-			glutInitWindowPosition(0, 0);
-			glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
-
-			glutCreateWindow("Test Window");
-
-			if (glewInit() != GLEW_OK) {
-				cerr << "GLEW failed to initialize." << endl;
-				char i;
-				cin >> i;
-				return -1;
-			}
-
-			vec3 vec = vec3(1.0f, 0.0f, 1.0f);
-
-			cout << "SUCCESS!" << endl;
-			char i;
-			cin >> i;
-			return 0;
-		}
-
-	Compile and run it.  A window should pop up, and the console should say "SUCCESS". Delete the file once it works.
 
 	right-click(OBGGraphics)->Properties->Configuration Properties->General
 	Change Configuration to All Configurations
@@ -255,15 +203,18 @@ PART 4: The Client Projects
 		$DEVIL/include
 		$GLM
 		$FREEGLUT/include
+		$GLFW/include
 		OnlineBoardGame/OBGGraphics
 		OnlineBoardGame/OBGCore
 	Go to Linker->General
 	Edit Additional Library Directories; add:
+		$GLFW/lib-msvc110
 		$GLEW/lib/Release/Win32
 		$DEVIL/lib
 		$FREEGLUT/lib
 	Go to Linker->Input
 	Edit Additional Dependencies; add:
+		glfw3dll.lib
 		glew32.lib
 		DevIL.lib
 		ILU.lib
@@ -342,16 +293,19 @@ PART 4: The Client Projects
 		$DEVIL/include
 		$GLM
 		$FREEGLUT/include
+		$GLFW/include
 		OnlineBoardGame/OBGGraphics
 		OnlineBoardGame/OBGCore
 		OnlineBoardGame/OBGClient
 	Go to Linker->General
 	Edit Additional Library Directories; add:
+		$GLFW/lib-msvc110
 		$GLEW/lib/Release/Win32
 		$DEVIL/lib
 		$FREEGLUT/lib
 	Go to Linker->Input
 	Edit Additional Dependencies; add:
+		glfw3dll.lib
 		glew32.lib
 		DevIL.lib
 		ILU.lib
@@ -376,16 +330,19 @@ PART 4: The Client Projects
 		$DEVIL/include
 		$GLM
 		$FREEGLUT/include
+		$GLFW/include
 		OnlineBoardGame/OBGGraphics
 		OnlineBoardGame/OBGCore
 		OnlineBoardGame/OBGClient
 	Go to Linker->General
 	Edit Additional Library Directories; add:
+		$GLFW/lib-msvc110
 		$GLEW/lib/Release/Win32
 		$DEVIL/lib
 		$FREEGLUT/lib
 	Go to Linker->Input
 	Edit Additional Dependencies; add:
+		glfw3dll.lib
 		glew32.lib
 		DevIL.lib
 		ILU.lib

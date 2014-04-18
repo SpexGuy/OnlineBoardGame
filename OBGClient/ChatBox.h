@@ -1,7 +1,7 @@
 #pragma once
+#include <CriticalSection.h>
 #include <string>
 #include <vector>
-#include <CriticalSection.h>
 #include <Renderable.h>
 #include "MessageListener.h"
 #include "MessageEventBroadcaster.h"

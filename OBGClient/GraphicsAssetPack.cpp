@@ -74,8 +74,10 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 
 	TextureMaterial *material = new TextureMaterial(tex, texShader);
 
-	return new GraphicsAsset(name, group.asString(), mass.asDouble(),
-		btVector3(massCenterX.asDouble(), massCenterY.asDouble(), massCenterZ.asDouble()),
+	return new GraphicsAsset(name, group.asString(), btScalar(mass.asDouble()),
+		btVector3(btScalar(massCenterX.asDouble()),
+				  btScalar(massCenterY.asDouble()),
+				  btScalar(massCenterZ.asDouble())),
 		transform, shape, mesh, material);
 }
 

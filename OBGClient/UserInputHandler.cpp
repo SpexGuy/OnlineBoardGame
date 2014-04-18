@@ -1,6 +1,5 @@
 #include <iostream>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <GraphicsContext.h>
 #include "ChatBox.h"
 #include "ClientEntityManager.h"
 #include "Entity.h"
@@ -53,170 +52,122 @@ void UserInputHandler::update(int time) {
 	delete interaction;
 }
 
-void UserInputHandler::keyPressed(unsigned char c, int x, int y) {
-	pointer->setScreenPos(ivec2(x, y));
-
+void UserInputHandler::keyPressed(int key, int scancode, int mods) {
 	if (chat->isEditMode()) {
-		switch(c) {
-		case CHAR_ESCAPE:
+		switch(key) {
+		case GLFW_KEY_ESCAPE:
 			chat->cancel();
 			break;
-		case CHAR_BACKSPACE:
-		case CHAR_DELETE:
+		case GLFW_KEY_DELETE:
+		case GLFW_KEY_BACKSPACE:
 			chat->popCharacter();
 			break;
-		case CHAR_ENTER:
+		case GLFW_KEY_ENTER:
 			chat->submit();
 			break;
 		default:
-			if (c >= 0x20 && c <= 0x7E)
-				chat->pushCharacter(c);
+			if (key >= 0x20 && key <= 0x7E)
+				chat->pushCharacter(key);
 			else
-				cout << "Could not type character " << int(c) << endl;
+				cout << "Could not type character " << int(key) << endl;
 		}
 	} else {
-		switch(c) {
-		case 't':
-		case 'T':
-		case CHAR_ENTER:
+		switch(key) {
+		case GLFW_KEY_T:
+		case GLFW_KEY_ENTER:
 			chat->enterEditMode();
 			break;
-		case CHAR_ESCAPE:
-			if (glutGet(GLUT_FULL_SCREEN)) {
-				glutLeaveFullScreen();
-				break;
-			} //else fall through
-		case 'X':
-		case 'x':
-			GameManager::inst()->close();
+		case GLFW_KEY_ESCAPE:
+			//if (GraphicsContext::inst()->isFullscreen()) {
+			//	GraphicsContext::inst()->setFullscreen(false);
+			//	break;
+			//} //else fall through
+		case GLFW_KEY_X:
+			GraphicsContext::inst()->setShouldCloseWindow(true);
 			break;
-		case 'w':
-		case 'W':
-			//Rotate -x
+		case GLFW_KEY_W:
 			rotations |= ROT_NEG_X;
 			break;
-		case 's':
-		case 'S':
-			//Rotate x
+		case GLFW_KEY_S:
 			rotations |= ROT_POS_X;
 			break;
-		case 'a':
-		case 'A':
-			//Rotate z
+		case GLFW_KEY_A:
 			rotations |= ROT_POS_Z;
 			break;
-		case 'd':
-		case 'D':
-			//rotate -z
+		case GLFW_KEY_D:
 			rotations |= ROT_NEG_Z;
 			break;
-		case 'q':
-		case 'Q':
-			//rotate y
+		case GLFW_KEY_Q:
 			rotations |= ROT_POS_Y;
 			break;
-		case 'e':
-		case 'E':
-			//rotate -y
+		case GLFW_KEY_E:
 			rotations |= ROT_NEG_Y;
 			break;
-		case 'r':
-		case 'R':
+		case GLFW_KEY_R:
 			wireframe = !wireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 			break;
-		case 'z':
-		case 'Z':
+		case GLFW_KEY_Z:
 			GameManager::inst()->getGraphicsManager()->toggleZoom();
 			break;
-		case 'f':
-		case 'F':
+		case GLFW_KEY_F:
 			pointer->goLow();
 			break;
+		//case GLFW_KEY_F11:
+		//	GraphicsContext::inst()->toggleFullscreen();
+		//	break;
 		default:
-			cout << "Unknown character pressed: " << c << " (" << int(c) << ")" << endl;
+			cout << "Unknown key pressed: " << key << endl;
 		}
 	}
 }
 
-void UserInputHandler::keyReleased(unsigned char c, int x, int y) {
-	switch(c) {	
+void UserInputHandler::keyReleased(int key, int scancode, int mods) {
+	switch(key) {
 		if(!chat->isEditMode()) {
-			case 'w':
-			case 'W':
-				//Rotate -x
+			case GLFW_KEY_W:
 				rotations &= ~ROT_NEG_X;
 				break;
-			case 's':
-			case 'S':
-				//Rotate x
+			case GLFW_KEY_S:
 				rotations &= ~ROT_POS_X;
 				break;
-			case 'a':
-			case 'A':
-				//Rotate z
+			case GLFW_KEY_A:
 				rotations &= ~ROT_POS_Z;
 				break;
-			case 'd':
-			case 'D':
-				//rotate -z
+			case GLFW_KEY_D:
 				rotations &= ~ROT_NEG_Z;
 				break;
-			case 'q':
-			case 'Q':
-				//rotate y
+			case GLFW_KEY_Q:
 				rotations &= ~ROT_POS_Y;
 				break;
-			case 'e':
-			case 'E':
-				//rotate -y
+			case GLFW_KEY_E:
 				rotations &= ~ROT_NEG_Y;
 				break;
-			case 'f':
-			case 'F':
+			case GLFW_KEY_F:
 				pointer->goHigh();
 				break;
 		}
 	}
 }
 
-void UserInputHandler::specialKeyPressed(int k, int x, int y) {
-	pointer->setScreenPos(ivec2(x, y));
-	switch(k) {
-	case GLUT_KEY_F11:
-		glutFullScreenToggle();
-		break;
-	default:
-		cout << "Unknown special key: " << k << endl;
-	}
-}
-
-void UserInputHandler::mousePressed(int button, int state, int x, int y) {
-	pointer->setScreenPos(ivec2(x, y));
+void UserInputHandler::mousePressed(int button, int mods) {
 	ClientEntityManager* entityManager = GameManager::inst()->getEntityManager();
 
 	switch(button) {
-	case 0:{ //left click
-		if(state == GLUT_DOWN) {
-			vec3 pos = pointer->getWorldPos();
-			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), vector<int>());
-			if(clickedEntity != NULL) {
-				int id = clickedEntity->getId();
-				heldList.push_back(id);
-				cout << "Clicked on entity " << id << endl;
-			} else {
-				cout << "Clicked on nothing" << endl;
-			}
-		}
-		else if(state == GLUT_UP) {
-			heldList.clear();
+	case GLFW_MOUSE_BUTTON_LEFT: {
+		vec3 pos = pointer->getWorldPos();
+		Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), vector<int>());
+		if(clickedEntity != NULL) {
+			int id = clickedEntity->getId();
+			heldList.push_back(id);
+			cout << "Clicked on entity " << id << endl;
+		} else {
+			cout << "Clicked on nothing" << endl;
 		}
 		break;
 	}
-	case 1: //middle click
-		break;
-	case 2: //right click
-		if(state == GLUT_DOWN && heldList.size() != 0) {
+	case GLFW_MOUSE_BUTTON_RIGHT: //right click
+		if(heldList.size() != 0) {
 			vec3 pos = pointer->getWorldPos();
 			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), lastHeldList);
 			if(clickedEntity != NULL) {
@@ -225,17 +176,22 @@ void UserInputHandler::mousePressed(int button, int state, int x, int y) {
 			}
 		}
 		break;
-	case 3: //back button
-		break;
-	case 4: //forward button
+	case GLFW_MOUSE_BUTTON_4:
+		if (heldList.size() > 0) {
+			heldList.pop_back();
+		}
 		break;
 	default:
-		cout << "TOO MANY BUTTONS ON THAT MOUSE! (button " << button << " was pressed)" << endl;
+		cout << "unsupported mouse button: " << button << endl;
 	}
 }
 
-void UserInputHandler::mouseDragged(int x, int y) {
-	pointer->setScreenPos(ivec2(x, y));
+void UserInputHandler::mouseReleased(int button, int mods) {
+	switch(button) {
+	case GLFW_MOUSE_BUTTON_LEFT:
+		heldList.clear();
+		break;
+	}
 }
 
 void UserInputHandler::mouseMoved(int x, int y) {
@@ -244,4 +200,5 @@ void UserInputHandler::mouseMoved(int x, int y) {
 
 UserInputHandler::~UserInputHandler() {
 	delete chat;
+	delete pointer;
 }
