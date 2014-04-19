@@ -3,13 +3,13 @@
 #include "btBulletDynamicsCommon.h"
 #include <stdint.h>
 
-#define ROT_POS_X 1 << 7
-#define ROT_NEG_X 1 << 6
-#define SHAKING   1 << 5
-#define ROT_POS_Y 1 << 4
-#define ROT_NEG_Y 1 << 3
-#define ROT_POS_Z 1 << 1
-#define ROT_NEG_Z 1 << 0
+#define ROT_POS_X (1 << 7)
+#define ROT_NEG_X (1 << 6)
+#define SHAKING   (1 << 5)
+#define ROT_POS_Y (1 << 4)
+#define ROT_NEG_Y (1 << 3)
+#define ROT_POS_Z (1 << 1)
+#define ROT_NEG_Z (1 << 0)
 
 using std::vector;
 class Interaction {
