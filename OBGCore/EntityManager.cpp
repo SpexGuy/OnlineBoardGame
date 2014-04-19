@@ -111,9 +111,6 @@ void EntityManager::handleInteraction(Interaction *action) {
 			}
 			if(action->flags & SHAKING) {
 				entities[i]->shake();
-				cout << "IMMA SHAKIN AN OBJECT" << endl;
-			} else {
-				cout << "IM NOT SHAKIN AN OBJECT" << endl;
 			}
 			physBody.setAngularVelocity(rotations);
 			physBody.activate(true);
