@@ -91,23 +91,29 @@ void EntityManager::handleInteraction(Interaction *action) {
 			physBody.setLinearVelocity(v);
 			physBody.setGravity(btVector3(0,0,0));
 			btVector3 rotations = btVector3(0.0, 0.0, 0.0);
-			if(action->rotations & ROT_POS_X) {
+			if(action->flags & ROT_POS_X) {
 				rotations += btVector3(ROTATION_SPEED, 0.0, 0.0);
 			}
-			if(action->rotations & ROT_NEG_X) {
+			if(action->flags & ROT_NEG_X) {
 				rotations += btVector3(-ROTATION_SPEED, 0.0, 0.0);
 			}
-			if(action->rotations & ROT_POS_Y) {
+			if(action->flags & ROT_POS_Y) {
 				rotations += btVector3(0.0, ROTATION_SPEED, 0.0);
 			}
-			if(action->rotations & ROT_NEG_Y) {
+			if(action->flags & ROT_NEG_Y) {
 				rotations += btVector3(0.0, -ROTATION_SPEED, 0.0);
 			}
-			if(action->rotations & ROT_POS_Z) {
+			if(action->flags & ROT_POS_Z) {
 				rotations += btVector3(0.0, 0.0, ROTATION_SPEED);
 			}
-			if(action->rotations & ROT_NEG_Z) {
+			if(action->flags & ROT_NEG_Z) {
 				rotations += btVector3(0.0, 0.0, -ROTATION_SPEED);
+			}
+			if(action->flags & SHAKING) {
+				entities[i]->shake();
+				cout << "IMMA SHAKIN AN OBJECT" << endl;
+			} else {
+				cout << "IM NOT SHAKIN AN OBJECT" << endl;
 			}
 			physBody.setAngularVelocity(rotations);
 			physBody.activate(true);

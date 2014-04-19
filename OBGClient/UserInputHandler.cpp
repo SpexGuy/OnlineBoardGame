@@ -13,7 +13,8 @@
 #define CHAR_DELETE 0x7F
 #define CHAR_BACKSPACE 0x08
 #define CHAR_ENTER '\r'
-
+#define SHAKE_SIZE 20
+#define SHAKE_THRESHOLD 2
 
 #define ROTATIONAL_VELOCITY 100
 
@@ -23,11 +24,14 @@ using namespace glm;
 UserInputHandler::UserInputHandler() {
 	chat = new ChatBox();
 	wireframe = false;
-	rotations = 0;
+	flags = 0;
+	shakes = list<bool>();
+	shakeCount = 0;
 }
 
 void UserInputHandler::start() {
 	pointer = new MousePointer();
+	lastMouse = glm::vec2(pointer->getScreenPos().x, pointer->getScreenPos().y);
 }
 
 void UserInputHandler::update(int time) {
@@ -43,11 +47,35 @@ void UserInputHandler::update(int time) {
 		idList.push_back(i);
 	}
 
+	glm::vec2 mouse = glm::vec2(pointer->getScreenPos().x, pointer->getScreenPos().y);
+	glm::vec2 mouseDiff = mouse - lastMouse;
+
+	if(glm::dot(mouseDiff, lastMouseDiff) < 0.0) {
+		shakeCount ++;
+		shakes.push_back(true);
+	} else {
+		shakes.push_back(false);
+	}
+
+	while(shakes.size() > SHAKE_SIZE) {
+		bool pop = *shakes.begin();
+		if(pop) shakeCount --;
+		shakes.pop_front();
+	}
+
+	lastMouse = mouse;
+	lastMouseDiff = mouseDiff;
+	if(shakeCount >= SHAKE_THRESHOLD) {
+		flags |= SHAKING;
+	} else {
+		flags &= ~SHAKING;
+	}
+
 	lastHeldList = heldList;
 	
 	vec3 worldPos = pointer->getWorldPos();
 	btVector3 btPos(worldPos.x, worldPos.y, worldPos.z);
-	Interaction *interaction = new Interaction(btPos, idList, rotations);
+	Interaction *interaction = new Interaction(btPos, idList, flags);
 	fireInteraction(interaction);
 	delete interaction;
 }
@@ -86,22 +114,22 @@ void UserInputHandler::keyPressed(int key, int scancode, int mods) {
 			GraphicsContext::inst()->setShouldCloseWindow(true);
 			break;
 		case GLFW_KEY_W:
-			rotations |= ROT_NEG_X;
+			flags |= ROT_NEG_X;
 			break;
 		case GLFW_KEY_S:
-			rotations |= ROT_POS_X;
+			flags |= ROT_POS_X;
 			break;
 		case GLFW_KEY_A:
-			rotations |= ROT_POS_Z;
+			flags |= ROT_POS_Z;
 			break;
 		case GLFW_KEY_D:
-			rotations |= ROT_NEG_Z;
+			flags |= ROT_NEG_Z;
 			break;
 		case GLFW_KEY_Q:
-			rotations |= ROT_POS_Y;
+			flags |= ROT_POS_Y;
 			break;
 		case GLFW_KEY_E:
-			rotations |= ROT_NEG_Y;
+			flags |= ROT_NEG_Y;
 			break;
 		case GLFW_KEY_R:
 			wireframe = !wireframe;
@@ -126,22 +154,22 @@ void UserInputHandler::keyReleased(int key, int scancode, int mods) {
 	switch(key) {
 		if(!chat->isEditMode()) {
 			case GLFW_KEY_W:
-				rotations &= ~ROT_NEG_X;
+				flags &= ~ROT_NEG_X;
 				break;
 			case GLFW_KEY_S:
-				rotations &= ~ROT_POS_X;
+				flags &= ~ROT_POS_X;
 				break;
 			case GLFW_KEY_A:
-				rotations &= ~ROT_POS_Z;
+				flags &= ~ROT_POS_Z;
 				break;
 			case GLFW_KEY_D:
-				rotations &= ~ROT_NEG_Z;
+				flags &= ~ROT_NEG_Z;
 				break;
 			case GLFW_KEY_Q:
-				rotations &= ~ROT_POS_Y;
+				flags &= ~ROT_POS_Y;
 				break;
 			case GLFW_KEY_E:
-				rotations &= ~ROT_NEG_Y;
+				flags &= ~ROT_NEG_Y;
 				break;
 			case GLFW_KEY_F:
 				pointer->goHigh();

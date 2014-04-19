@@ -5,6 +5,7 @@
 
 #define ROT_POS_X 1 << 7
 #define ROT_NEG_X 1 << 6
+#define SHAKING   1 << 5
 #define ROT_POS_Y 1 << 4
 #define ROT_NEG_Y 1 << 3
 #define ROT_POS_Z 1 << 1
@@ -15,10 +16,10 @@ class Interaction {
 private:
 	Interaction();
 public:
-	uint8_t rotations;
+	uint8_t flags;
 	vector<int> ids;
 	btVector3 mousePos;
-	Interaction(const btVector3& mousePos, const vector<int> &ids, uint8_t rotations);
+	Interaction(const btVector3& mousePos, const vector<int> &ids, uint8_t flags);
 	~Interaction();
 };
 
@@ -40,7 +41,7 @@ public:
 struct SerializedInteraction {
 	btVector3 mousePos;
 	int numIds;
-	uint8_t rotations;
+	uint8_t flags;
 	int ids[0];
 };
 #pragma warning(default:4200)

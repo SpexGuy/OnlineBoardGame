@@ -1,6 +1,8 @@
 #pragma once
 #include <InteractionEventBroadcaster.h>
+#include "LinearMath\btVector3.h"
 #include "MessageEventBroadcaster.h"
+#include <list>
 #include <stdint.h>
 
 class ChatBox;
@@ -14,9 +16,13 @@ private:
 	ChatBox *chat;
 	std::vector<int> heldList;
 	std::vector<int> lastHeldList;
-	uint8_t rotations;
+	uint8_t flags;
 	MousePointer *pointer;
 	bool wireframe;
+	std::list<bool> shakes;
+	glm::vec2 lastMouse;
+	glm::vec2 lastMouseDiff;
+	int shakeCount;
 public:
 	UserInputHandler();
 	virtual void start();
