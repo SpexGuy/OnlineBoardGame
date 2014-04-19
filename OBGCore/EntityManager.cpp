@@ -6,12 +6,36 @@
 #include "Asset.h"
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
+
 	
 #define MAX_PICKUP_VELOCITY 5*BOARD_SIZE
 #define PICKUP_POWER 10
 #define ROTATION_SPEED 1.5
 
 using namespace std;
+
+struct	CustomCallback : public btCollisionWorld::RayResultCallback
+{
+	CustomCallback(vector<int> heldList)
+		:heldList(heldList), closest(5)
+	{
+	}
+
+	btScalar closest;
+	vector<int> heldList;
+		
+	virtual	btScalar	addSingleResult(btCollisionWorld::LocalRayResult& rayResult,bool normalInWorldSpace)
+	{
+		btRigidBody *collisionObject = (btRigidBody *)rayResult.m_collisionObject;
+		Entity *entity = (Entity *)collisionObject->getMotionState();
+		if(rayResult.m_hitFraction < closest && find(heldList.begin(), heldList.end(), entity->getId()) == heldList.end()) {
+			m_collisionObject = rayResult.m_collisionObject;
+			closest = rayResult.m_hitFraction;
+		}
+
+		return rayResult.m_hitFraction;
+	}
+};
 
 EntityManager::EntityManager() {
 
@@ -179,20 +203,21 @@ Entity* EntityManager::getEntityById(int id) {
 }
 
 Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to, vector<int> heldList) {
-	btCollisionWorld::AllHitsRayResultCallback  callback(from, to);
+	CustomCallback callback(heldList);
 	FunctionLock lock(worldLock);
 		world->rayTest(from, to, callback);
 	lock.unlock();
 
 	if(callback.hasHit()) {
-		for(int i = 0; i < callback.m_collisionObjects.size(); i ++) {
-			const btCollisionObject *collided = callback.m_collisionObjects[i];
-			int id = ((Entity *)(((btRigidBody *)collided)->getMotionState()))->getId();
-			if(((btRigidBody *)collided)->getMotionState() != groundEnt && find(heldList.begin(), heldList.end(), id) == heldList.end()) {
-				btQuaternion quat = btQuaternion();
-				return (Entity *) ((btRigidBody *)collided)->getMotionState();
-			}
+		const btCollisionObject *collided = callback.m_collisionObject;
+
+		cout << "hi" << endl;
+		if(((btRigidBody *)collided)->getMotionState() != groundEnt) {
+			cout << "TROLOLOLOLOLOLOL" << endl;
+			btQuaternion quat = btQuaternion();
+			return (Entity *) ((btRigidBody *)collided)->getMotionState();
 		}
+
 	}
 	return NULL;
 }
