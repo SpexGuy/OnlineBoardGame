@@ -14,18 +14,18 @@
 
 using namespace std;
 
-struct	CustomCallback : public btCollisionWorld::RayResultCallback
+class ClosestNotInListCallback :
+	public btCollisionWorld::RayResultCallback
 {
-	CustomCallback(vector<int> heldList)
-		:heldList(heldList), closest(5)
-	{
-	}
-
+public:
 	btScalar closest;
 	vector<int> heldList;
 		
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalRayResult& rayResult,bool normalInWorldSpace)
-	{
+	ClosestNotInListCallback(vector<int> exclude)
+		:heldList(exclude), closest(5)
+	{}
+
+	virtual	btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace) {
 		btRigidBody *collisionObject = (btRigidBody *)rayResult.m_collisionObject;
 		Entity *entity = (Entity *)collisionObject->getMotionState();
 		if(rayResult.m_hitFraction < closest && find(heldList.begin(), heldList.end(), entity->getId()) == heldList.end()) {
@@ -33,6 +33,28 @@ struct	CustomCallback : public btCollisionWorld::RayResultCallback
 			closest = rayResult.m_hitFraction;
 		}
 
+		return rayResult.m_hitFraction;
+	}
+};
+
+class AllNotInListCallback :
+	public btCollisionWorld::RayResultCallback
+{
+public:
+	vector<int> heldList;
+	vector<Entity *> intersected;
+		
+	AllNotInListCallback(vector<int> exclude)
+		:heldList(exclude)
+	{}
+
+	virtual	btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace) {
+		btRigidBody *collisionObject = (btRigidBody *)rayResult.m_collisionObject;
+		Entity *entity = (Entity *)collisionObject->getMotionState();
+		if(find(heldList.begin(), heldList.end(), entity->getId()) == heldList.end()) {
+			m_collisionObject = rayResult.m_collisionObject;
+			intersected.push_back(entity);
+		}
 		return rayResult.m_hitFraction;
 	}
 };
@@ -211,7 +233,7 @@ Entity* EntityManager::getEntityById(int id) {
 }
 
 Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVector3& to, vector<int> heldList) {
-	CustomCallback callback(heldList);
+	ClosestNotInListCallback callback(heldList);
 	FunctionLock lock(worldLock);
 		world->rayTest(from, to, callback);
 	lock.unlock();
@@ -225,4 +247,13 @@ Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVect
 
 	}
 	return NULL;
+}
+
+vector<Entity *> EntityManager::getAllIntersectingEntities(const btVector3 &from, const btVector3 &to, vector<int> excludingIds) {
+	AllNotInListCallback callback(excludingIds);
+	FunctionLock lock(worldLock);
+		world->rayTest(from, to, callback);
+	lock.unlock();
+
+	return callback.intersected;
 }

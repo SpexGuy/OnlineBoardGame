@@ -184,28 +184,28 @@ void UserInputHandler::mousePressed(int button, int mods) {
 	switch(button) {
 	case GLFW_MOUSE_BUTTON_LEFT: {
 		vec3 pos = pointer->getWorldPos();
-		Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), vector<int>());
-		if(clickedEntity != NULL) {
-			int id = clickedEntity->getId();
-			heldList.push_back(id);
-			cout << "Clicked on entity " << id << endl;
+		if (mods & GLFW_MOD_SHIFT) {
+			vector<Entity *> clickedEntities =
+				entityManager->getAllIntersectingEntities(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), heldList);
+			for (Entity *entity : clickedEntities) {
+				heldList.push_back(entity->getId());
+			}
 		} else {
-			cout << "Clicked on nothing" << endl;
-		}
-		break;
-	}
-	case GLFW_MOUSE_BUTTON_RIGHT: //right click
-		if(heldList.size() != 0) {
-			vec3 pos = pointer->getWorldPos();
-			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), lastHeldList);
+			Entity *clickedEntity = entityManager->getIntersectingEntity(btVector3(pos.x, pos.y, pos.z), btVector3(pos.x, 0, pos.z), heldList);
 			if(clickedEntity != NULL) {
 				int id = clickedEntity->getId();
 				heldList.push_back(id);
+				cout << "Clicked on entity " << id << endl;
+			} else {
+				cout << "Clicked on nothing" << endl;
 			}
 		}
 		break;
-	case GLFW_MOUSE_BUTTON_4:
-		if (heldList.size() > 0) {
+	}
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		if (mods & GLFW_MOD_SHIFT) {
+			heldList.clear();
+		} else if (heldList.size() > 0) {
 			heldList.pop_back();
 		}
 		break;
@@ -215,11 +215,7 @@ void UserInputHandler::mousePressed(int button, int mods) {
 }
 
 void UserInputHandler::mouseReleased(int button, int mods) {
-	switch(button) {
-	case GLFW_MOUSE_BUTTON_LEFT:
-		heldList.clear();
-		break;
-	}
+
 }
 
 void UserInputHandler::mouseMoved(int x, int y) {

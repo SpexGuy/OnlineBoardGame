@@ -42,6 +42,7 @@ public:
 	virtual Entity* getEntityById(int id);
 	virtual std::map<int, Entity *> getEntities() { return entities; }
 	virtual btDynamicsWorld* getWorld() { return world; }
-	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to, std::vector<int> heldList);
+	virtual Entity* getIntersectingEntity(const btVector3& from, const btVector3& to, std::vector<int> excludingIds);
+	virtual std::vector<Entity *> getAllIntersectingEntities(const btVector3 &from, const btVector3 &to, std::vector<int> excludingIds);
 	virtual void createPhysicsUpdates();
 };
