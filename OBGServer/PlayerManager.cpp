@@ -73,8 +73,11 @@ void PlayerManager::update(int time) {
 
 void PlayerManager::handlePhysicsUpdate(PhysicsUpdate *physicsUpdate) {
 	FunctionLock lock(playersLock);
+	int len = physicsUpdate->serialByteSize();
+	SerialPhysicsUpdate *spu = (SerialPhysicsUpdate *)alloca(len);
+	physicsUpdate->fill(spu);
 	for (auto &player : players) {
-		udpServer.sendPacket(player.first, TYPE_PHYSICS_UPDATE, sizeof(PhysicsUpdate), (uint8_t *)physicsUpdate);
+		udpServer.sendPacket(player.first, TYPE_PHYSICS_UPDATE, len, (uint8_t *)spu);
 	}
 }
 

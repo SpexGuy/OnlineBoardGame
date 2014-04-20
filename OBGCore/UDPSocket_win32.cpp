@@ -10,6 +10,61 @@ void sleep(int millis) {
 	Sleep(millis);
 }
 
+void printWinsockError() {
+	int error = WSAGetLastError();
+	switch(error) {
+	case WSANOTINITIALISED:
+		cout << "WSA was not initialized" << endl;
+		break;
+	case WSAENETDOWN:
+		cout << "The network subsystem has failed" << endl;
+		break;
+	case WSAEFAULT:
+		cout << "A bad buffer was passed" << endl;
+		break;
+	case WSAEINTR:
+		cout << "Blocking call was cancelled" << endl;
+		break;
+	case WSAEINPROGRESS:
+		cout << "A blocking winsock1.1 call is in progress?" << endl;
+		break;
+	case WSAEINVAL:
+		cout << "Socket not bound, or unknown flag, or MSG_OOB and SO_OOBINLINE, or bytestream len <= 0" << endl;
+		break;
+	case WSAEISCONN:
+		cout << "This socket is connected, so you can't use this function" << endl;
+		break;
+	case WSAENETRESET:
+		cout << "TimeToLive has expired" << endl;
+		break;
+	case WSAENOTSOCK:
+		cout << "Invalid socket descriptor" << endl;
+		break;
+	case WSAEOPNOTSUPP:
+		cout << "MSG_OOB specified but socket is not stream-style or is unidirectional" << endl;
+		break;
+	case WSAESHUTDOWN:
+		cout << "Tried to read from shut down socket" << endl;
+		break;
+	case WSAEWOULDBLOCK:
+		cout << "Nonblocking socket but would block" << endl;
+		break;
+	case WSAEMSGSIZE:
+		cout << "Message was too large to fit into the buffer and was truncated" << endl;
+		break;
+	case WSAETIMEDOUT:
+		cout << "Connection has been dropped" << endl;
+		break;
+	case WSAECONNRESET:
+		cout << "Send resulted in ICMP Port Unreachable" << endl;
+		break;
+	default:
+		cout << "Unknown socket error occured: " << error << endl;
+		cout << "See http://msdn.microsoft.com/en-us/library/windows/desktop/ms740120%28v=vs.85%29.aspx for details" << endl;
+		break;
+	}
+}
+
 UDPSocket::UDPSocket() :
 	socketFD(0)
 {}
@@ -65,13 +120,14 @@ int UDPSocket::receive(Address &from, uint8_t *data, int maxLen) {
 
 	int received_bytes = recvfrom(socketFD, (char*)data, maxLen, 0, (sockaddr*)&fromsa, &fromLength);
 
-	if (received_bytes <= 0)
-		return 0;
-
 	unsigned int address = ntohl(fromsa.sin_addr.s_addr);
 	unsigned short port = ntohs(fromsa.sin_port);
 
 	from = Address::UDPAddress(address, port);
+
+	if (received_bytes < 0) {
+		printWinsockError();
+	}
 
 	return received_bytes;
 }

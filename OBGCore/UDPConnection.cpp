@@ -4,8 +4,6 @@
 
 using namespace std;
 
-#define MAX_PACKET_SIZE 4096
-
 int UDPClientReadThread(void *client) {
 	return ((UDPClient *)client)->loop();
 }
@@ -32,6 +30,7 @@ bool UDPClient::sendPacket(int type, int len, const uint8_t *data) {
 	if (!isRunning())
 		return false;
 	assert(server.GetAddress());
+	assert(len <= MAX_PACKET_SIZE);
 	//make packet
 	int size = sizeof(Packet) + len;
 	Packet *pack = (Packet *) alloca(size);
@@ -57,12 +56,18 @@ int UDPClient::loop() {
 		int received_bytes = socket.receive(sender, (uint8_t *)pack, MAX_PACKET_SIZE);
 		if (received_bytes < 0)
 			return received_bytes;
-		if (received_bytes < sizeof(Packet))
+		if (sender != server) {
+			printf("Wrong Sender: %d.%d.%d.%d:0x%x\n", sender.GetA(), sender.GetB(), sender.GetC(), sender.GetD(), sender.GetTCPPort());
 			continue;
-		if (pack->protocol != protocolId)
+		}
+		if (received_bytes < sizeof(Packet)) {
+			cout << "Too few bytes: " << received_bytes << endl;
 			continue;
-		if (sender != server)
+		}
+		if (pack->protocol != protocolId) {
+			cout << "Wrong Protocol" << endl;
 			continue;
+		}
 		//message is valid
 		//update tracking data
 		lastMessageTime = time;
@@ -80,6 +85,7 @@ bool UDPClient::update(int time) {
 	this->time = time;
 	reliabilitySystem.Update(dt);
 	if (isUnresponsive()) {
+		stop();
 		cout << "Server has timed out" << endl;
 		return false;
 	}
@@ -129,6 +135,7 @@ bool UDPServer::broadcastPacket(int type, int len, const uint8_t *data, const Ad
 
 bool UDPServer::sendPacket(const Address &destination, int type, int len, const uint8_t *data) {
 	FunctionLock lock(clientsLock);
+	assert(len <= MAX_PACKET_SIZE);
 	assert(isRunning());
 	assert(clients.find(destination) != clients.end());
 	//make packet
@@ -175,6 +182,12 @@ int UDPServer::loop() {
 		int received_bytes = socket.receive(from, (uint8_t *)pack, MAX_PACKET_SIZE);
 		if (received_bytes < 0)
 			return received_bytes;
+		FunctionLock lock(clientsLock);
+		if (clients.find(from) == clients.end()) {
+			printf("Unknown client: %d.%d.%d.%d:%d\n", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetTCPPort());
+			continue;
+		}
+		lock.unlock();
 		if (received_bytes < sizeof(Packet)) {
 			cout << "too few bytes: " << received_bytes << endl;
 			continue;
@@ -183,13 +196,9 @@ int UDPServer::loop() {
 			cout << "wrong protocol: " << pack->protocol << endl;
 			continue;
 		}
-		FunctionLock lock(clientsLock);
-		if (clients.find(from) == clients.end()) {
-			printf("Unknown client: %d.%d.%d.%d:%d\n", from.GetA(), from.GetB(), from.GetC(), from.GetD(), from.GetTCPPort());
-			continue;
-		}
 		//message is valid
 		//update tracking info
+		lock.relock();
 		clients[from].lastMessageTime = time;
 		clients[from].reliabilitySystem->PacketReceived(pack->seqno, received_bytes - sizeof(Packet));
 		clients[from].reliabilitySystem->ProcessAck(pack->ack, pack->ack_bits);

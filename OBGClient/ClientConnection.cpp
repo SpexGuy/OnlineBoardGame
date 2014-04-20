@@ -27,10 +27,11 @@ bool ClientConnection::update(int time) {
 
 void ClientConnection::handleMessage(int type, uint8_t *data, int len) {
 	switch(type) {
-	case TYPE_PHYSICS_UPDATE:
-		assert(len == sizeof(PhysicsUpdate));
-		firePhysicsUpdate((PhysicsUpdate *) data);
+	case TYPE_PHYSICS_UPDATE: {
+		PhysicsUpdate update((SerialPhysicsUpdate *)data, len);
+		firePhysicsUpdate(&update);
 		break;
+	}
 	default:
 		cout << "Unknown UDP type: " << type;
 	}
@@ -50,8 +51,7 @@ void ClientConnection::processData(uint8_t type, const uint8_t *data, uint16_t s
 
 	case TYPE_PHYSICS_UPDATE:
 		cout << "Got physics update through TCP?" << endl;
-		assert(size == sizeof(PhysicsUpdate));
-		firePhysicsUpdate((PhysicsUpdate *) data);
+		assert(false);
 		break;
 
 	case TYPE_MESSAGE:
@@ -74,6 +74,8 @@ void ClientConnection::setUsername(const string &un) {
 }
 
 void ClientConnection::handleInteraction(Interaction *action) {
+	if (!udpClient.isRunning())
+		return;
 	//allocate SerializedInteraction with enough ints at the end
 	int size = sizeof(SerializedInteraction) + action->ids.size()*sizeof(int);
 	struct SerializedInteraction *serial = (SerializedInteraction *)alloca(size);

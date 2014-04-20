@@ -4,6 +4,8 @@
  */
 #pragma once
 
+#include <assert.h>
+
 /**
  * An interface for a synchronizing lock
  */
@@ -45,7 +47,13 @@ public:
 		lock.lock();
 		locked = true;
 	}
+	inline void relock() {
+		assert(!locked);
+		lock.lock();
+		locked = true;
+	}
 	inline void unlock() {
+		assert(locked);
 		locked = false;
 		lock.unlock();
 	}

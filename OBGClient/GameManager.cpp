@@ -132,14 +132,14 @@ void GameManager::run() {
 	while (!GraphicsContext::inst()->shouldCloseWindow()) {
 		clock_t time(clock());
 		update(time);
-		while(clock() - time < PERIOD)
-			; //wait for timestep
+		//poll events at least once until time for next frame 
+		do { GraphicsContext::inst()->pollEvents(); }
+			while(clock() - time < PERIOD);
 	}
 	GraphicsContext::inst()->closeWindow();
 }
 
 void GameManager::update(int time) {
-	GraphicsContext::inst()->pollEvents();
 	inputHandler->update(time);
 	entityManager->update(time);
 	graphicsManager->update(time);

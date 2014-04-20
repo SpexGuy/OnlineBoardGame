@@ -12,6 +12,7 @@
 #include "Thread.h"
 #include "UDPSocket.h"
 
+#define MAX_PACKET_SIZE 4096
 #define MAX_SEQNO 0xFFFF
 typedef uint16_t seqno_t;
 

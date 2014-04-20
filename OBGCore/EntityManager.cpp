@@ -90,8 +90,8 @@ EntityManager::~EntityManager() {
 
 void EntityManager::addEntity(Entity *e) {
 	FunctionLock lock(worldLock);
-	e->getPhysicsBody()->setCcdMotionThreshold(0.05);
-	e->getPhysicsBody()->setCcdSweptSphereRadius(0.2);
+	e->getPhysicsBody()->setCcdMotionThreshold(0.05f);
+	e->getPhysicsBody()->setCcdSweptSphereRadius(0.2f);
 	entities[e->getId()] = e;
 	world->addRigidBody(e->getPhysicsBody());
 }
@@ -99,7 +99,7 @@ void EntityManager::addEntity(Entity *e) {
 void EntityManager::handleInteraction(Interaction *action) {
 	FunctionLock lock(worldLock);
 	for(int &i : action->ids) {
-		assert(i != 0);
+		assert(entities.find(abs(i)) != entities.end());
 		if(i < 0) {
 			btRigidBody& physBody = *entities[-i]->getPhysicsBody();
 			physBody.setGravity(world->getGravity());
@@ -143,6 +143,7 @@ void EntityManager::handleInteraction(Interaction *action) {
 }
 
 void EntityManager::createPhysicsUpdates() {
+	PhysicsUpdate update;
 	FunctionLock lock(worldLock);
 	for(pair<int, Entity*> p : entities) {
 		Entity * e = p.second;
@@ -150,20 +151,27 @@ void EntityManager::createPhysicsUpdates() {
 		btTransform transform = physBody.getWorldTransform();
 		btVector3 linear = physBody.getLinearVelocity();
 		btVector3 angular = physBody.getAngularVelocity();
-		PhysicsUpdate update(e->getId(), transform, linear, angular);
-		firePhysicsUpdate(&update);
+		bool moreRoom = update.addEntity(e->getId(), transform, linear, angular);
+		if (!moreRoom) {
+			firePhysicsUpdate(&update);
+			update.clear();
+		}
 	}
+	if (update.size() > 0)
+	firePhysicsUpdate(&update);
 }
 
-void EntityManager::handlePhysicsUpdate(PhysicsUpdate *update) {
+void EntityManager::handlePhysicsUpdate(PhysicsUpdate *physupdate) {
 	FunctionLock lock(worldLock);
-	Entity* ent = entities[update->getEntityId()];
+	for (EntityUpdate &update : *physupdate) {
+		Entity* ent = entities[update.getEntityId()];
 	
-	btRigidBody& physBody = *ent->getPhysicsBody();
+		btRigidBody& physBody = *ent->getPhysicsBody();
 	
-	physBody.setWorldTransform(update->getWorldTransform());
-	physBody.setLinearVelocity(update->getLinearVelocity());
-	physBody.setAngularVelocity(update->getAngularVelocity());
+		physBody.setWorldTransform(update.getWorldTransform());
+		physBody.setLinearVelocity(update.getLinearVelocity());
+		physBody.setAngularVelocity(update.getAngularVelocity());
+	}
 }
 
 void EntityManager::start() {
@@ -174,7 +182,7 @@ void EntityManager::update(int time) {
 	//Step physics simulation
 
 	FunctionLock lock(worldLock);
-	world->stepSimulation(float(time - lastTime)/float(CLOCKS_PER_SEC), 10, 0.005);
+	world->stepSimulation(float(time - lastTime)/float(CLOCKS_PER_SEC), 10, 0.005f);
 	lock.unlock();
 	lastTime = time;
 	

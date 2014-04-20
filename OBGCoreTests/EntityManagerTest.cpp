@@ -85,10 +85,10 @@ namespace OBGCoreTests
 		{
 			btVector3 position(4,2,3);
 			entityManager->addEntity(entity);
-			PhysicsUpdate update(entity->getId(), btTransform(btQuaternion(), 
+			PhysicsUpdate physupdate;
+			physupdate.addEntity(entity->getId(), btTransform(btQuaternion(), 
 				position), btVector3(0, 0, 0), btVector3(0, 0, 0));
-
-			entityManager->handlePhysicsUpdate(&update);
+			entityManager->handlePhysicsUpdate(&physupdate);
 			btTransform transform = entity->getPhysicsBody()->getWorldTransform();
 			Assert::AreEqual(position, transform.getOrigin());
 		}

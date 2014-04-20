@@ -6,7 +6,8 @@
 void Asset::inflateRigidBody(Entity *entity) {
 	btCollisionShape *shape = collider->inflate();
     btVector3 fallInertia(0,0,0);
-    shape->calculateLocalInertia(mass,fallInertia);
+	if (mass != 0)
+		shape->calculateLocalInertia(mass,fallInertia);
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo(mass, entity, shape, fallInertia);
 	entity->setRigidBody(new btRigidBody(constructionInfo));
 }
