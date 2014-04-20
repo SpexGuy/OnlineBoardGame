@@ -152,6 +152,7 @@ void GameManager::display() {
 	if (GraphicsContext::inst()->isVisible()) {
 		checkError("Before display");
 		graphicsManager->display();
+		checkError("After display");
 	}
 }
 

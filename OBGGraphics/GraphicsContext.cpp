@@ -139,10 +139,15 @@ void GraphicsContext::useShader(GLSLProgram *shader) {
 void GraphicsContext::drawTriangles(GLsizei numElements, GLuint vertexArrayHandle,
 									const mat4 &world)
 {
+	checkError("Before draw triangles");
 	glBindVertexArray(vertexArrayHandle);
+	checkError("Bound vertex array");
 	currShader->use();
+	checkError("Used shader");
 	currShader->setup(world);
+	checkError("Setup shader");
 	glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, 0);
+	checkError("Drew elements");
 	glUseProgram(0);
 	checkError("After draw triangles");
 }
