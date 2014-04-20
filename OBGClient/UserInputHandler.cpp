@@ -13,7 +13,7 @@
 #define CHAR_DELETE 0x7F
 #define CHAR_BACKSPACE 0x08
 #define CHAR_ENTER '\r'
-#define SHAKE_SIZE 20
+#define SHAKE_SIZE 40
 #define SHAKE_THRESHOLD 2
 
 #define ROTATIONAL_VELOCITY 100

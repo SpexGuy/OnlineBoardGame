@@ -218,10 +218,7 @@ Entity* EntityManager::getIntersectingEntity(const btVector3& from, const btVect
 
 	if(callback.hasHit()) {
 		const btCollisionObject *collided = callback.m_collisionObject;
-
-		cout << "hi" << endl;
 		if(((btRigidBody *)collided)->getMotionState() != groundEnt) {
-			cout << "TROLOLOLOLOLOLOL" << endl;
 			btQuaternion quat = btQuaternion();
 			return (Entity *) ((btRigidBody *)collided)->getMotionState();
 		}
