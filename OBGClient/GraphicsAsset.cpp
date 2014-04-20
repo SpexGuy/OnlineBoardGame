@@ -12,7 +12,7 @@ void GraphicsAsset::draw(const mat4 &world) {
 }
 
 GraphicsEntity *GraphicsAsset::createEntity(const btTransform &position, int id) {	
-	GraphicsEntity *e = new GraphicsEntity(this, id, position);
+	GraphicsEntity *e = new GraphicsEntity(this, id, position, shakeType);
 	inflateRigidBody(e);
 	return e;
 }

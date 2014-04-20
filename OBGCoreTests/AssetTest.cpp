@@ -4,6 +4,7 @@
 #include "Asset.h"
 #include "Entity.h"
 #include "CollisionShapeInflater.h"
+#include "ShakeStrategy.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -21,12 +22,12 @@ namespace OBGCoreTests
 		{
 			transform = btTransform(btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(1.0, 2.0, 3.0));
 			box = new BoxInflater(btVector3(0.5, 0.5, 0.5));
-			asset = new Asset("Box", "1", 1.0, btVector3(), transform, box);
+			asset = new Asset("Box", "1", 1.0, btVector3(), transform, box, ShakeStrategy::defaultShakeStrategy);
 		}
 
 		TEST_METHOD(EntityCreationTest)
 		{
-			Entity *entity = new Entity(asset, 5, transform);
+			Entity *entity = new Entity(asset, 5, transform, ShakeStrategy::defaultShakeStrategy);
 			Assert::AreEqual(5, entity->getId());
 			btVector3 origin = transform.getOrigin();
 			btTransform actualTransform;

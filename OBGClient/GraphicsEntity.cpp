@@ -4,12 +4,13 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "GraphicsAsset.h"
 #include "GraphicsEntity.h"
+#include "ShakeStrategy.h"
 
 using namespace glm;
 
 GraphicsEntity::GraphicsEntity(GraphicsAsset *asset, int id,
-							   const btTransform &t) :
-	Entity(asset, id, t)
+							   const btTransform &t, ShakeStrategy *shake) :
+	Entity(asset, id, t, shake)
 {}
 
 void GraphicsEntity::render() {

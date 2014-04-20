@@ -19,8 +19,8 @@ public:
 				  float mass, const btVector3 &centerMass,
 				  const btTransform &orientation,
 				  CollisionShapeInflater *collider,
-				  GraphicsMesh *mesh, Material *material)
-	 :	Asset(name, group, mass, centerMass, orientation, collider),
+				  GraphicsMesh *mesh, Material *material, ShakeStrategy *shake)
+	 :	Asset(name, group, mass, centerMass, orientation, collider, shake),
 		mesh(mesh),
 		material(material)
 	{}

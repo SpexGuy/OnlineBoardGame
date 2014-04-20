@@ -3,6 +3,7 @@
 #include <Renderable.h>
 
 class GraphicsAsset;
+class ShakeStrategy;
 
 class GraphicsEntity :
 	public Entity,
@@ -13,7 +14,7 @@ private:
 	glm::mat4 world;
 
 public:
-	GraphicsEntity(GraphicsAsset *asset, int id, const btTransform &t);
+	GraphicsEntity(GraphicsAsset *asset, int id, const btTransform &t, ShakeStrategy *shake);
 	virtual void render();
 	virtual void setWorldTransform(const btTransform &transform);
 	virtual ~GraphicsEntity() {}

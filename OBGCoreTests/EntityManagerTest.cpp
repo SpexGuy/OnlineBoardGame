@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
+#include "ShakeStrategy.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -23,7 +24,7 @@ namespace OBGCoreTests
 		TEST_METHOD_INITIALIZE(setup) {
 			entityManager = new EntityManager();
 			box = new BoxInflater(btVector3(0.25, 0.25, 0.25));
-			asset = new Asset("Box", "1", 10.0f, btVector3(0,0,0), btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)), box); 
+			asset = new Asset("Box", "1", 10.0f, btVector3(0,0,0), btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)), box, ShakeStrategy::defaultShakeStrategy); 
 			entity = asset->createEntity(btTransform(btQuaternion(0,0,0,1), btVector3(0,1,0)), 1);
 		}
 		
@@ -103,7 +104,7 @@ namespace OBGCoreTests
 
 			EntityManager *testManager = new EntityManager();
 			BoxInflater *testBox = new BoxInflater(btVector3(0.25, 0.25, 0.25));
-			Asset* testAsset = new Asset("Box", "1", 10.0f, btVector3(0,0,0), btTransform(btQuaternion(0,0,0,1), btVector3(0,2,0)), testBox); 
+			Asset* testAsset = new Asset("Box", "1", 10.0f, btVector3(0,0,0), btTransform(btQuaternion(0,0,0,1), btVector3(0,2,0)), testBox, ShakeStrategy::defaultShakeStrategy);
 			Entity *testEntity = testAsset->createEntity(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)), 1);
 			btTransform transform = btTransform(btQuaternion(0,0,0,1), expPos);
 			testEntity->getPhysicsBody()->setAngularVelocity(expAngular);

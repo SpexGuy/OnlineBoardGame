@@ -2,6 +2,7 @@
 #include <btBulletDynamicsCommon.h>
 
 class Asset;
+class ShakeStrategy;
 
 class Entity :
 	public btMotionState
@@ -14,9 +15,10 @@ protected:
 	btRigidBody *physicsBody;
 	btTransform transform;
 	Asset *type;
+	ShakeStrategy *shakeStrategy;
 
 public:
-	Entity(Asset *type, int id, const btTransform &transform);
+	Entity(Asset *type, int id, const btTransform &transform, ShakeStrategy *strategy);
 	virtual void shake();
 	virtual void hide();
 	virtual void show();

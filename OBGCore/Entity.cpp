@@ -1,33 +1,18 @@
-#include "Entity.h"
-#include "Asset.h"
 #include <iostream>
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "Asset.h"
+#include "Entity.h"
+#include "ShakeStrategy.h"
 
-Entity::Entity() {
-
-}
-
-Entity::Entity(Asset *type, int id, const btTransform &transform) :
+Entity::Entity(Asset *type, int id, const btTransform &transform, ShakeStrategy *shakeStrategy) :
 	type(type),
 	id(id),
 	transform(transform),
-	hidden(false)
+	hidden(false),
+	shakeStrategy(shakeStrategy)
 {}
 
 void Entity::shake() {
-	btTransform trans = this->getPhysicsBody()->getWorldTransform();
-	float randY, randP, randR;
-	randY = rand()/(float)RAND_MAX;
-	randP = rand()/(float)RAND_MAX;
-	randR = rand()/(float)RAND_MAX;
-
-	randY *= 2 * M_PI;
-	randP *= 2 * M_PI;
-	randR *= 2 * M_PI;
-
-	trans.setRotation(btQuaternion(randY, randP, randR));
-	this->getPhysicsBody()->setWorldTransform(trans);
+	shakeStrategy->shake(this);
 }
 
 void Entity::hide() {

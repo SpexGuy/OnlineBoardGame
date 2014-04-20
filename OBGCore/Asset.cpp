@@ -13,7 +13,7 @@ void Asset::inflateRigidBody(Entity *entity) {
 }
 
 Entity *Asset::createEntity(const btTransform &position, int id) {
-	Entity *entity = new Entity(this, id, position);
+	Entity *entity = new Entity(this, id, position, shakeType);
 	inflateRigidBody(entity);
 	return entity;
 }

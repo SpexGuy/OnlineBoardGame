@@ -6,6 +6,7 @@
 #include "Asset.h"
 #include "Interaction.h"
 #include "PhysicsUpdate.h"
+#include "ShakeStrategy.h"
 
 	
 #define MAX_PICKUP_VELOCITY 5*BOARD_SIZE
@@ -61,7 +62,7 @@ public:
 
 EntityManager::EntityManager() {
 
-	groundEnt = new Entity(NULL, -1, btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+	groundEnt = new Entity(NULL, -1, btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)), ShakeStrategy::defaultShakeStrategy);
 	//Set up the physics world
 	broadphase = new btDbvtBroadphase();
 	collisionConfiguration = new btDefaultCollisionConfiguration;

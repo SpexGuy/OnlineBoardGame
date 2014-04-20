@@ -50,7 +50,6 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	Value collider = asset["Collider"];
 	assert(group.isConvertibleTo(ValueType::stringValue));
 	assert(stackType.isNull());
-	assert(shakeType.isNull());
 	assert(meshName.isString());
 	assert(colorTex.isString());
 	assert(specTex.isString());
@@ -63,6 +62,10 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	CollisionShapeInflater *shape;
 	btTransform transform;
 	bool success = parseCollider(collider, &transform, &shape);
+	assert(success);
+
+	ShakeStrategy *shake;
+	success = getShakeStrategy(shakeType, &shake);
 	assert(success);
 
 	TextureGroup *tex = new TextureGroup();
@@ -78,7 +81,7 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 		btVector3(btScalar(massCenterX.asDouble()),
 				  btScalar(massCenterY.asDouble()),
 				  btScalar(massCenterZ.asDouble())),
-		transform, shape, mesh, material);
+		transform, shape, mesh, material, shake);
 }
 
 ifstream *GraphicsAssetPack::getFile(const string &filename) {

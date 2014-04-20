@@ -8,6 +8,7 @@
 class Asset;
 class CollisionShapeInflater;
 class Entity;
+class ShakeStrategy;
 
 class AssetPack {
 protected:
@@ -24,6 +25,7 @@ protected:
 
 	virtual CollisionShapeInflater *getCollider(const std::string &name);
 	virtual bool parseCollider(const Json::Value &collider, btTransform *retTransform, CollisionShapeInflater **retShape);
+	virtual bool getShakeStrategy(const Json::Value &inputType, ShakeStrategy **retStrategy);
 
 public:
 	AssetPack(const Json::Value &root);

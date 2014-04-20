@@ -7,6 +7,7 @@
 #include "CollisionShapeInflater.h"
 #include "Entity.h"
 #include "json.h"
+#include "ShakeStrategy.h"
 
 using namespace std;
 using Json::Value;
@@ -85,6 +86,10 @@ Asset *AssetPack::makeAsset(const string &name) {
 	bool success = parseCollider(collider, &transform, &shape);
 	assert(success);
 
+	ShakeStrategy *shake;
+	success = getShakeStrategy(shakeType, &shake);
+	assert(success);
+
 	return new Asset(
 		name,
 		group.asString(),
@@ -92,7 +97,7 @@ Asset *AssetPack::makeAsset(const string &name) {
 		btVector3(massCenterX.asDouble(),
 				  massCenterY.asDouble(),
 				  massCenterZ.asDouble()),
-		transform, shape);
+		transform, shape, shake);
 }
 
 Asset *AssetPack::getAsset(const string &name) {
@@ -217,6 +222,21 @@ CollisionShapeInflater *AssetPack::getCollider(const string &name) {
 	} else {
 		return new ConvexHullInflater(*pos->second);
 	}
+}
+
+bool AssetPack::getShakeStrategy(const Value &input, ShakeStrategy **retStrat) {
+	if (!input.isString())
+		return false;
+	string type = input.asString();
+	if (type == string("None")) {
+		*retStrat = ShakeStrategy::defaultShakeStrategy;
+		return true;
+	} else if (type == string("Spin")) {
+		static ShakeStrategy *spinStrategy = new RandomizeRotationShakeStrategy();
+		*retStrat = spinStrategy;
+		return true;
+	}
+	return false;
 }
 
 vector<Entity *> AssetPack::loadGame() {
