@@ -34,7 +34,7 @@ void GraphicsAssetPack::downloadFile(const string &file) {
 }
 
 GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
-	Value asset = assetRoot[name];
+	Value asset = assetValues[name];
 	assert(asset.isObject());
 	Value group = asset["Group"];
 	Value stackType = asset["StackType"];

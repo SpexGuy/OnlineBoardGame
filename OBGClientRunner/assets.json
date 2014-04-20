@@ -2,8 +2,9 @@
    "GameName":"Bad Earth",
    "Version":0.1,
    "EntityLocationsFile":"entities.json",
-   "Assets":{
-      "earth":{
+   "Assets":[
+      {
+         "Name":"earth",
          "Group":"sphereness",
          "StackType":null,
          "ShakeType":null,
@@ -22,7 +23,8 @@
    			"Radius":1
 		   }
       },
-      "ttrBoard":{
+      {
+         "Name":"ttrBoard",
          "Group":"board",
          "StackType":null,
          "ShakeType":null,
@@ -40,7 +42,8 @@
             "Rotation":[0,0,0,1]
          }
       },
-      "ttrRouteCard1": {
+      {
+         "Name":"ttrRouteCard1",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -59,7 +62,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard2": {
+      {
+         "Name":"ttrRouteCard2",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -78,7 +82,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard3": {
+      {
+         "Name":"ttrRouteCard3",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -97,7 +102,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard4": {
+      {
+         "Name":"ttrRouteCard4",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -116,7 +122,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard5": {
+      {
+         "Name":"ttrRouteCard5",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -135,7 +142,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard6": {
+      {
+         "Name":"ttrRouteCard6",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -154,7 +162,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard7": {
+      {
+         "Name":"ttrRouteCard7",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -173,8 +182,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard8": {
-         "Group":"card",
+      {
+         "Name":"ttrRouteCard8",
          "StackType":null,
          "ShakeType":null,
          "Mesh":"ttrCard.obj",
@@ -192,7 +201,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard9": {
+      {
+         "Name":"ttrRouteCard9",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -211,7 +221,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard10": {
+      {
+         "Name":"ttrRouteCard10",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -230,7 +241,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard11": {
+      {
+         "Name":"ttrRouteCard11",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -249,8 +261,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard12": {
-         "Group":"card",
+      {
+         "Name":"ttrRouteCard12",
          "StackType":null,
          "ShakeType":null,
          "Mesh":"ttrCard.obj",
@@ -268,7 +280,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard13": {
+      {
+         "Name":"ttrRouteCard13",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -287,7 +300,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard14": {
+      {
+         "Name":"ttrRouteCard14",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -306,7 +320,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard15": {
+      {
+         "Name":"ttrRouteCard15",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -325,7 +340,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard16": {
+      {
+         "Name":"ttrRouteCard16",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -344,7 +360,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard17": {
+      {
+         "Name":"ttrRouteCard17",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -363,7 +380,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard18": {
+      {
+         "Name":"ttrRouteCard18",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -382,7 +400,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard19": {
+      {
+         "Name":"ttrRouteCard19",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -401,7 +420,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard20": {
+      {
+         "Name":"ttrRouteCard20",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -420,7 +440,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard21": {
+      {
+         "Name":"ttrRouteCard21",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -439,7 +460,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard22": {
+      {
+         "Name":"ttrRouteCard22",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -458,7 +480,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard23": {
+      {
+         "Name":"ttrRouteCard23",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -477,7 +500,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard24": {
+      {
+         "Name":"ttrRouteCard24",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -496,7 +520,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard25": {
+      {
+         "Name":"ttrRouteCard25",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -515,7 +540,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard26": {
+      {
+         "Name":"ttrRouteCard26",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -534,7 +560,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard27": {
+      {
+         "Name":"ttrRouteCard27",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -553,7 +580,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard28": {
+      {
+         "Name":"ttrRouteCard28",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -572,7 +600,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard29": {
+      {
+         "Name":"ttrRouteCard29",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -591,7 +620,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrRouteCard30": {
+      {
+         "Name":"ttrRouteCard30",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -610,7 +640,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardWhite": {
+      {
+         "Name":"ttrCardWhite",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -629,7 +660,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardBlack": {
+      {
+         "Name":"ttrCardBlack",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -648,7 +680,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardYellow": {
+      {
+         "Name":"ttrCardYellow",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -667,7 +700,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardGreen": {
+      {
+         "Name":"ttrCardGreen",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -686,7 +720,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardOrange": {
+      {
+         "Name":"ttrCardOrange",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -705,7 +740,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardBlue": {
+      {
+         "Name":"ttrCardBlue",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -724,7 +760,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardRed": {
+      {
+         "Name":"ttrCardRed",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -743,7 +780,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardPink": {
+      {
+         "Name":"ttrCardPink",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -762,7 +800,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrCardAll": {
+      {
+         "Name":"ttrCardAll",
          "Group":"card",
          "StackType":null,
          "ShakeType":null,
@@ -781,7 +820,8 @@
             "HalfExtents":[1.5,0.025,2.417]
          }
       },
-      "ttrTrainGreen":{
+      {
+         "Name":"ttrTrainGreen",
          "Group":"train",
          "StackType":null,
          "ShakeType":null,
@@ -800,7 +840,8 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
-      "ttrTrainBlue":{
+      {
+         "Name":"ttrTrainBlue",
          "Group":"train",
          "StackType":null,
          "ShakeType":null,
@@ -819,7 +860,8 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
-      "ttrTrainBlack":{
+      {
+         "Name":"ttrTrainBlack",
          "Group":"train",
          "StackType":null,
          "ShakeType":null,
@@ -838,7 +880,8 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
-      "ttrTrainRed":{
+      {
+         "Name":"ttrTrainRed",
          "Group":"train",
          "StackType":null,
          "ShakeType":null,
@@ -857,7 +900,8 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
-      "ttrTrainYellow":{
+      {
+         "Name":"ttrTrainYellow",
          "Group":"train",
          "StackType":null,
          "ShakeType":null,
@@ -876,7 +920,8 @@
             "HalfExtents":[0.32,0.485,1.11]
          }
       },
-      "othelloToken":{
+      {
+         "Name":"othelloToken",
          "Group":"tokens",
          "StackType":null,
          "ShakeType":null,
@@ -895,7 +940,8 @@
             "HalfExtents":[0.20,0.0625,0.20]
          }
       },
-      "othelloBoard":{
+      {
+         "Name":"othelloBoard",
          "Group":"board",
          "StackType":null,
          "ShakeType":null,
@@ -1024,5 +1070,5 @@
             ]
          }
       }
-   }
+   ]
 }

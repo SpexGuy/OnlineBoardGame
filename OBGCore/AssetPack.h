@@ -14,6 +14,7 @@ protected:
 	double version;
 	std::string gameName;
 	std::string defaultSaveFile;
+	std::map<std::string, Json::Value> assetValues;
 	std::map<std::string, Asset *> assets;
 	std::map<std::string, std::vector<btVector3> *> colliders;
 	Json::Value assetRoot;

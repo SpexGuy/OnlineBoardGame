@@ -41,16 +41,27 @@ AssetPack::AssetPack(const Json::Value &root) {
 	assert(version.isConvertibleTo(ValueType::realValue));
 	assert(gameName.isString());
 	assert(defaultSave.isString());
-	assert(assetRoot.isObject());
+	assert(assetRoot.isArray());
 
 	this->version = version.asDouble();
 	this->gameName = gameName.asString();
 	this->defaultSaveFile = defaultSave.asString();
 	this->assetRoot = assetRoot;
+	Value assetName;
+	for (Value asset : assetRoot) {
+		if (!asset.isObject()) continue;
+		assetName = asset["Name"];
+		if (!assetName.isString()) continue;
+		assert(assetValues.find(assetName.asString()) == assetValues.end());
+		assetValues[assetName.asString()] = asset;
+	}
 }
 
 Asset *AssetPack::makeAsset(const string &name) {
-	Value asset = assetRoot[name];
+	auto loc = assetValues.find(name);
+	if (loc == assetValues.end())
+		return NULL;
+	Value asset = loc->second;
 	assert(asset.isObject());
 
 	Value group = asset["Group"];

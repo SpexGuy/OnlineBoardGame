@@ -57,7 +57,7 @@ int UDPClient::loop() {
 		if (received_bytes < 0)
 			return received_bytes;
 		if (sender != server) {
-			printf("Wrong Sender: %d.%d.%d.%d:0x%x\n", sender.GetA(), sender.GetB(), sender.GetC(), sender.GetD(), sender.GetTCPPort());
+			printf("Wrong Sender: %d.%d.%d.%d:%04X\n", sender.GetA(), sender.GetB(), sender.GetC(), sender.GetD(), sender.GetTCPPort());
 			continue;
 		}
 		if (received_bytes < sizeof(Packet)) {
