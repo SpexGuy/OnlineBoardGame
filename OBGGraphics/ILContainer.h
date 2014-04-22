@@ -26,7 +26,7 @@ private:
 	GLvoid *data;
 public:
 	ILContainer(const char *filename);
-
+	virtual bool initialize();
 	/* binds the texture to its channel */
 	virtual void bind(int channel);
 	virtual ~ILContainer();

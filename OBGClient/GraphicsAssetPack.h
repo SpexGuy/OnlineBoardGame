@@ -24,13 +24,13 @@ protected:
 	virtual GraphicsAsset *makeAsset(const std::string &name);
 
 public:
-	GraphicsAssetPack(const Json::Value &root);
+	GraphicsAssetPack();
+
+	virtual bool initialize(const Json::Value &root);
 
 	virtual std::ifstream *getFile(const std::string &filename);
 	virtual GraphicsMesh *getMesh(const std::string &filename);
 	virtual ILContainer *getImage(const std::string &filename);
-
-	//virtual std::vector<Entity *> loadGame();
 
 	virtual ~GraphicsAssetPack();
 };

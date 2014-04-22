@@ -13,36 +13,40 @@ using namespace std;
 using Json::Value;
 using Json::ValueType;
 
-btQuaternion parseQuaternion(const Value &val) {
-	assert(val.isArray() && val.size() == 4);
-	assert(val[0].isConvertibleTo(ValueType::realValue));
-	assert(val[1].isConvertibleTo(ValueType::realValue));
-	assert(val[2].isConvertibleTo(ValueType::realValue));
-	assert(val[3].isConvertibleTo(ValueType::realValue));
-	return btQuaternion(val[0].asDouble(), val[1].asDouble(),
-						val[2].asDouble(), val[3].asDouble());
+bool parseQuaternion(const Value &val, btQuaternion &retQuat) {
+	if (!(val.isArray() && val.size() == 4)) return false;
+	if (!val[0].isConvertibleTo(ValueType::realValue)) return false;
+	if (!val[1].isConvertibleTo(ValueType::realValue)) return false;
+	if (!val[2].isConvertibleTo(ValueType::realValue)) return false;
+	if (!val[3].isConvertibleTo(ValueType::realValue)) return false;
+	retQuat.setValue(val[0].asDouble(), val[1].asDouble(),
+					 val[2].asDouble(), val[3].asDouble());
+	return true;
 }
 
-btVector3 parseVector3(const Value &val) {
-	assert(val.isArray() && val.size() == 3);
-	assert(val[0].isConvertibleTo(ValueType::realValue));
-	assert(val[1].isConvertibleTo(ValueType::realValue));
-	assert(val[2].isConvertibleTo(ValueType::realValue));
-	return btVector3(val[0].asDouble(), val[1].asDouble(),
-					 val[2].asDouble());
+bool parseVector3(const Value &val, btVector3 &retVec) {
+	if (!val.isArray() && val.size() == 3) return false;
+	if (!val[0].isConvertibleTo(ValueType::realValue)) return false;
+	if (!val[1].isConvertibleTo(ValueType::realValue)) return false;
+	if (!val[2].isConvertibleTo(ValueType::realValue)) return false;
+	retVec.setValue(val[0].asDouble(), val[1].asDouble(),
+					val[2].asDouble());
+	return true;
 }
 
-AssetPack::AssetPack(const Json::Value &root) {
-	assert(root.isObject());
+AssetPack::AssetPack() {}
+
+bool AssetPack::initialize(const Json::Value &root) {
+	if (!root.isObject()) return false;
 	Value version = root["Version"];
 	Value gameName = root["GameName"];
 	Value defaultSave = root["EntityLocationsFile"];
 	Value assetRoot = root["Assets"];
 	
-	assert(version.isConvertibleTo(ValueType::realValue));
-	assert(gameName.isString());
-	assert(defaultSave.isString());
-	assert(assetRoot.isArray());
+	if (!version.isConvertibleTo(ValueType::realValue)) return false;
+	if (!gameName.isString()) return false;
+	if (!defaultSave.isString()) return false;
+	if (!assetRoot.isArray()) return false;
 
 	this->version = version.asDouble();
 	this->gameName = gameName.asString();
@@ -53,9 +57,13 @@ AssetPack::AssetPack(const Json::Value &root) {
 		if (!asset.isObject()) continue;
 		assetName = asset["Name"];
 		if (!assetName.isString()) continue;
-		assert(assetValues.find(assetName.asString()) == assetValues.end());
+		if (assetValues.find(assetName.asString()) != assetValues.end()) {
+			cout << "Asset pack contains duplicated asset: " << assetName.asString() <<". Ignoring duplicate." << endl;
+			continue;
+		}
 		assetValues[assetName.asString()] = asset;
 	}
+	return true;
 }
 
 Asset *AssetPack::makeAsset(const string &name) {
@@ -73,22 +81,20 @@ Asset *AssetPack::makeAsset(const string &name) {
 	Value massCenterY = asset["CoMy"];
 	Value massCenterZ = asset["CoMz"];
 	Value collider = asset["Collider"];
-	assert(group.isConvertibleTo(ValueType::stringValue));
-	assert(stackType.isNull());
-	assert(shakeType.isNull());
-	assert(mass.isConvertibleTo(ValueType::realValue));
-	assert(massCenterX.isConvertibleTo(ValueType::realValue));
-	assert(massCenterY.isConvertibleTo(ValueType::realValue));
-	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
+	if (!group.isConvertibleTo(ValueType::stringValue)) return NULL;
+	if (!mass.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterX.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterY.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterZ.isConvertibleTo(ValueType::realValue)) return NULL;
 
 	CollisionShapeInflater *shape;
 	btTransform transform;
-	bool success = parseCollider(collider, &transform, &shape);
-	assert(success);
+	if (!parseCollider(collider, &transform, &shape))
+		return NULL;
 
 	ShakeStrategy *shake;
-	success = getShakeStrategy(shakeType, &shake);
-	assert(success);
+	if (!getShakeStrategy(shakeType, &shake))
+		return NULL;
 
 	return new Asset(
 		name,
@@ -116,56 +122,67 @@ Asset *AssetPack::getAsset(const string &name) {
 }
 
 bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, CollisionShapeInflater **retShape) {
-	assert(collider.isObject());
+	if (!collider.isObject()) return false;
 	Value type = collider["Type"];
 	Value position = collider["Position"];
 	Value rotation = collider["Rotation"];
-	assert(type.isString());
-	*retTransform = btTransform(parseQuaternion(rotation),parseVector3(position));
+	if (!type.isString()) return false;
+	btVector3 pos;
+	btQuaternion rot;
+	if (!parseQuaternion(rotation, rot))
+		return false;
+	if (!parseVector3(position, pos))
+		return false;
+	*retTransform = btTransform(rot, pos);
 
 
 	if (type.asString() == string("Sphere")) {
 		Value radius = collider["Radius"];
-		assert(radius.isConvertibleTo(ValueType::realValue));
+		if (!radius.isConvertibleTo(ValueType::realValue))
+			return false;
 		*retShape = new SphereInflater(radius.asDouble());
 		return true;
 	} else if (type.asString() == string("Box")) {
 		Value halfExtents = collider["HalfExtents"];
-		btVector3 vec = parseVector3(halfExtents);
+		btVector3 vec;
+		if (!parseVector3(halfExtents, vec)) return false;
 		*retShape = new BoxInflater(vec);
 		return true;
 	} else if (type.asString() == string("Cylinder")) {
 		Value halfExtents = collider["HalfExtents"];
-		btVector3 vec = parseVector3(halfExtents);
+		btVector3 vec;
+		if (!parseVector3(halfExtents, vec)) return false;
 		*retShape = new CylinderInflater(vec);
 		return true;
 	} else if (type.asString() == string("Capsule")) {
 		Value radius = collider["Radius"];
 		Value distance = collider["Distance"];
-		assert(radius.isConvertibleTo(ValueType::realValue));
-		assert(distance.isConvertibleTo(ValueType::realValue));
+		if (!radius.isConvertibleTo(ValueType::realValue)) return false;
+		if (!distance.isConvertibleTo(ValueType::realValue)) return false;
 		*retShape = new CapsuleInflater(radius.asDouble(), distance.asDouble());
 		return true;
 	} else if (type.asString() == string("Cone")) {
 		Value radius = collider["Radius"];
 		Value height = collider["Height"];
-		assert(radius.isConvertibleTo(ValueType::realValue));
-		assert(height.isConvertibleTo(ValueType::realValue));
+		if (!radius.isConvertibleTo(ValueType::realValue)) return false;
+		if (!height.isConvertibleTo(ValueType::realValue)) return false;
 		*retShape = new ConeInflater(radius.asDouble(), height.asDouble());
 		return true;
 	} else if (type.asString() == string("MultiSphere")) {
 		Value radiiVal = collider["Radii"];
 		Value positionsVal = collider["Positions"];
-		assert(radiiVal.isArray());
-		assert(positionsVal.isArray());
-		assert(radiiVal.size() > 0);
-		assert(radiiVal.size() == positionsVal.size());
+		if (!radiiVal.isArray()) return false;
+		if (!positionsVal.isArray()) return false;
+		if (!(radiiVal.size() > 0)) return false;
+		if (!(radiiVal.size() == positionsVal.size())) return false;
 		int num = radiiVal.size();
 		btVector3 *positions = new btVector3[num];
 		btScalar *radii = new btScalar[num];
 		for (int c = 0; c < num; c++) {
-			assert(radiiVal[c].isConvertibleTo(ValueType::realValue));
-			positions[c] = parseVector3(positionsVal[c]);
+			if (!radiiVal[c].isConvertibleTo(ValueType::realValue))
+				return false;
+			if (!parseVector3(positionsVal[c], positions[c]))
+				return false;
 			radii[c] = radiiVal[c].asDouble();
 		}
 		*retShape = new MultiSphereInflater(positions, radii, num);
@@ -173,7 +190,7 @@ bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, 
 		return true;
 	} else if (type.asString() == string("ConvexHull")) {
 		Value file = collider["File"];
-		assert(file.isString());
+		if (!file.isString()) return false;;
 		CollisionShapeInflater *shape = getCollider(file.asString());
 		*retShape = shape;
 		return shape != NULL;
@@ -182,8 +199,8 @@ bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, 
 		return true;
 	} else if (type.asString() == string("Compound")) {
 		Value colliders = collider["Colliders"];
-		assert(colliders.isArray());
-		assert(colliders.size() > 0);
+		if (!colliders.isArray()) return false;
+		if (!(colliders.size() > 0)) return false;
 		CompoundInflater *shape = new CompoundInflater();
 		btTransform subTrans;
 		CollisionShapeInflater *subShape;
@@ -200,7 +217,6 @@ bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, 
 		return numChildren > 0;
 	} else {
 		cout << "Unknown Collider Type: " << type.asString() << endl;
-		assert(false);
 		return false;
 	}
 	//this should be unreachable, but just in case...
@@ -239,43 +255,45 @@ bool AssetPack::getShakeStrategy(const Value &input, ShakeStrategy **retStrat) {
 	return false;
 }
 
-vector<Entity *> AssetPack::loadGame() {
-	return loadGame(defaultSaveFile);
+bool AssetPack::loadGame(vector<Entity *> &entities) {
+	return loadGame(entities, defaultSaveFile);
 }
 
-vector<Entity *> AssetPack::loadGame(const string &saveFile) {
+bool AssetPack::loadGame(vector<Entity *> &entities, const string &saveFile) {
 	int id = 1;
-	vector<Entity *> entities;
 	Json::Reader reader;
 	Value saveRoot;
 	ifstream file(saveFile, ios::in);
 	if (!file) {
 		cout << "Could not open entity file: " << saveFile << endl;
-		return entities;
+		return false;
 	}
 	if (!reader.parse(file, saveRoot)) {
 		cout << "Could not parse entity file: " << saveFile << endl;
 		file.close();
-		return entities;
+		return false;
 	}
-	assert(saveRoot.isObject());
+	if (!saveRoot.isObject()) return false;
 	Value ents = saveRoot["Entities"];
-	assert(ents.isArray());
+	if (!ents.isArray()) return false;
 	for (Value ent : ents) {
 		Value assetVal = ent["Asset"];
 		Value position = ent["Position"];
 		Value rotation = ent["Rotation"];
-		assert(assetVal.isString());
+		if (!assetVal.isString()) return false;
 		Asset *asset = getAsset(assetVal.asString());
 		if (asset == NULL) {
 			//ignore invalid asset
 			cout << "Invalid asset: " << assetVal.asString() << endl;
 			continue;
 		}
-		btTransform orientation(parseQuaternion(rotation), parseVector3(position));
-		entities.push_back(asset->createEntity(orientation, id++));
+		btVector3 pos;
+		btQuaternion rot;
+		if (!parseQuaternion(rotation, rot)) continue;
+		if (!parseVector3(position, pos)) continue;
+		entities.push_back(asset->createEntity(btTransform(rot, pos), id++));
 	}
-	return entities;
+	return true;
 }
 
 AssetPack::~AssetPack() {

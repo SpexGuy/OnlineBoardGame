@@ -33,6 +33,7 @@ MousePointer::MousePointer() :
 	mesh = new GraphicsMesh(points, faces);
 
 	ILContainer *image = new ILContainer("mouse.jpg");
+	image->initialize();
 	Texture *texture = new ILTexture(image, 0);
 	
 	TextureShader *texShader = new TextureShader();

@@ -20,13 +20,16 @@ using Json::Value;
 using Json::ValueType;
 
 
-GraphicsAssetPack::GraphicsAssetPack(const Value &root) :
-		AssetPack(root)
-{
+GraphicsAssetPack::GraphicsAssetPack() {}
+
+bool GraphicsAssetPack::initialize(const Value &root) {
+	if (!AssetPack::initialize(root))
+		return false;
 	texShader = new PointerShadowShader();
 	texShader->compileShader("PointerShadowShader.vert");
 	texShader->compileShader("PointerShadowShader.frag");
 	texShader->link();
+	return true;
 }
 
 void GraphicsAssetPack::downloadFile(const string &file) {
@@ -34,7 +37,10 @@ void GraphicsAssetPack::downloadFile(const string &file) {
 }
 
 GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
-	Value asset = assetValues[name];
+	auto loc = assetValues.find(name);
+	if (loc == assetValues.end())
+		return NULL;
+	Value asset = loc->second;
 	assert(asset.isObject());
 	Value group = asset["Group"];
 	Value stackType = asset["StackType"];
@@ -48,34 +54,45 @@ GraphicsAsset *GraphicsAssetPack::makeAsset(const string &name) {
 	Value massCenterY = asset["CoMy"];
 	Value massCenterZ = asset["CoMz"];
 	Value collider = asset["Collider"];
-	assert(group.isConvertibleTo(ValueType::stringValue));
-	assert(stackType.isNull());
-	assert(meshName.isString());
-	assert(colorTex.isString());
-	assert(specTex.isString());
-	assert(normalTex.isString());
-	assert(mass.isConvertibleTo(ValueType::realValue));
-	assert(massCenterX.isConvertibleTo(ValueType::realValue));
-	assert(massCenterY.isConvertibleTo(ValueType::realValue));
-	assert(massCenterZ.isConvertibleTo(ValueType::realValue));
+	if (!group.isConvertibleTo(ValueType::stringValue)) return NULL;
+	if (!meshName.isString()) return NULL;
+	if (!colorTex.isString()) return NULL;
+	if (!specTex.isString()) return NULL;
+	if (!normalTex.isString()) return NULL;
+	if (!mass.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterX.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterY.isConvertibleTo(ValueType::realValue)) return NULL;
+	if (!massCenterZ.isConvertibleTo(ValueType::realValue)) return NULL;
 
 	CollisionShapeInflater *shape;
 	btTransform transform;
 	bool success = parseCollider(collider, &transform, &shape);
-	assert(success);
+	if (!success) return NULL;
 
 	ShakeStrategy *shake;
 	success = getShakeStrategy(shakeType, &shake);
-	assert(success);
+	if (!success) return NULL;
 
 	TextureGroup *tex = new TextureGroup();
-	tex->addTexture(new ILTexture(getImage(colorTex.asString()), CHANNEL_COLOR));
-	tex->addTexture(new ILTexture(getImage(specTex.asString()), CHANNEL_SPECULAR));
-	tex->addTexture(new ILTexture(getImage(normalTex.asString()), CHANNEL_NORMAL));
+	ILContainer *color = getImage(colorTex.asString());
+	if (!color) return NULL;
+	tex->addTexture(new ILTexture(color, CHANNEL_COLOR));
+	if (*specTex.asCString() != '\0') {
+		ILContainer *spec = getImage(specTex.asString());
+		if (!spec) return NULL;
+		tex->addTexture(new ILTexture(spec, CHANNEL_SPECULAR));
+	}
+	if (*normalTex.asCString() != '\0') {
+		ILContainer *norm = getImage(normalTex.asString());
+		if (!norm) return NULL;
+		tex->addTexture(new ILTexture(norm, CHANNEL_NORMAL));
+	}
 
 	GraphicsMesh *mesh = getMesh(meshName.asString());
+	if (!mesh) return NULL;
 
 	TextureMaterial *material = new TextureMaterial(tex, texShader);
+	if (!material) return NULL;
 
 	return new GraphicsAsset(name, group.asString(), btScalar(mass.asDouble()),
 		btVector3(btScalar(massCenterX.asDouble()),
@@ -126,6 +143,10 @@ ILContainer *GraphicsAssetPack::getImage(const string &filename) {
 	auto pos = images.find(filename);
 	if (pos == images.end()) {
 		ILContainer *image = new ILContainer(filename.c_str());
+		if (!image->initialize()) {
+			delete image;
+			image = NULL;
+		}
 		images[filename] = image;
 		return image;
 	} else {

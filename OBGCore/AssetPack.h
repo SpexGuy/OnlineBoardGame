@@ -28,10 +28,12 @@ protected:
 	virtual bool getShakeStrategy(const Json::Value &inputType, ShakeStrategy **retStrategy);
 
 public:
-	AssetPack(const Json::Value &root);
+	AssetPack();
 
-	virtual std::vector<Entity *> loadGame();
-	virtual std::vector<Entity *> loadGame(const std::string &saveFile);
+	virtual bool initialize(const Json::Value &root);
+
+	virtual bool loadGame(std::vector<Entity *> &entities);
+	virtual bool loadGame(std::vector<Entity *> &entities, const std::string &saveFile);
 
 	virtual ~AssetPack();
 };

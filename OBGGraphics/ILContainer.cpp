@@ -6,12 +6,14 @@
 
 ILContainer::ILContainer(const char *filename) {
 	this->filename = filename;
+}
 
+bool ILContainer::initialize() {
 	if ((this->il_handle = ilGenImage()) == BAD_IL_VALUE)
-		assert(false);
+		return false;
 	ilBindImage(this->il_handle);
 	if (!ilLoadImage(filename))
-		assert(false);
+		return false;
 
 	glGenTextures(1, &this->il_texture_handle);
 	glBindTexture(GL_TEXTURE_2D, this->il_texture_handle);
@@ -25,8 +27,9 @@ ILContainer::ILContainer(const char *filename) {
 	format = ilGetInteger(IL_IMAGE_FORMAT);
 	data = ilGetData();
 	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), width, height, 0, format, GL_UNSIGNED_BYTE, data);
-}
 
+	return true;
+}
 
 void ILContainer::bind(int channel) {
 	// We are asserting that we have initialized this object before.

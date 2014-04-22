@@ -33,18 +33,28 @@ void GameManager::run() {
 	running = true;
 
 	ifstream file("assets.json");
-	assert(file);
+	if (!file) {
+		cout << "Could not open assets.json" << endl;
+		return;
+	}
 	Json::Value root;
 	Json::Reader reader;
 	if (!reader.parse(file, root)) {
 		cout << "Could not parse JSON file" << endl;
 		file.close();
-		assert(false);
+		return;
 	}
 	file.close();
-	AssetPack *pack = new AssetPack(root);
-	vector<Entity *> entities = pack->loadGame();
-	assert(entities.size() > 0);
+	AssetPack *pack = new AssetPack();
+	if (!pack->initialize(root)) {
+		cout << "Invalid assets.json header" << endl;
+		return;
+	}
+	vector<Entity *> entities;
+	if (!pack->loadGame(entities)) {
+		cout << "Failed to load entities" << endl;
+		return;
+	}
 	for (Entity *entity : entities) {
 		entityManager->addEntity(entity);
 	}
