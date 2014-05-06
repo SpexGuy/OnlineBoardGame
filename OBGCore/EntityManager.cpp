@@ -174,7 +174,7 @@ void EntityManager::createPhysicsUpdates() {
 		btTransform transform = physBody.getWorldTransform();
 		btVector3 linear = physBody.getLinearVelocity();
 		btVector3 angular = physBody.getAngularVelocity();
-		bool moreRoom = update.addEntity(e->getId(), transform, linear, angular);
+		bool moreRoom = update.addEntity(e->getId(), physBody.isActive(), transform, linear, angular);
 		if (!moreRoom) {
 			firePhysicsUpdate(&update);
 			update.clear();
@@ -194,7 +194,8 @@ void EntityManager::handlePhysicsUpdate(PhysicsUpdate *physupdate) {
 		physBody.setWorldTransform(update.getWorldTransform());
 		physBody.setLinearVelocity(update.getLinearVelocity());
 		physBody.setAngularVelocity(update.getAngularVelocity());
-		physBody.activate(true);
+		if (update.isActive())
+			physBody.activate(true);
 	}
 }
 

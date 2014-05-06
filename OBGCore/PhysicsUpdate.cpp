@@ -16,8 +16,8 @@ PhysicsUpdate::PhysicsUpdate(SerialPhysicsUpdate *upd, int len) {
 	}
 }
 
-bool PhysicsUpdate::addEntity(int entityId, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel) {
-	push_back(EntityUpdate(entityId, transform, linearVel, angularVel));
+bool PhysicsUpdate::addEntity(int entityId, bool active, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel) {
+	push_back(EntityUpdate(entityId, active, transform, linearVel, angularVel));
 	return serialByteSize() + sizeof(EntityUpdate) <= MAX_PACKET_SIZE;
 }
 

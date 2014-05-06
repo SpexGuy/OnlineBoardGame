@@ -87,7 +87,7 @@ namespace OBGCoreTests
 			btVector3 position(4,2,3);
 			entityManager->addEntity(entity);
 			PhysicsUpdate physupdate;
-			physupdate.addEntity(entity->getId(), btTransform(btQuaternion(), 
+			physupdate.addEntity(entity->getId(), true, btTransform(btQuaternion(), 
 				position), btVector3(0, 0, 0), btVector3(0, 0, 0));
 			entityManager->handlePhysicsUpdate(&physupdate);
 			btTransform transform = entity->getPhysicsBody()->getWorldTransform();

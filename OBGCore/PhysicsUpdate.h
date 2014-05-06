@@ -21,14 +21,16 @@
 class EntityUpdate {
 private:
 	int entityId;
+	bool active;
 	btTransform transform;
 	btVector3 linearVel;
 	btVector3 angularVel;
 public:
-	EntityUpdate(int entityId, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel) :
-		entityId(entityId), transform(transform), linearVel(linearVel), angularVel(angularVel)
+	EntityUpdate(int entityId, bool active, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel) :
+		entityId(entityId), active(active), transform(transform), linearVel(linearVel), angularVel(angularVel)
 	{}
 	inline int getEntityId() const { return entityId; }
+	inline bool isActive() const { return active; }
 	inline const btTransform &getWorldTransform() const { return transform; }
 	inline const btVector3 &getLinearVelocity() const { return linearVel; }
 	inline const btVector3 &getAngularVelocity() const { return angularVel; }
@@ -49,6 +51,6 @@ public:
 	PhysicsUpdate(SerialPhysicsUpdate *upd, int len);
 
 	inline int serialByteSize() { return arrayByteSize() + sizeof(SerialPhysicsUpdate); }
-	bool addEntity(int entityId, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel);
+	bool addEntity(int entityId, bool active, const btTransform &transform, const btVector3 &linearVel, const btVector3 &angularVel);
 	void fill(SerialPhysicsUpdate *memory);
 };
