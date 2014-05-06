@@ -194,6 +194,7 @@ void EntityManager::handlePhysicsUpdate(PhysicsUpdate *physupdate) {
 		physBody.setWorldTransform(update.getWorldTransform());
 		physBody.setLinearVelocity(update.getLinearVelocity());
 		physBody.setAngularVelocity(update.getAngularVelocity());
+		physBody.activate(true);
 	}
 }
 
