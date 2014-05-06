@@ -1,9 +1,10 @@
 #pragma once
+#define _DEMO 1
 #ifdef _WIN32
 #	include <Windows.h>
 #endif
 #include <GL/glew.h>
-#define GLFW_INCLUDE_GLU
+#define GLFW_INCLUDE_GLU 1
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 

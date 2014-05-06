@@ -16,7 +16,7 @@ using namespace std;
 
 GLFWwindow *buildWindow(bool fullscreen, GLFWwindow *context) {
 	glfwWindowHint(GLFW_SAMPLES, 8);
-	return glfwCreateWindow(1024, 512, "BoardNow", fullscreen ? glfwGetPrimaryMonitor() : NULL, context);
+	return glfwCreateWindow(fullscreen ? 1920 : 1024, fullscreen ? 1080 : 512, "BoardNow", fullscreen ? glfwGetPrimaryMonitor() : NULL, context);
 }
 
 GraphicsContext *instance = NULL;
@@ -35,14 +35,20 @@ bool OBGGraphicsInit(int argc, char *argv[]) {
 }
 
 bool OBGGraphicsCreateContext() {
+#ifdef _DEMO
+	GLFWwindow *window = buildWindow(true, NULL);
+#else
 	GLFWwindow *window = buildWindow(false, NULL);
-	
+#endif
 	if (!window) {
 		cerr << "Could not create window" << endl;
 		assert(false);
 		return false;
 	}
 	glfwMakeContextCurrent(window);
+#ifdef _DEMO
+	glfwSetInputMode(window, GLFW_CURSOR_DISABLED, true);
+#endif
 		
 	if (glewInit() != GLEW_OK) {
 		cerr << "GLEW failed to initialize." << endl;
