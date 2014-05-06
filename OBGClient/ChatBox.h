@@ -7,7 +7,7 @@
 #include "MessageEventBroadcaster.h"
 
 #define NUM_MESSAGES 10
-#define INPUT_BOX_SIZE 30
+#define INPUT_BOX_SIZE 100
 
 class ChatBox :
 	public MessageEventBroadcaster,
