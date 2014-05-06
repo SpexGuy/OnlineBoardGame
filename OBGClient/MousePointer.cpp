@@ -15,7 +15,7 @@ using namespace glm;
 MousePointer::MousePointer() :
 	height(0, 100, MOUSE_HEIGHT)
 {
-	vector<VertexPNT> points;
+	/*vector<VertexPNT> points;
 	vector<GLuint> faces;
 
 	points.push_back(VertexPNT(vec3(-1,-1,0), vec3(0,0,1), vec2(0,0)));
@@ -42,7 +42,7 @@ MousePointer::MousePointer() :
 	texShader->link();
 
 	material = new TextureMaterial(texture, texShader);
-
+*/
 	screenPos = ivec2(0,0);
 }
 
@@ -51,9 +51,9 @@ void MousePointer::update(int time) {
 }
 
 void MousePointer::render() {
-	mat4 world = translate(mat4(1.0f), getWorldPos());
+	/*mat4 world = translate(mat4(1.0f), getWorldPos());
 	material->bind();
-	mesh->draw(world);
+	mesh->draw(world);*/
 }
 
 vec3 MousePointer::getWorldPos() {
