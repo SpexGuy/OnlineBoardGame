@@ -215,12 +215,8 @@ bool AssetPack::parseCollider(const Value &collider, btTransform *retTransform, 
 		}
 		*retShape = shape;
 		return numChildren > 0;
-	} else {
-		cout << "Unknown Collider Type: " << type.asString() << endl;
-		return false;
 	}
-	//this should be unreachable, but just in case...
-	assert(false);
+	cout << "Unknown Collider Type: " << type.asString() << endl;
 	return false;
 }
 
